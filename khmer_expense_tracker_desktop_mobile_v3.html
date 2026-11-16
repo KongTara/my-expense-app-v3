@@ -1,0 +1,3684 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>កម្មវិធីកត់ត្រាចំណូល-ចំណាយប្រចាំថ្ងៃ (Offline & Cloud Sync)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================
+           1. DESIGN TOKENS & GLOBAL TYPOGRAPHY
+           ========================================================= */
+        :root {
+            --bg-app: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-sidebar: #ffffff;
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-soft: #ccfbf1;
+            --income: #059669;
+            --income-bg: #ecfdf5;
+            --expense: #dc2626;
+            --expense-bg: #fef2f2;
+            --savings: #7c3aed;
+            --savings-bg: #f5f3ff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --sidebar-w: 265px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            font-family: 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            font-size: 15.5px;
+            line-height: 1.55;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* =========================================================
+           2. DESKTOP FIXED SIDEBAR & SCROLLABLE MAIN CONTENT (>860px)
+           ========================================================= */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            z-index: 40;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 6px 18px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, var(--primary), #14b8a6);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.25;
+        }
+
+        .brand-sub {
+            font-size: 12.5px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid transparent;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s ease;
+        }
+
+        .nav-item:hover {
+            background: #f8fafc;
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            border-color: #99f6e4;
+            font-weight: 800;
+        }
+
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .shortcut-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+        }
+
+        .shortcut-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .shortcut-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            padding: 3px 0;
+        }
+
+        .kbd-badge {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 1px 8px;
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--text-main);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .main-wrap {
+            margin-left: var(--sidebar-w);
+            width: calc(100% - var(--sidebar-w));
+            min-height: 100vh;
+            padding: 18px 24px 36px;
+        }
+
+        /* =========================================================
+           3. MOBILE TOP HEADER & BOTTOM NAV (<=860px)
+           ========================================================= */
+        .mobile-header {
+            display: none;
+        }
+
+        .mobile-bottom-nav {
+            display: none;
+        }
+
+        /* =========================================================
+           4. FILTER BARS, CARDS & KPI GRID
+           ========================================================= */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            padding: 12px 16px;
+        }
+
+        .wallet-strip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .wallet-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 15px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .wallet-pill:hover {
+            border-color: var(--primary);
+            color: var(--text-main);
+        }
+
+        .wallet-pill.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 3px 10px rgba(15, 118, 110, 0.25);
+        }
+
+        .timeframe-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+            padding: 12px 16px;
+        }
+
+        .tf-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tf-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border);
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tf-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .date-pickers-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .period-badge {
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 13.5px;
+            font-weight: 800;
+        }
+
+        /* Quick 3-Period Strip */
+        .quick-period-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .qp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .qp-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .qp-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .qp-date {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .qp-nums {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14.5px;
+            font-weight: 800;
+        }
+
+        /* 4 KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .kpi-card.balance { border-top: 4px solid var(--primary); }
+        .kpi-card.income { border-top: 4px solid var(--income); }
+        .kpi-card.expense { border-top: 4px solid var(--expense); }
+        .kpi-card.savings { border-top: 4px solid var(--savings); }
+
+        .kpi-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .kpi-label {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .kpi-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .kpi-val {
+            font-size: clamp(22px, 2.1vw, 26px);
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+        }
+
+        .kpi-sub {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .pay-split-box {
+            margin-top: 10px;
+            padding-top: 9px;
+            border-top: 1px dashed var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .pay-split-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .pay-badge-cash {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .pay-badge-bank {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           5. DASHBOARD 2-COLUMN SPLIT GRID (EXACT SPECIFICATION)
+           ========================================================= */
+        .dashboard-split {
+            display: grid;
+            grid-template-columns: 1.35fr 0.85fr;
+            gap: 16px;
+        }
+
+        .dash-right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* =========================================================
+           6. TABLES, LIST ITEMS & BUTTONS
+           ========================================================= */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 14.5px;
+            font-weight: 700;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 3px 10px rgba(15, 118, 110, 0.22);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: var(--text-main);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            background: #f0fdfa;
+        }
+
+        .btn-danger {
+            background: var(--expense-bg);
+            color: var(--expense);
+            border-color: #fecaca;
+        }
+
+        .btn-danger:hover {
+            background: #fee2e2;
+        }
+
+        .btn-sm {
+            padding: 7px 12px;
+            font-size: 13.5px;
+            border-radius: var(--radius-sm);
+        }
+
+        .tx-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .tx-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tx-table th {
+            text-align: left;
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--text-muted);
+            padding: 10px 8px;
+            border-bottom: 1.5px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .tx-table td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            font-size: 14.5px;
+        }
+
+        .tx-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tx-item-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+
+        .item-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .item-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .item-info {
+            min-width: 0;
+        }
+
+        .item-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .item-amount {
+            font-size: 15.5px;
+            font-weight: 800;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .item-sub-amount {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 12.5px;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.15s ease;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--primary);
+            background: #f0fdfa;
+        }
+
+        .icon-btn.del:hover {
+            border-color: var(--expense);
+            background: var(--expense-bg);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        /* =========================================================
+           7. FORMS, INPUTS & SETTINGS 50%/50% MASONRY
+           ========================================================= */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 10px 13px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border);
+            background: #ffffff;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 15.5px;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .input-control:focus {
+            border-color: var(--primary);
+        }
+
+        .settings-masonry {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            align-items: start;
+        }
+
+        .settings-col {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .currency-rate-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            align-items: end;
+            margin-bottom: 14px;
+        }
+
+        .currency-rate-grid .form-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .currency-rate-grid .input-control {
+            height: 46px;
+            box-sizing: border-box;
+        }
+
+        .settings-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        /* =========================================================
+           8. VIEW SECTIONS & REPORTS CHART
+           ========================================================= */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .seg-group {
+            display: inline-flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .seg-btn {
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .seg-btn.active {
+            background: #ffffff;
+            color: var(--primary-dark);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .bar-chart-wrap {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 8px;
+            align-items: end;
+            height: 155px;
+            padding: 16px 8px 6px;
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .bar-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            min-width: 36px;
+        }
+
+        .bar-pair {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 112px;
+        }
+
+        .bar-stick {
+            width: 10px;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s ease;
+        }
+
+        .bar-stick.inc { background: var(--income); }
+        .bar-stick.exp { background: var(--expense); }
+
+        .bar-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 28px 16px;
+            color: var(--text-muted);
+            font-size: 14.5px;
+        }
+
+        /* =========================================================
+           9. MODALS, CHIPS & PIN LOCK SCREEN
+           ========================================================= */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(3px);
+            z-index: 90;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal-sheet {
+            background: #ffffff;
+            width: 100%;
+            max-width: 540px;
+            max-height: 90vh;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: popIn 0.18s ease-out;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-head {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .modal-body {
+            padding: 18px 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-foot {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            background: #f8fafc;
+            flex-shrink: 0;
+        }
+
+        .chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .chip-btn {
+            padding: 5px 11px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .chip-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .chip-btn.note-chip {
+            background: #fefce8;
+            border-color: #fde047;
+            color: #854d0e;
+        }
+
+        .bulk-row-card {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8fafc;
+        }
+
+        .bulk-row-top {
+            display: grid;
+            grid-template-columns: auto 1fr 1fr 1fr auto;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bulk-row-mid {
+            display: grid;
+            grid-template-columns: 1fr 78px;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .toast-bar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #0f172a;
+            color: #ffffff;
+            padding: 11px 18px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.22s ease;
+            z-index: 120;
+        }
+
+        .toast-bar.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* PIN Lock Screen */
+        .pin-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+            color: #ffffff;
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .pin-screen.active {
+            display: flex;
+        }
+
+        .pin-dots {
+            display: flex;
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            background: transparent;
+        }
+
+        .pin-dot.filled {
+            background: #ffffff;
+        }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 72px);
+            gap: 12px;
+        }
+
+        .pin-key {
+            height: 60px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.14);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 22px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .pin-key:active {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* =========================================================
+           10. RESPONSIVE MEDIA QUERIES (TABLET & MOBILE <=860px)
+           ========================================================= */
+        @media (max-width: 1180px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .dashboard-split {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-wrap {
+                margin-left: 0;
+                width: 100%;
+                padding: 12px 12px 92px;
+            }
+
+            .mobile-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+                color: #ffffff;
+                padding: 12px 16px;
+                position: sticky;
+                top: 0;
+                z-index: 35;
+                box-shadow: 0 3px 12px rgba(15, 118, 110, 0.2);
+            }
+
+            .mobile-bottom-nav {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                align-items: center;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                border-top: 1px solid var(--border);
+                padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+                z-index: 50;
+                box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+            }
+			
+			.b-nav-btn:hover { 
+				background: var(--primary-soft);
+				color: var(--primary-dark);
+				border-radius: 999px;
+			}
+			
+            .b-nav-btn {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                border: none;
+                background: transparent;
+                color: var(--text-muted);
+                font-family: inherit;
+                font-size: 11.5px;
+                font-weight: 700;
+                cursor: pointer;
+                padding: 4px 2px;
+            }
+
+            .b-nav-btn.active {
+                color: var(--primary);
+                font-weight: 800;
+            }
+
+            .b-nav-fab {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--primary), #14b8a6);
+                color: #ffffff;
+                border: 4px solid #ffffff;
+                font-size: 26px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: -22px auto 0;
+                box-shadow: 0 6px 16px rgba(15, 118, 110, 0.35);
+                cursor: pointer;
+            }
+
+            .quick-period-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-masonry {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-backdrop {
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            .modal-sheet {
+                border-radius: 20px 20px 0 0;
+                max-height: 92vh;
+            }
+
+            .toast-bar {
+                bottom: 84px;
+                width: max-content;
+                max-width: 92vw;
+            }
+
+            .bulk-row-top {
+                grid-template-columns: auto 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .currency-rate-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =========================================================
+         MOBILE STICKY HEADER (<=860px)
+         ========================================================= -->
+    <header class="mobile-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 24px;">📒</span>
+            <div>
+                <div style="font-size: 16px; font-weight: 800; line-height: 1.2;">ចំណូល-ចំណាយប្រចាំថ្ងៃ</div>
+                <div id="mobileSyncStatus" style="font-size: 11.5px; opacity: 0.9;">Offline • សាច់ប្រាក់ & ធនាគារ</div>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <button type="button" id="mobileCurrBtn" class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.35);" onclick="toggleDisplayCurrency()">៛</button>
+            <button type="button" class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.35);" onclick="openBulkModal()">📑</button>
+            <button type="button" class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.35);" onclick="lockAppNow()">🔒</button>
+        </div>
+    </header>
+
+    <!-- =========================================================
+         DESKTOP FIXED LEFT SIDEBAR (>860px)
+         ========================================================= -->
+    <aside class="sidebar">
+        <div>
+            <div class="brand-box">
+                <div class="brand-logo">📒</div>
+                <div>
+                    <div class="brand-title">ចំណូល-ចំណាយ</div>
+                    <div id="sidebarSyncStatus" class="brand-sub">Desktop & Mobile Offline</div>
+                </div>
+            </div>
+
+            <nav class="nav-group">
+                <button type="button" class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+                    <span>🏠</span> <span>ទំព័រដើម (Dashboard)</span>
+                </button>
+                <button type="button" class="nav-item" data-view="transactions" onclick="switchView('transactions')">
+                    <span>📋</span> <span>បញ្ជីប្រតិបត្តិការ</span>
+                </button>
+                <button type="button" class="nav-item" data-view="reports" onclick="switchView('reports')">
+                    <span>📊</span> <span>របាយការណ៍ប្រចាំខែ</span>
+                </button>
+                <button type="button" class="nav-item" data-view="savings" onclick="switchView('savings')">
+                    <span>🐷</span> <span>គោលដៅប្រាក់សន្សំ</span>
+                </button>
+                <button type="button" class="nav-item" data-view="settings" onclick="switchView('settings')">
+                    <span>⚙️</span> <span>ការកំណត់ & Backup</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="lockAppNow()">
+                <span>🔒</span> <span>ចាក់សោកម្មវិធី (PIN)</span>
+            </button>
+            <div class="shortcut-card">
+                <div class="shortcut-title">⌨️ ផ្លូវកាត់ក្តារចុច (Shortcuts)</div>
+                <div class="shortcut-row"><span>កត់ត្រាថ្មី</span> <span class="kbd-badge">N</span></div>
+                <div class="shortcut-row"><span>កត់ត្រាម្តងច្រើន</span> <span class="kbd-badge">B</span></div>
+                <div class="shortcut-row"><span>ស្វែងរក</span> <span class="kbd-badge">/</span></div>
+                <div class="shortcut-row"><span>បិទផ្ទាំង</span> <span class="kbd-badge">ESC</span></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- =========================================================
+         MAIN SCROLLABLE CONTENT AREA
+         ========================================================= -->
+    <main class="main-wrap">
+
+        <!-- TOP FILTER BAR (HIDDEN IN SETTINGS VIEW) -->
+        <div id="globalFilterBar">
+            <div class="card top-action-bar">
+                <div id="walletPillList" class="wallet-strip"></div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" id="desktopCurrBtn" class="btn btn-secondary btn-sm" onclick="toggleDisplayCurrency()">៛ ប្រាក់រៀល (KHR)</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="openBulkModal()">📑 កត់ត្រាម្តងច្រើន</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="openTxModal()">➕ កត់ត្រាថ្មី</button>
+                </div>
+            </div>
+
+            <div class="card timeframe-bar">
+                <div class="tf-tabs">
+                    <button type="button" id="tf-day" class="tf-btn" onclick="setTimeframeMode('day')">📅 ថ្ងៃនេះ / តាមថ្ងៃ</button>
+                    <button type="button" id="tf-week" class="tf-btn" onclick="setTimeframeMode('week')">📆 សប្តាហ៍នេះ</button>
+                    <button type="button" id="tf-month" class="tf-btn active" onclick="setTimeframeMode('month')">🗓️ ខែនេះ / តាមខែ</button>
+                    <button type="button" id="tf-all" class="tf-btn" onclick="setTimeframeMode('all')">🌐 ទាំងអស់</button>
+                </div>
+                <div class="date-pickers-row">
+                    <span id="dayPickerWrap" style="display: none;">
+                        <input type="date" id="dayPicker" class="input-control" style="padding: 6px 10px; font-size: 14px;" onchange="onDateFilterChange()">
+                    </span>
+                    <span id="monthPickerWrap" style="display: inline-flex;">
+                        <input type="month" id="monthPicker" class="input-control" style="padding: 6px 10px; font-size: 14px;" onchange="onDateFilterChange()">
+                    </span>
+                    <span id="activePeriodBadge" class="period-badge">ខែនេះ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUMMARY SECTION (HIDDEN IN SETTINGS VIEW) -->
+        <div id="summaryOverviewWrap">
+            <div id="quickPeriodStrip" class="quick-period-grid"></div>
+
+            <div id="kpiGrid" class="kpi-grid">
+                <div class="kpi-card balance">
+                    <div>
+                        <div class="kpi-top">
+                            <span id="kpiBalanceLabel" class="kpi-label">សមតុល្យសរុប</span>
+                            <span class="kpi-icon" style="background: var(--primary-soft); color: var(--primary);">💰</span>
+                        </div>
+                        <div id="kpiBalance" class="kpi-val" style="color: var(--primary);">0 ៛</div>
+                        <div id="kpiBalanceSub" class="kpi-sub">≈ $0.00</div>
+                    </div>
+                    <div id="balancePaymentBreakdown" class="pay-split-box"></div>
+                </div>
+
+                <div class="kpi-card income">
+                    <div>
+                        <div class="kpi-top">
+                            <span class="kpi-label">ចំណូលសរុប</span>
+                            <span class="kpi-icon" style="background: var(--income-bg); color: var(--income);">↓</span>
+                        </div>
+                        <div id="kpiIncome" class="kpi-val" style="color: var(--income);">0 ៛</div>
+                        <div id="kpiIncomeSub" class="kpi-sub">≈ $0.00</div>
+                    </div>
+                    <div id="incomePaymentBreakdown" class="pay-split-box"></div>
+                </div>
+
+                <div class="kpi-card expense">
+                    <div>
+                        <div class="kpi-top">
+                            <span class="kpi-label">ចំណាយសរុប</span>
+                            <span class="kpi-icon" style="background: var(--expense-bg); color: var(--expense);">↑</span>
+                        </div>
+                        <div id="kpiExpense" class="kpi-val" style="color: var(--expense);">0 ៛</div>
+                        <div id="kpiExpenseSub" class="kpi-sub">≈ $0.00</div>
+                    </div>
+                    <div id="expensePaymentBreakdown" class="pay-split-box"></div>
+                </div>
+
+                <div class="kpi-card savings">
+                    <div>
+                        <div class="kpi-top">
+                            <span class="kpi-label">ប្រាក់សន្សំសរុប</span>
+                            <span class="kpi-icon" style="background: var(--savings-bg); color: var(--savings);">🐷</span>
+                        </div>
+                        <div id="kpiSavings" class="kpi-val" style="color: var(--savings);">0 ៛</div>
+                        <div id="kpiSavingsSub" class="kpi-sub">≈ $0.00</div>
+                    </div>
+                    <div class="pay-split-box">
+                        <div class="pay-split-row">
+                            <span style="color: var(--text-muted); font-weight: 700;">គោលដៅកំពុងសន្សំ</span>
+                            <strong id="kpiGoalCount">0 គោលដៅ</strong>
+                        </div>
+                        <div class="pay-split-row">
+                            <button type="button" style="background: none; border: none; color: var(--savings); font-family: inherit; font-size: 13.5px; font-weight: 800; cursor: pointer;" onclick="switchView('savings')">គ្រប់គ្រងគោលដៅ →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             VIEW 1: DASHBOARD
+             ========================================================= -->
+        <section id="view-dashboard" class="view-section active">
+            <div class="dashboard-split">
+                <!-- Left Column: Recent Transactions Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🕒 ប្រតិបត្តិការថ្មីៗ</h3>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openBulkModal()">📑 ម្តងច្រើន</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="switchView('transactions')">មើលទាំងអស់ →</button>
+                        </div>
+                    </div>
+                    <div id="recentTxTableContainer" class="tx-table-wrap"></div>
+                </div>
+
+                <!-- Right Column: Category Breakdown + Savings Goals -->
+                <div class="dash-right-col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🍩 សមាមាត្រចំណាយតាមប្រភេទ</h3>
+                            <span id="catPeriodTag" class="tag-pill">ខែនេះ</span>
+                        </div>
+                        <div id="categoryBreakdownList"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🐷 គោលដៅប្រាក់សន្សំ</h3>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="openGoalModal()">➕ បង្កើតថ្មី</button>
+                        </div>
+                        <div id="dashboardGoalsList"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             VIEW 2: ALL TRANSACTIONS
+             ========================================================= -->
+        <section id="view-transactions" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <h3 class="card-title">📋 បញ្ជីប្រតិបត្តិការទាំងអស់</h3>
+                        <span id="txCountBadge" class="tag-pill">0 ប្រតិបត្តិការ</span>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="exportCSV(true)">📥 ទាញយក Excel (CSV)</button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openTxModal()">➕ កត់ត្រាថ្មី</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; align-items: center;">
+                    <div class="seg-group">
+                        <button type="button" id="seg-all" class="seg-btn active" onclick="setTypeFilter('all')">ទាំងអស់</button>
+                        <button type="button" id="seg-income" class="seg-btn" onclick="setTypeFilter('income')">↓ ចំណូល</button>
+                        <button type="button" id="seg-expense" class="seg-btn" onclick="setTypeFilter('expense')">↑ ចំណាយ</button>
+                    </div>
+
+                    <select id="paymentFilterSelect" class="input-control" style="width: auto; min-width: 170px; padding: 8px 12px;" onchange="renderAll()">
+                        <option value="all">💳 ការទូទាត់ទាំងអស់</option>
+                        <option value="cash">💵 សាច់ប្រាក់សុទ្ធ</option>
+                        <option value="bank">🏦 ធនាគារ (Bank)</option>
+                    </select>
+
+                    <input type="text" id="searchInput" class="input-control" placeholder="🔍 ស្វែងរកមុខទំនិញ កំណត់ចំណាំ ធនាគារ ឬទឹកប្រាក់..." style="flex: 1; min-width: 220px;" oninput="renderAll()">
+                </div>
+
+                <div id="fullTxList"></div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             VIEW 3: MONTHLY REPORTS
+             ========================================================= -->
+        <section id="view-reports" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📊 របាយការណ៍ប្រចាំខែ និងប្រចាំឆ្នាំ</h3>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <select id="reportYearSelect" class="input-control" style="width: auto; padding: 7px 12px;" onchange="renderReports()"></select>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="exportCSV(false)">📥 ទាញយក Excel ទាំងអស់</button>
+                    </div>
+                </div>
+
+                <div id="reportYearlyOverview" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 16px;"></div>
+
+                <div style="font-size: 13.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
+                    ក្រាហ្វិកប្រៀបធៀបប្រចាំខែ (<span style="color: var(--income);">■ ចំណូល</span> • <span style="color: var(--expense);">■ ចំណាយ</span>) — ចុចលើខែណាមួយដើម្បីមើលលម្អិត
+                </div>
+                <div id="yearlyBarChart" class="bar-chart-wrap"></div>
+
+                <div id="monthlyBreakdownCards"></div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             VIEW 4: SAVINGS GOALS
+             ========================================================= -->
+        <section id="view-savings" class="view-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🐷 គ្រប់គ្រងគោលដៅប្រាក់សន្សំ</h3>
+                    <button type="button" class="btn btn-primary" onclick="openGoalModal()">➕ បង្កើតគោលដៅថ្មី</button>
+                </div>
+                <div id="savingsListContainer"></div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             VIEW 5: SETTINGS & BACKUP ONLY (PURE SETTINGS VIEW)
+             ========================================================= -->
+        <section id="view-settings" class="view-section">
+            <div class="settings-masonry">
+                <!-- Left Settings Column -->
+                <div class="settings-col">
+                    <!-- Card 1: Currency & Exchange Rate -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">💱 រូបិយប័ណ្ណ និងអត្រាប្តូរប្រាក់</h3>
+                        </div>
+                        <div class="currency-rate-grid">
+                            <div>
+                                <label class="form-label" for="setCurrency">រូបិយប័ណ្ណគោល</label>
+                                <select id="setCurrency" class="input-control">
+                                    <option value="KHR">៛ ប្រាក់រៀល (KHR)</option>
+                                    <option value="USD">$ ប្រាក់ដុល្លារ (USD)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label" for="setRate">អត្រាប្តូរប្រាក់ (១ ដុល្លារ = ? រៀល)</label>
+                                <input type="number" id="setRate" class="input-control" min="1" step="any" value="4000">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="saveGeneralSettings()">💾 រក្សាទុកការកំណត់</button>
+                    </div>
+
+                    <!-- Card 2: Cloud Sync Across Devices -->
+                    <div class="card" style="border: 1.5px solid #99f6e4; background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);">
+                        <div class="card-header">
+                            <h3 class="card-title">☁️ ធ្វើសមកាលកម្មទិន្នន័យ (Sync លើកុំព្យូទ័រ, iPad & ទូរសព្ទ)</h3>
+                            <span id="cloudBadge" class="tag-pill">មិនទាន់ភ្ជាប់</span>
+                        </div>
+                        <p class="settings-desc">
+                            បង្កើត <strong>លេខកូដសមកាលកម្មផ្ទាល់ខ្លួន (Sync Code)</strong> នៅលើឧបករណ៍ទី ១ រួចយកលេខកូដដូចគ្នានេះទៅវាយបញ្ចូលលើ <strong>កុំព្យូទ័រ, iPad និងទូរសព្ទ</strong> ដើម្បីឱ្យទិន្នន័យលោតដូចគ្នាដោយស្វ័យប្រវត្តិ (នៅតែកត់ត្រាពេល Offline បាន ហើយនឹង Sync ភ្លាមពេលមានអ៊ីនធឺណិត)។
+                        </p>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                            <input type="text" id="syncRoomInput" class="input-control" placeholder="វាយលេខកូដសម្ងាត់ SYNC (ឧ. KHM-889922)..." style="flex: 1; min-width: 180px; font-weight: 800; text-transform: uppercase;">
+                            <button type="button" class="btn btn-secondary" onclick="generateNewSyncCode()">🎲 បង្កើតកូដថ្មី</button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px;">
+                            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="connectCloudSync()">🔗 ភ្ជាប់ & Sync ឥឡូវនេះ</button>
+                            <button type="button" id="btnDisconnectSync" class="btn btn-danger" style="width: 100%; display: none;" onclick="disconnectCloudSync()">🔌 ផ្តាច់ការ Sync</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Backup & Restore JSON -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">💾 បម្រុងទុក និងផ្ទេរទិន្នន័យ (Backup & Restore JSON)</h3>
+                        </div>
+                        <p class="settings-desc">
+                            ទាញយកឯកសារ Backup ទុកការពារទិន្នន័យ ឬផ្ទេរទិន្នន័យឆ្លងឧបករណ៍ដោយមិនបាត់បង់កំណត់ត្រាចាស់ឡើយ។
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px;">
+                            <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="exportBackupJSON()">📤 ទាញយក Backup (JSON)</button>
+                            <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="document.getElementById('backupFileInp').click()">📥 បញ្ចូល Backup (JSON)</button>
+                            <input type="file" id="backupFileInp" accept=".json" style="display: none;" onchange="handleBackupUpload(event)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Settings Column -->
+                <div class="settings-col">
+                    <!-- Card 4: Manage Wallets -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">👛 គ្រប់គ្រងកាបូបលុយ (Wallets)</h3>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <select id="newWalletEmoji" class="input-control" style="width: 72px; text-align: center;">
+                                <option value="👤">👤</option>
+                                <option value="🏠">🏠</option>
+                                <option value="💼">💼</option>
+                                <option value="🏪">🏪</option>
+                                <option value="💳">💳</option>
+                                <option value="🎓">🎓</option>
+                            </select>
+                            <input type="text" id="newWalletName" class="input-control" placeholder="ឈ្មោះកាបូបថ្មី (ឧ. អាជីវកម្ម)...">
+                            <button type="button" class="btn btn-primary" onclick="addNewWallet()">➕ បន្ថែម</button>
+                        </div>
+                        <div id="settingsWalletList"></div>
+                    </div>
+
+                    <!-- Card 5: Import Excel / Word -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">📥 នាំចូលទិន្នន័យពី Excel (CSV) ឬ Copy-Paste ពី Word</h3>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="downloadExcelTemplate()">⬇️ ទាញយកគំរូ Excel</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('csvFileInp').click()">📂 ជ្រើសរើសឯកសារ CSV</button>
+                            <input type="file" id="csvFileInp" accept=".csv,.txt" style="display: none;" onchange="handleCsvUpload(event)">
+                        </div>
+                        <textarea id="smartPasteBox" class="input-control" rows="4" placeholder="Paste ទិន្នន័យពី Excel ឬ Word នៅទីនេះ (ឧ. 2026-11-16 | ចំណាយ | សាច់ប្រាក់ | អាហារ | 15000 | KHR | បាយថ្ងៃត្រង់)..."></textarea>
+                        <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="parseAndImportText()">⚡ នាំចូលទិន្នន័យដោយស្វ័យប្រវត្តិ</button>
+                    </div>
+
+                    <!-- Card 6: 4-Digit PIN Lock -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">🔐 លេខកូដសម្ងាត់ (4-Digit PIN Lock)</h3>
+                        </div>
+                        <p id="pinStatusText" class="settings-desc">បច្ចុប្បន្ន៖ <strong>មិនទាន់បានបើកការចាក់សោ PIN ទេ</strong></p>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                            <input type="password" id="newPinInput" inputmode="numeric" maxlength="4" class="input-control" placeholder="លេខ ៤ ខ្ទង់ (1234)" style="width: 175px;">
+                            <button type="button" class="btn btn-primary" onclick="savePinSetting()">កំណត់ PIN</button>
+                            <button type="button" id="btnDisablePin" class="btn btn-danger" style="display: none;" onclick="disablePinSetting()">បិទ PIN</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =========================================================
+         MOBILE BOTTOM NAVIGATION BAR (<=860px)
+         ========================================================= -->
+    <nav class="mobile-bottom-nav">
+        <button type="button" class="b-nav-btn active" data-view="dashboard" onclick="switchView('dashboard')">
+            <span style="font-size: 19px;">🏠</span>
+            <span>ទំព័រដើម</span>
+        </button>
+        <button type="button" class="b-nav-btn" data-view="transactions" onclick="switchView('transactions')">
+            <span style="font-size: 19px;">📋</span>
+            <span>បញ្ជី</span>
+        </button>
+        <button type="button" class="b-nav-fab" onclick="openTxModal()" title="កត់ត្រាថ្មី">+</button>
+        <button type="button" class="b-nav-btn" data-view="reports" onclick="switchView('reports')">
+            <span style="font-size: 19px;">📊</span>
+            <span>របាយការណ៍</span>
+        </button>
+        <button type="button" class="b-nav-btn" data-view="settings" onclick="switchView('settings')">
+            <span style="font-size: 19px;">⚙️</span>
+            <span>ការកំណត់</span>
+        </button>
+    </nav>
+
+    <!-- =========================================================
+         MODAL 1: SINGLE TRANSACTION (PROTECTED AGAINST ACCIDENTAL TAP)
+         ========================================================= -->
+    <div id="txModal" class="modal-backdrop no-backdrop-close">
+        <div class="modal-sheet">
+            <div class="modal-head">
+                <h3 id="txModalHeading" class="card-title">➕ កត់ត្រាចំណូល-ចំណាយថ្មី</h3>
+                <button type="button" class="icon-btn" onclick="closeModalById('txModal')">✕</button>
+            </div>
+            <form id="txForm" onsubmit="saveTransaction(event)" style="display: flex; flex-direction: column; overflow: hidden; flex: 1;">
+                <div class="modal-body">
+                    <input type="hidden" id="editTxId">
+                    <input type="hidden" id="txType" value="expense">
+                    <input type="hidden" id="txPaymentMethod" value="cash">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+                        <button type="button" id="btnTypeExpense" class="btn btn-danger" onclick="setTxFormType('expense')">↑ ចំណាយ (Expense)</button>
+                        <button type="button" id="btnTypeIncome" class="btn btn-secondary" onclick="setTxFormType('income')">↓ ចំណូល (Income)</button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="form-group">
+                        <div>
+                            <label class="form-label">កាបូបលុយ</label>
+                            <select id="txWalletId" class="input-control"></select>
+                        </div>
+                        <div>
+                            <label class="form-label">ប្រភេទ / មុខទំនិញ</label>
+                            <select id="txCategory" class="input-control"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">វិធីសាស្ត្រទូទាត់</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button type="button" id="btnPayCash" class="btn btn-secondary" onclick="setTxPaymentMethod('cash')">💵 សាច់ប្រាក់សុទ្ធ</button>
+                            <button type="button" id="btnPayBank" class="btn btn-secondary" onclick="setTxPaymentMethod('bank')">🏦 ធនាគារ (Bank)</button>
+                        </div>
+                        <div id="bankNameWrapper" style="display: none; margin-top: 8px;">
+                            <select id="txBankName" class="input-control">
+                                <option value="ABA Bank">🏦 ABA Bank</option>
+                                <option value="ACLEDA Bank">🏦 ACLEDA Bank (អេស៊ីលីដា)</option>
+                                <option value="Wing Bank">🏦 Wing Bank (វីង)</option>
+                                <option value="Canadia Bank">🏦 Canadia Bank</option>
+                                <option value="Prince Bank">🏦 Prince Bank</option>
+                                <option value="ធនាគារផ្សេងៗ">🏦 ធនាគារផ្សេងៗ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">ចំនួនទឹកប្រាក់</label>
+                        <div style="display: grid; grid-template-columns: 1fr 110px; gap: 8px;">
+                            <input type="number" id="txAmount" inputmode="decimal" step="any" min="0" class="input-control" placeholder="0" style="font-size: 18px; font-weight: 800;" required onfocus="ensureFieldVisibleOnMobile(this)">
+                            <select id="txCurrency" class="input-control" onchange="renderQuickAmountChips()">
+                                <option value="KHR">៛ រៀល</option>
+                                <option value="USD">$ ដុល្លារ</option>
+                            </select>
+                        </div>
+                        <div id="quickAmountChips" class="chips-row"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">កាលបរិច្ឆេទ</label>
+                        <input type="date" id="txDate" class="input-control" required onchange="renderDailyNoteChips()">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">កំណត់ចំណាំ (Note)</label>
+                        <input type="text" id="txNote" class="input-control" placeholder="ឧ. បាយថ្ងៃត្រង់, កាហ្វេ, ប្រាក់ខែ..." onfocus="ensureFieldVisibleOnMobile(this)">
+                        <div id="dailyNoteChips" class="chips-row"></div>
+                    </div>
+                </div>
+                <div class="modal-foot">
+                    <button type="button" class="btn btn-secondary" onclick="closeModalById('txModal')">បោះបង់</button>
+                    <button type="submit" class="btn btn-primary">💾 រក្សាទុក</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 2: BULK ENTRY (PROTECTED AGAINST ACCIDENTAL TAP)
+         ========================================================= -->
+    <div id="bulkModal" class="modal-backdrop no-backdrop-close">
+        <div class="modal-sheet" style="max-width: 680px;">
+            <div class="modal-head">
+                <h3 class="card-title">📑 កត់ត្រាម្តងច្រើនជួរ (Bulk Entry)</h3>
+                <button type="button" class="icon-btn" onclick="closeModalById('bulkModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                    <div>
+                        <label class="form-label">កាបូបលុយរួម</label>
+                        <select id="bulkWalletId" class="input-control"></select>
+                    </div>
+                    <div>
+                        <label class="form-label">កាលបរិច្ឆេទរួម</label>
+                        <input type="date" id="bulkCommonDate" class="input-control">
+                    </div>
+                </div>
+
+                <div id="bulkRowsContainer"></div>
+
+                <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 4px;" onclick="addBulkRows(2)">➕ បន្ថែម ២ ជួរទៀត</button>
+                <div id="bulkSummaryBar" style="display: flex; justify-content: space-between; margin-top: 12px; padding: 10px 14px; background: var(--primary-soft); color: var(--primary-dark); border-radius: var(--radius-md); font-size: 14px;"></div>
+            </div>
+            <div class="modal-foot">
+                <button type="button" class="btn btn-secondary" onclick="closeModalById('bulkModal')">បោះបង់</button>
+                <button type="button" class="btn btn-primary" onclick="saveBulkRows()">💾 រក្សាទុកទាំងអស់</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 3: CREATE SAVINGS GOAL
+         ========================================================= -->
+    <div id="goalModal" class="modal-backdrop">
+        <div class="modal-sheet" style="max-width: 440px;">
+            <div class="modal-head">
+                <h3 class="card-title">🐷 បង្កើតគោលដៅប្រាក់សន្សំថ្មី</h3>
+                <button type="button" class="icon-btn" onclick="closeModalById('goalModal')">✕</button>
+            </div>
+            <form onsubmit="saveGoal(event)">
+                <div class="modal-body">
+                    <div style="display: grid; grid-template-columns: 78px 1fr; gap: 10px;" class="form-group">
+                        <div>
+                            <label class="form-label">រូបតំណាង</label>
+                            <select id="goalEmoji" class="input-control" style="text-align: center;">
+                                <option value="🐷">🐷</option>
+                                <option value="🛡️">🛡️</option>
+                                <option value="🏠">🏠</option>
+                                <option value="🚗">🚗</option>
+                                <option value="✈️">✈️</option>
+                                <option value="💻">💻</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">ឈ្មោះគោលដៅ</label>
+                            <input type="text" id="goalName" class="input-control" placeholder="ឧ. លុយបម្រុងគ្រាអាសន្ន" required>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 110px; gap: 10px;">
+                        <div>
+                            <label class="form-label">គោលដៅទឹកប្រាក់</label>
+                            <input type="number" id="goalTarget" inputmode="decimal" step="any" min="1" class="input-control" placeholder="4000000" required>
+                        </div>
+                        <div>
+                            <label class="form-label">រូបិយប័ណ្ណ</label>
+                            <select id="goalCurrency" class="input-control">
+                                <option value="KHR">៛ រៀល</option>
+                                <option value="USD">$ ដុល្លារ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-foot">
+                    <button type="button" class="btn btn-secondary" onclick="closeModalById('goalModal')">បោះបង់</button>
+                    <button type="submit" class="btn btn-primary">💾 បង្កើតគោលដៅ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 4: DEPOSIT / WITHDRAW SAVINGS GOAL
+         ========================================================= -->
+    <div id="goalActionModal" class="modal-backdrop">
+        <div class="modal-sheet" style="max-width: 420px;">
+            <div class="modal-head">
+                <h3 id="goalActionTitle" class="card-title">➕ ដាក់ប្រាក់សន្សំ</h3>
+                <button type="button" class="icon-btn" onclick="closeModalById('goalActionModal')">✕</button>
+            </div>
+            <form onsubmit="submitGoalAction(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="goalActId">
+                    <input type="hidden" id="goalActType">
+                    <div class="form-group">
+                        <label class="form-label">ចំនួនទឹកប្រាក់</label>
+                        <input type="number" id="goalActAmount" inputmode="decimal" step="any" min="1" class="input-control" placeholder="0" required>
+                    </div>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                        <input type="checkbox" id="goalSyncLedger" checked>
+                        <span>កត់ត្រាចូលបញ្ជីចំណូល-ចំណាយប្រចាំថ្ងៃដោយស្វ័យប្រវត្តិ</span>
+                    </label>
+                </div>
+                <div class="modal-foot">
+                    <button type="button" class="btn btn-secondary" onclick="closeModalById('goalActionModal')">បោះបង់</button>
+                    <button type="submit" class="btn btn-primary">យល់ព្រម</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         MODAL 5: BACKUP RESTORE CHOICE
+         ========================================================= -->
+    <div id="restoreChoiceModal" class="modal-backdrop">
+        <div class="modal-sheet" style="max-width: 440px;">
+            <div class="modal-head">
+                <h3 class="card-title">📥 ជ្រើសរើសរបៀបបញ្ចូល Backup</h3>
+                <button type="button" class="icon-btn" onclick="closeModalById('restoreChoiceModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 14.5px; color: var(--text-muted); margin-bottom: 14px;">
+                    តើអ្នកចង់បូកបញ្ចូលទិន្នន័យថ្មីបន្ថែមលើទិន្នន័យបច្ចុប្បន្ន ឬជំនួសទិន្នន័យចាស់ទាំងស្រុង?
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="applyBackupRestore('merge')">➕ បូកបញ្ចូលបន្ថែម (Merge - មិនបាត់ទិន្នន័យចាស់)</button>
+                    <button type="button" class="btn btn-danger" style="width: 100%;" onclick="applyBackupRestore('overwrite')">♻️ ជំនួសទិន្នន័យទាំងស្រុង (Overwrite)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         PIN LOCK SCREEN OVERLAY
+         ========================================================= -->
+    <div id="pinLockScreen" class="pin-screen">
+        <div style="font-size: 46px; margin-bottom: 8px;">🔐</div>
+        <h2 style="font-size: 20px; font-weight: 800;">កម្មវិធីត្រូវបានចាក់សោ</h2>
+        <p style="font-size: 14px; opacity: 0.9; margin-top: 4px;">សូមបញ្ចូលលេខកូដសម្ងាត់ PIN ៤ ខ្ទង់</p>
+        <div id="pinDotsRow" class="pin-dots">
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+        </div>
+        <div id="pinErrText" style="height: 22px; font-size: 13.5px; color: #fecaca; font-weight: 700; margin-bottom: 8px;"></div>
+        <div class="pin-pad">
+            <button type="button" class="pin-key" onclick="pressPinKey('1')">1</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('2')">2</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('3')">3</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('4')">4</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('5')">5</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('6')">6</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('7')">7</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('8')">8</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('9')">9</button>
+            <button type="button" class="pin-key" style="font-size: 15px;" onclick="clearPinKey()">សម្អាត</button>
+            <button type="button" class="pin-key" onclick="pressPinKey('0')">0</button>
+            <button type="button" class="pin-key" onclick="backPinKey()">⌫</button>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         TOAST NOTIFICATION BAR
+         ========================================================= -->
+    <div id="toastBar" class="toast-bar">
+        <span id="toastText">រួចរាល់</span>
+        <button type="button" id="toastUndo" style="display: none; background: #fbbf24; color: #0f172a; border: none; border-radius: 999px; padding: 3px 10px; font-weight: 800; cursor: pointer;" onclick="undoLastDelete()">ត្រឡប់ក្រោយ</button>
+    </div>
+
+    <!-- =========================================================
+         FIREBASE CLOUD SYNC BRIDGE (OPTIONAL WHEN ONLINE)
+         ========================================================= -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        window.CloudBridge = {
+            enabled: false,
+            db: null,
+            auth: null,
+            user: null,
+            appId: typeof __app_id !== 'undefined' ? __app_id : 'kh-expense-universal',
+            unsubscribe: null,
+
+            async init() {
+                try {
+                    if (typeof __firebase_config === 'undefined' || !__firebase_config) return false;
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const app = initializeApp(firebaseConfig);
+                    this.auth = getAuth(app);
+                    this.db = getFirestore(app);
+
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(this.auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(this.auth);
+                    }
+                    this.user = this.auth.currentUser;
+                    this.enabled = Boolean(this.user);
+                    return this.enabled;
+                } catch (err) {
+                    return false;
+                }
+            },
+
+            sanitizeKey(code) {
+                return String(code || '').trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+            },
+
+            getDocRef(syncCode) {
+                const clean = this.sanitizeKey(syncCode);
+                if (!clean || !this.db) return null;
+                return doc(this.db, 'artifacts', this.appId, 'public', 'data', 'synced_ledgers', clean);
+            },
+
+            async push(syncCode, payload) {
+                if (!this.enabled || !this.user) return false;
+                const ref = this.getDocRef(syncCode);
+                if (!ref) return false;
+                try {
+                    await setDoc(ref, {
+                        ...payload,
+                        updatedAt: Date.now(),
+                        updatedBy: this.user.uid
+                    }, { merge: true });
+                    return true;
+                } catch (err) {
+                    return false;
+                }
+            },
+
+            async pullOnce(syncCode) {
+                if (!this.enabled || !this.user) return null;
+                const ref = this.getDocRef(syncCode);
+                if (!ref) return null;
+                try {
+                    const snap = await getDoc(ref);
+                    return snap.exists() ? snap.data() : null;
+                } catch (err) {
+                    return null;
+                }
+            },
+
+            subscribe(syncCode, onRemoteData) {
+                if (this.unsubscribe) {
+                    this.unsubscribe();
+                    this.unsubscribe = null;
+                }
+                if (!this.enabled || !this.user) return;
+                const ref = this.getDocRef(syncCode);
+                if (!ref) return;
+
+                this.unsubscribe = onSnapshot(ref, (snap) => {
+                    if (snap.exists()) {
+                        onRemoteData(snap.data());
+                    }
+                });
+            }
+        };
+
+        window.dispatchEvent(new Event('cloud-bridge-ready'));
+    </script>
+
+    <!-- =========================================================
+         MAIN APPLICATION LOGIC (100% OFFLINE-FIRST)
+         ========================================================= -->
+    <script>
+        // 1. STATE & CONSTANTS
+        const KEYS = {
+            TX: 'kh_universal_tx_v6',
+            CFG: 'kh_universal_cfg_v6',
+            WALLETS: 'kh_universal_wallets_v6',
+            GOALS: 'kh_universal_goals_v6'
+        };
+
+        let config = { currency: 'KHR', rate: 4000, pin: '', syncCode: '', lastSyncedAt: 0 };
+        let wallets = [];
+        let transactions = [];
+        let goals = [];
+        let activeWalletId = 'all';
+        let typeFilter = 'all';
+        let timeframeMode = 'month';
+        let selectedDate = '';
+        let selectedMonth = '';
+        let lastKnownTodayStr = '';
+        let deletedTxBuffer = null;
+        let pendingBackupData = null;
+        let pinBuffer = '';
+        let isApplyingRemoteSync = false;
+
+        const CATEGORIES = {
+            expense: [
+                { id: 'food', name: 'អាហារ', emoji: '🍜', bg: '#ffedd5' },
+                { id: 'drink', name: 'ភេសជ្ជៈ', emoji: '🧋', bg: '#fce7f3' },
+                { id: 'transport', name: 'ធ្វើដំណើរ', emoji: '⛽', bg: '#e0f2fe' },
+                { id: 'shopping', name: 'ទិញទំនិញ', emoji: '🛍️', bg: '#f3e8ff' },
+                { id: 'bills', name: 'ទឹកភ្លើង/ទូរសព្ទ', emoji: '🧾', bg: '#fef3c7' },
+                { id: 'health', name: 'សុខភាព', emoji: '💊', bg: '#fee2e2' },
+                { id: 'social', name: 'សង្គម/ជប់លៀង', emoji: '🍻', bg: '#fef9c3' },
+                { id: 'other_exp', name: 'ផ្សេងៗ', emoji: '📦', bg: '#f1f5f9' }
+            ],
+            income: [
+                { id: 'salary', name: 'ប្រាក់ខែ', emoji: '💼', bg: '#dcfce7' },
+                { id: 'business', name: 'អាជីវកម្ម', emoji: '🏪', bg: '#ccfbf1' },
+                { id: 'bonus', name: 'ប្រាក់រង្វាន់', emoji: '🎁', bg: '#fef3c7' },
+                { id: 'invest', name: 'វិនិយោគ', emoji: '📈', bg: '#e0e7ff' },
+                { id: 'other_inc', name: 'ចំណូលផ្សេងៗ', emoji: '💰', bg: '#f1f5f9' }
+            ]
+        };
+
+        const KHMER_MONTHS = ['មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា', 'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ'];
+
+        // 2. REAL-TIME DATE & FORMATTING HELPERS
+        function getTodayStr() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        function getWeekBounds(dateStr) {
+            const parts = (dateStr || getTodayStr()).split('-').map(Number);
+            const d = new Date(parts[0], parts[1] - 1, parts[2]);
+            const day = d.getDay();
+            const diffToMon = day === 0 ? -6 : 1 - day;
+            const mon = new Date(d);
+            mon.setDate(d.getDate() + diffToMon);
+            const sun = new Date(mon);
+            sun.setDate(mon.getDate() + 6);
+            const fmt = (dt) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+            return { start: fmt(mon), end: fmt(sun) };
+        }
+
+        function formatKhmerDate(dateStr) {
+            if (!dateStr) return '';
+            const [y, m, d] = dateStr.split('-').map(Number);
+            if (!y || !m || !d) return dateStr;
+            return `${d} ${KHMER_MONTHS[m - 1]} ${y}`;
+        }
+
+        function escapeHTML(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function convertMoney(amount, fromCurr, toCurr) {
+            const val = Number(amount) || 0;
+            if (fromCurr === toCurr) return val;
+            const rate = Number(config.rate) || 4000;
+            return fromCurr === 'USD' ? val * rate : val / rate;
+        }
+
+        function formatMoney(amount, curr) {
+            const val = Number(amount) || 0;
+            if (curr === 'USD') {
+                return '$' + val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+            return Math.round(val).toLocaleString('en-US') + ' ៛';
+        }
+
+        function getCategory(type, catId) {
+            const list = CATEGORIES[type] || CATEGORIES.expense;
+            return list.find(c => c.id === catId) || list[list.length - 1];
+        }
+
+        function getWallet(walletId) {
+            return wallets.find(w => w.id === walletId) || wallets[0] || { id: 'w_personal', name: 'ផ្ទាល់ខ្លួន', emoji: '👤' };
+        }
+
+        function notify(msg, showUndo = false) {
+            const bar = document.getElementById('toastBar');
+            const text = document.getElementById('toastText');
+            const undoBtn = document.getElementById('toastUndo');
+            if (!bar || !text) return;
+            text.textContent = msg;
+            if (undoBtn) undoBtn.style.display = showUndo ? 'inline-block' : 'none';
+            bar.classList.add('show');
+            clearTimeout(bar._timer);
+            bar._timer = setTimeout(() => bar.classList.remove('show'), showUndo ? 4500 : 2800);
+        }
+
+        // 3. LOCALSTORAGE & CLOUD SYNC
+        function loadData() {
+            try {
+                const rawCfg = localStorage.getItem(KEYS.CFG);
+                if (rawCfg) config = { ...config, ...JSON.parse(rawCfg) };
+
+                const rawWallets = localStorage.getItem(KEYS.WALLETS);
+                if (rawWallets) wallets = JSON.parse(rawWallets);
+                if (!Array.isArray(wallets) || wallets.length === 0) {
+                    wallets = [
+                        { id: 'w_personal', name: 'ផ្ទាល់ខ្លួន', emoji: '👤' },
+                        { id: 'w_family', name: 'គ្រួសារ', emoji: '🏠' },
+                        { id: 'w_work', name: 'ការងារ', emoji: '💼' }
+                    ];
+                }
+
+                const rawTx = localStorage.getItem(KEYS.TX);
+                if (rawTx) {
+                    transactions = JSON.parse(rawTx).map(tx => ({
+                        ...tx,
+                        walletId: tx.walletId || wallets[0].id,
+                        paymentMethod: tx.paymentMethod || 'cash',
+                        bankName: tx.bankName || ''
+                    }));
+                } else {
+                    const today = getTodayStr();
+                    transactions = [
+                        { id: 'demo_1', walletId: 'w_personal', type: 'income', paymentMethod: 'bank', bankName: 'ABA Bank', amount: 2400000, currency: 'KHR', category: 'salary', date: today, note: 'ប្រាក់ខែប្រចាំខែ (គំរូ)' },
+                        { id: 'demo_2', walletId: 'w_personal', type: 'expense', paymentMethod: 'cash', bankName: '', amount: 20000, currency: 'KHR', category: 'food', date: today, note: 'អាហារថ្ងៃត្រង់' },
+                        { id: 'demo_3', walletId: 'w_work', type: 'expense', paymentMethod: 'bank', bankName: 'ACLEDA Bank', amount: 15, currency: 'USD', category: 'bills', date: today, note: 'ថ្លៃអ៊ីនធឺណិតការិយាល័យ' }
+                    ];
+                }
+
+                const rawGoals = localStorage.getItem(KEYS.GOALS);
+                if (rawGoals) {
+                    goals = JSON.parse(rawGoals);
+                } else {
+                    goals = [
+                        { id: 'goal_1', emoji: '🐷', name: 'លុយបម្រុងគ្រាអាសន្ន', target: 4000000, saved: 1200000, currency: 'KHR' }
+                    ];
+                }
+            } catch (err) {
+                console.error('Storage load error:', err);
+            }
+        }
+
+        function saveData(skipCloudPush = false) {
+            try {
+                localStorage.setItem(KEYS.CFG, JSON.stringify(config));
+                localStorage.setItem(KEYS.WALLETS, JSON.stringify(wallets));
+                localStorage.setItem(KEYS.TX, JSON.stringify(transactions));
+                localStorage.setItem(KEYS.GOALS, JSON.stringify(goals));
+                if (!skipCloudPush && config.syncCode && !isApplyingRemoteSync) {
+                    pushToCloudNow();
+                }
+            } catch (err) {
+                console.error('Storage save error:', err);
+            }
+        }
+
+        function generateNewSyncCode() {
+            const rand = Math.floor(100000 + Math.random() * 900000);
+            const code = `KHM-${rand}`;
+            document.getElementById('syncRoomInput').value = code;
+            notify(`បានបង្កើតកូដថ្មី៖ ${code} — សូមចុច "ភ្ជាប់ & Sync ឥឡូវនេះ"`);
+        }
+
+        function updateSyncStatusUI(text, connected) {
+            const badge = document.getElementById('cloudBadge');
+            const discBtn = document.getElementById('btnDisconnectSync');
+            const sStatus = document.getElementById('sidebarSyncStatus');
+            const mStatus = document.getElementById('mobileSyncStatus');
+            if (badge) {
+                badge.textContent = text;
+                badge.style.background = connected ? '#dcfce7' : '#f1f5f9';
+                badge.style.color = connected ? '#059669' : 'var(--text-muted)';
+            }
+            if (discBtn) discBtn.style.display = connected ? 'inline-flex' : 'none';
+            if (sStatus) sStatus.textContent = connected ? `Cloud Sync: ${config.syncCode}` : 'Desktop & Mobile Offline';
+            if (mStatus) mStatus.textContent = connected ? `Sync: ${config.syncCode}` : 'Offline • សាច់ប្រាក់ & ធនាគារ';
+        }
+
+        async function pushToCloudNow() {
+            if (!config.syncCode || !window.CloudBridge || !window.CloudBridge.enabled) return;
+            await window.CloudBridge.push(config.syncCode, {
+                currency: config.currency,
+                rate: config.rate,
+                wallets,
+                transactions,
+                goals
+            });
+        }
+
+        function mergeRemoteSnapshot(remote) {
+            if (!remote || !Array.isArray(remote.transactions)) return;
+            isApplyingRemoteSync = true;
+            try {
+                if (Array.isArray(remote.wallets) && remote.wallets.length > 0) wallets = remote.wallets;
+                transactions = remote.transactions;
+                if (Array.isArray(remote.goals)) goals = remote.goals;
+                saveData(true);
+                renderWalletPills();
+                renderAll();
+                if (document.getElementById('view-settings').classList.contains('active')) renderSettings();
+                if (document.getElementById('view-savings').classList.contains('active')) renderSavingsViews();
+                if (document.getElementById('view-reports').classList.contains('active')) renderReports();
+            } finally {
+                isApplyingRemoteSync = false;
+            }
+        }
+
+        async function connectCloudSync() {
+            const rawCode = document.getElementById('syncRoomInput').value.trim().toUpperCase();
+            if (!rawCode) {
+                notify('សូមវាយបញ្ចូល ឬបង្កើតលេខកូដសម្ងាត់ Sync ជាមុនសិន!');
+                return;
+            }
+            config.syncCode = rawCode;
+            saveData(true);
+            updateSyncStatusUI(`✅ បានភ្ជាប់ (${rawCode})`, true);
+
+            if (window.CloudBridge) {
+                if (!window.CloudBridge.enabled) await window.CloudBridge.init();
+                if (window.CloudBridge.enabled) {
+                    const remote = await window.CloudBridge.pullOnce(rawCode);
+                    if (remote && Array.isArray(remote.transactions) && remote.transactions.length > 0) {
+                        mergeRemoteSnapshot(remote);
+                    }
+                    await pushToCloudNow();
+                    window.CloudBridge.subscribe(rawCode, mergeRemoteSnapshot);
+                    notify(`បានភ្ជាប់ និងធ្វើសមកាលកម្មកូដ ${rawCode} ជោគជ័យ!`);
+                    return;
+                }
+            }
+            notify(`បានរក្សាទុកកូដ ${rawCode} (នឹង Sync ស្វ័យប្រវត្តិពេលភ្ជាប់អ៊ីនធឺណិត)`);
+        }
+
+        function disconnectCloudSync() {
+            if (window.CloudBridge && window.CloudBridge.unsubscribe) {
+                window.CloudBridge.unsubscribe();
+            }
+            config.syncCode = '';
+            saveData(true);
+            document.getElementById('syncRoomInput').value = '';
+            updateSyncStatusUI('មិនទាន់ភ្ជាប់', false);
+            notify('បានផ្តាច់ការ Sync លើឧបករណ៍នេះហើយ');
+        }
+
+        // 4. VIEW SWITCHING (HIDES SUMMARY & FILTERS IN SETTINGS VIEW)
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(`view-${viewName}`);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === viewName);
+            });
+            document.querySelectorAll('.b-nav-btn[data-view]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === viewName);
+            });
+
+            const globalFilterBar = document.getElementById('globalFilterBar');
+            const summaryOverviewWrap = document.getElementById('summaryOverviewWrap');
+            const isMobile = window.innerWidth <= 860;
+
+            if (viewName === 'settings') {
+                // Pure settings view: completely hide wallet filters, timeframe filters, and all 4 KPI summary cards
+                if (globalFilterBar) globalFilterBar.style.display = 'none';
+                if (summaryOverviewWrap) summaryOverviewWrap.style.display = 'none';
+            } else {
+                if (globalFilterBar) globalFilterBar.style.display = (viewName === 'savings') ? 'none' : '';
+                if (summaryOverviewWrap) {
+                    summaryOverviewWrap.style.display = (isMobile && viewName !== 'dashboard') ? 'none' : '';
+                }
+            }
+
+            if (viewName === 'reports') renderReports();
+            if (viewName === 'savings') renderSavingsViews();
+            if (viewName === 'settings') renderSettings();
+            if (viewName === 'dashboard' || viewName === 'transactions') renderAll();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleDisplayCurrency() {
+            config.currency = config.currency === 'KHR' ? 'USD' : 'KHR';
+            saveData();
+            updateCurrencyButtons();
+            renderAll();
+            if (document.getElementById('view-reports').classList.contains('active')) renderReports();
+            if (document.getElementById('view-savings').classList.contains('active')) renderSavingsViews();
+        }
+
+        function updateCurrencyButtons() {
+            const symbol = config.currency === 'KHR' ? '៛' : '$';
+            const label = config.currency === 'KHR' ? '៛ ប្រាក់រៀល (KHR)' : '$ ប្រាក់ដុល្លារ (USD)';
+            const dBtn = document.getElementById('desktopCurrBtn');
+            const mBtn = document.getElementById('mobileCurrBtn');
+            if (dBtn) dBtn.textContent = label;
+            if (mBtn) mBtn.textContent = symbol;
+        }
+
+        function renderWalletPills() {
+            const allPills = [{ id: 'all', name: 'ទាំងអស់', emoji: '🌐' }, ...wallets];
+            const html = allPills.map(w => `
+                <button type="button" class="wallet-pill ${activeWalletId === w.id ? 'active' : ''}" onclick="selectWallet('${w.id}')">
+                    <span>${w.emoji}</span>
+                    <span>${escapeHTML(w.name)}</span>
+                </button>
+            `).join('');
+            const container = document.getElementById('walletPillList');
+            if (container) container.innerHTML = html;
+        }
+
+        function selectWallet(wId) {
+            activeWalletId = wId;
+            renderWalletPills();
+            renderAll();
+            if (document.getElementById('view-reports').classList.contains('active')) renderReports();
+        }
+
+        function setTimeframeMode(mode) {
+            timeframeMode = mode;
+            ['day', 'week', 'month', 'all'].forEach(m => {
+                const btn = document.getElementById(`tf-${m}`);
+                if (btn) btn.classList.toggle('active', m === mode);
+            });
+            const dayWrap = document.getElementById('dayPickerWrap');
+            const monthWrap = document.getElementById('monthPickerWrap');
+            if (dayWrap) dayWrap.style.display = mode === 'day' ? 'inline-flex' : 'none';
+            if (monthWrap) monthWrap.style.display = mode === 'month' ? 'inline-flex' : 'none';
+            renderAll();
+        }
+
+        function onDateFilterChange() {
+            selectedDate = document.getElementById('dayPicker').value || getTodayStr();
+            selectedMonth = document.getElementById('monthPicker').value || getTodayStr().slice(0, 7);
+            renderAll();
+        }
+
+        function setTypeFilter(type) {
+            typeFilter = type;
+            ['all', 'income', 'expense'].forEach(t => {
+                const btn = document.getElementById(`seg-${t}`);
+                if (btn) btn.classList.toggle('active', t === type);
+            });
+            renderAll();
+        }
+
+        // 5. CORE RENDERING (KPIs, PERIODS, TABLES, GOALS)
+        function getWalletScopedTx() {
+            if (activeWalletId === 'all') return transactions;
+            return transactions.filter(t => t.walletId === activeWalletId);
+        }
+
+        function getPeriodFilteredTx() {
+            const scoped = getWalletScopedTx();
+            if (timeframeMode === 'all') return scoped;
+            if (timeframeMode === 'day') {
+                const target = selectedDate || getTodayStr();
+                return scoped.filter(t => t.date === target);
+            }
+            if (timeframeMode === 'week') {
+                const { start, end } = getWeekBounds(getTodayStr());
+                return scoped.filter(t => t.date >= start && t.date <= end);
+            }
+            const targetMonth = selectedMonth || getTodayStr().slice(0, 7);
+            return scoped.filter(t => (t.date || '').startsWith(targetMonth));
+        }
+
+        function getPeriodHumanLabel() {
+            if (timeframeMode === 'all') return 'គ្រប់ពេលទាំងអស់';
+            if (timeframeMode === 'day') {
+                const target = selectedDate || getTodayStr();
+                return formatKhmerDate(target);
+            }
+            if (timeframeMode === 'week') {
+                const { start, end } = getWeekBounds(getTodayStr());
+                return `${start.slice(8)}/${start.slice(5, 7)} - ${end.slice(8)}/${end.slice(5, 7)}`;
+            }
+            const targetMonth = selectedMonth || getTodayStr().slice(0, 7);
+            const [y, m] = targetMonth.split('-').map(Number);
+            return `ខែ${KHMER_MONTHS[(m || 1) - 1]} ${y}`;
+        }
+
+        function renderAll() {
+            const scopedTx = getWalletScopedTx();
+            const periodTx = getPeriodFilteredTx();
+            const periodLabel = getPeriodHumanLabel();
+            const otherCurr = config.currency === 'KHR' ? 'USD' : 'KHR';
+
+            const periodBadge = document.getElementById('activePeriodBadge');
+            if (periodBadge) periodBadge.textContent = `🗓️ ${periodLabel}`;
+
+            let sumInc = 0, sumExp = 0;
+            let incCash = 0, incBank = 0;
+            let expCash = 0, expBank = 0;
+            const catExpMap = {};
+
+            periodTx.forEach(tx => {
+                const amt = convertMoney(tx.amount, tx.currency, config.currency);
+                const isBank = tx.paymentMethod === 'bank';
+                if (tx.type === 'income') {
+                    sumInc += amt;
+                    if (isBank) incBank += amt; else incCash += amt;
+                } else {
+                    sumExp += amt;
+                    if (isBank) expBank += amt; else expCash += amt;
+                    catExpMap[tx.category] = (catExpMap[tx.category] || 0) + amt;
+                }
+            });
+
+            const balance = sumInc - sumExp;
+            const balCash = incCash - expCash;
+            const balBank = incBank - expBank;
+
+            document.getElementById('kpiBalanceLabel').textContent = `សមតុល្យប្រចាំខែ (${periodLabel})`;
+            document.getElementById('kpiBalance').textContent = formatMoney(balance, config.currency);
+            document.getElementById('kpiBalanceSub').textContent = `≈ ${formatMoney(convertMoney(balance, config.currency, otherCurr), otherCurr)}`;
+
+            document.getElementById('kpiIncome').textContent = formatMoney(sumInc, config.currency);
+            document.getElementById('kpiIncomeSub').textContent = `≈ ${formatMoney(convertMoney(sumInc, config.currency, otherCurr), otherCurr)}`;
+
+            document.getElementById('kpiExpense').textContent = formatMoney(sumExp, config.currency);
+            document.getElementById('kpiExpenseSub').textContent = `≈ ${formatMoney(convertMoney(sumExp, config.currency, otherCurr), otherCurr)}`;
+
+            const renderSplit = (cashVal, bankVal) => `
+                <div class="pay-split-row">
+                    <span class="pay-badge-cash">💵 សាច់ប្រាក់</span>
+                    <span><strong>${formatMoney(cashVal, config.currency)}</strong> ≈ ${formatMoney(convertMoney(cashVal, config.currency, otherCurr), otherCurr)}</span>
+                </div>
+                <div class="pay-split-row">
+                    <span class="pay-badge-bank">🏦 ធនាគារ</span>
+                    <span><strong>${formatMoney(bankVal, config.currency)}</strong> ≈ ${formatMoney(convertMoney(bankVal, config.currency, otherCurr), otherCurr)}</span>
+                </div>
+            `;
+
+            document.getElementById('balancePaymentBreakdown').innerHTML = renderSplit(balCash, balBank);
+            document.getElementById('incomePaymentBreakdown').innerHTML = renderSplit(incCash, incBank);
+            document.getElementById('expensePaymentBreakdown').innerHTML = renderSplit(expCash, expBank);
+
+            const totalSaved = goals.reduce((acc, g) => acc + convertMoney(g.saved, g.currency, config.currency), 0);
+            document.getElementById('kpiSavings').textContent = formatMoney(totalSaved, config.currency);
+            document.getElementById('kpiSavingsSub').textContent = `≈ ${formatMoney(convertMoney(totalSaved, config.currency, otherCurr), otherCurr)}`;
+            document.getElementById('kpiGoalCount').textContent = `${goals.length} គោលដៅ`;
+
+            // Real-Time 3-Period Comparison (Today • This Week • This Month)
+            const todayStr = getTodayStr();
+            const weekBounds = getWeekBounds(todayStr);
+            const monthPrefix = todayStr.slice(0, 7);
+
+            const calcRange = (predicate) => {
+                let inc = 0, exp = 0;
+                scopedTx.forEach(t => {
+                    if (predicate(t)) {
+                        const v = convertMoney(t.amount, t.currency, config.currency);
+                        if (t.type === 'income') inc += v; else exp += v;
+                    }
+                });
+                return { inc, exp };
+            };
+
+            const dStat = calcRange(t => t.date === todayStr);
+            const wStat = calcRange(t => t.date >= weekBounds.start && t.date <= weekBounds.end);
+            const mStat = calcRange(t => (t.date || '').startsWith(monthPrefix));
+
+            document.getElementById('quickPeriodStrip').innerHTML = `
+                <div class="qp-card" onclick="selectedDate='${todayStr}'; document.getElementById('dayPicker').value='${todayStr}'; setTimeframeMode('day')">
+                    <div class="qp-head"><span>📅 សរុបថ្ងៃនេះ៖</span><span class="qp-date">${formatKhmerDate(todayStr)}</span></div>
+                    <div class="qp-nums">
+                        <span style="color: var(--income);">↓ ${formatMoney(dStat.inc, config.currency)}</span>
+                        <span style="color: var(--expense);">↑ ${formatMoney(dStat.exp, config.currency)}</span>
+                    </div>
+                </div>
+                <div class="qp-card" onclick="setTimeframeMode('week')">
+                    <div class="qp-head"><span>📆 សរុបសប្តាហ៍នេះ៖</span><span class="qp-date">${weekBounds.start.slice(8)}/${weekBounds.start.slice(5,7)} - ${weekBounds.end.slice(8)}/${weekBounds.end.slice(5,7)}/${weekBounds.end.slice(0,4)}</span></div>
+                    <div class="qp-nums">
+                        <span style="color: var(--income);">↓ ${formatMoney(wStat.inc, config.currency)}</span>
+                        <span style="color: var(--expense);">↑ ${formatMoney(wStat.exp, config.currency)}</span>
+                    </div>
+                </div>
+                <div class="qp-card" onclick="selectedMonth='${monthPrefix}'; document.getElementById('monthPicker').value='${monthPrefix}'; setTimeframeMode('month')">
+                    <div class="qp-head"><span>🗓️ សរុបខែនេះ៖</span><span class="qp-date">${monthPrefix}</span></div>
+                    <div class="qp-nums">
+                        <span style="color: var(--income);">↓ ${formatMoney(mStat.inc, config.currency)}</span>
+                        <span style="color: var(--expense);">↑ ${formatMoney(mStat.exp, config.currency)}</span>
+                    </div>
+                </div>
+            `;
+
+            // Category Breakdown
+            document.getElementById('catPeriodTag').textContent = periodLabel;
+            const catListEl = document.getElementById('categoryBreakdownList');
+            const catEntries = Object.entries(catExpMap).sort((a, b) => b[1] - a[1]);
+            const barColors = ['#7c3aed', '#ea580c', '#0d9488', '#2563eb', '#db2777'];
+            if (catEntries.length === 0) {
+                catListEl.innerHTML = `<div class="empty-state">មិនទាន់មានទិន្នន័យចំណាយក្នុងអំឡុងពេលនេះទេ</div>`;
+            } else {
+                catListEl.innerHTML = catEntries.map(([catId, val], idx) => {
+                    const cat = getCategory('expense', catId);
+                    const pct = sumExp > 0 ? Math.round((val / sumExp) * 100) : 0;
+                    return `
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700;">
+                                <span>${cat.emoji} ${cat.name} (${pct}%)</span>
+                                <span>${formatMoney(val, config.currency)}</span>
+                            </div>
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: ${pct}%; background: ${barColors[idx % barColors.length]};"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Dashboard Savings Goals Card
+            renderDashboardGoals();
+
+            // Recent Transactions Table (Dashboard)
+            const sortedPeriod = [...periodTx].sort((a, b) => new Date(b.date) - new Date(a.date));
+            renderRecentTxTable(sortedPeriod.slice(0, 8));
+
+            // Full Filtered Transactions (Transactions View)
+            const searchVal = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+            const payFilter = document.getElementById('paymentFilterSelect')?.value || 'all';
+            const filtered = sortedPeriod.filter(tx => {
+                if (typeFilter !== 'all' && tx.type !== typeFilter) return false;
+                if (payFilter !== 'all' && (tx.paymentMethod || 'cash') !== payFilter) return false;
+                if (searchVal) {
+                    const cat = getCategory(tx.type, tx.category);
+                    return (tx.note || '').toLowerCase().includes(searchVal) ||
+                           cat.name.toLowerCase().includes(searchVal) ||
+                           (tx.bankName || '').toLowerCase().includes(searchVal) ||
+                           String(tx.amount).includes(searchVal);
+                }
+                return true;
+            });
+
+            const badge = document.getElementById('txCountBadge');
+            if (badge) badge.textContent = `${filtered.length} ប្រតិបត្តិការ`;
+            renderTxListInto('fullTxList', filtered);
+        }
+
+        function renderRecentTxTable(list) {
+            const container = document.getElementById('recentTxTableContainer');
+            if (!container) return;
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div style="font-size: 32px; margin-bottom: 6px;">📭</div><div style="font-weight: 700;">មិនទាន់មានប្រតិបត្តិការក្នុងអំឡុងពេលនេះទេ</div></div>`;
+                return;
+            }
+            const rowsHtml = list.map(tx => {
+                const cat = getCategory(tx.type, tx.category);
+                const isInc = tx.type === 'income';
+                const isBank = tx.paymentMethod === 'bank';
+                const payTag = isBank
+                    ? `<span class="pay-badge-bank">🏦 ${escapeHTML(tx.bankName || 'Bank')}</span>`
+                    : `<span class="pay-badge-cash">💵 សាច់ប្រាក់</span>`;
+                const sign = isInc ? '+' : '-';
+                const color = isInc ? 'var(--income)' : 'var(--expense)';
+                const converted = convertMoney(tx.amount, tx.currency, config.currency);
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="tx-item-cell">
+                                <div class="item-icon" style="background: ${cat.bg};">${cat.emoji}</div>
+                                <span class="item-title">${escapeHTML(cat.name)}</span>
+                            </div>
+                        </td>
+                        <td>${payTag}</td>
+                        <td style="white-space: nowrap; color: var(--text-muted);">${formatKhmerDate(tx.date)}</td>
+                        <td style="color: var(--text-muted);">${escapeHTML(tx.note) || '—'}</td>
+                        <td style="text-align: right;">
+                            <div class="item-amount" style="color: ${color};">${sign}${formatMoney(tx.amount, tx.currency)}</div>
+                            ${tx.currency !== config.currency ? `<div class="item-sub-amount">≈ ${formatMoney(converted, config.currency)}</div>` : ''}
+                        </td>
+                        <td style="white-space: nowrap; text-align: right;">
+                            <button type="button" class="icon-btn" onclick="openTxModal('${tx.id}')" title="កែប្រែ">✏️</button>
+                            <button type="button" class="icon-btn del" onclick="deleteTransaction('${tx.id}')" title="លុប">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <table class="tx-table">
+                    <thead>
+                        <tr>
+                            <th>មុខទំនិញ</th>
+                            <th>ការទូទាត់</th>
+                            <th>កាលបរិច្ឆេទ</th>
+                            <th>កំណត់ចំណាំ</th>
+                            <th style="text-align: right;">ទឹកប្រាក់</th>
+                            <th style="text-align: right;">កែ/លុប</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+            `;
+        }
+
+        function renderDashboardGoals() {
+            const el = document.getElementById('dashboardGoalsList');
+            if (!el) return;
+            if (goals.length === 0) {
+                el.innerHTML = `<div class="empty-state" style="padding: 14px;">មិនទាន់មានគោលដៅប្រាក់សន្សំទេ</div>`;
+                return;
+            }
+            el.innerHTML = goals.slice(0, 2).map(g => {
+                const target = convertMoney(g.target, g.currency, config.currency);
+                const saved = convertMoney(g.saved, g.currency, config.currency);
+                const pct = target > 0 ? Math.min(100, Math.round((saved / target) * 100)) : 0;
+                const remain = Math.max(0, target - saved);
+                return `
+                    <div style="border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; margin-bottom: 10px; background: #fafafa;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <div style="font-size: 15.5px; font-weight: 800;">${g.emoji || '🐷'} ${escapeHTML(g.name)}</div>
+                            <div style="display: flex; gap: 6px;">
+                                <button type="button" class="icon-btn del" onclick="deleteGoal('${g.id}')" title="លុប">🗑️</button>
+                            </div>
+                        </div>
+                        <div style="font-size: 13.5px; color: var(--text-muted); font-weight: 600;">
+                            សន្សំបាន៖ <strong style="color: var(--income);">${formatMoney(saved, config.currency)}</strong> / ${formatMoney(target, config.currency)} (${pct}%)
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">នៅខ្វះ៖ ${formatMoney(remain, config.currency)}</div>
+                        <div class="progress-track" style="height: 8px; margin-bottom: 12px;">
+                            <div class="progress-fill" style="width: ${pct}%; background: var(--primary);"></div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button type="button" class="btn btn-sm" style="background: var(--income-bg); color: var(--income); border-color: #a7f3d0;" onclick="openGoalAction('${g.id}', 'deposit')">+ ដាក់សន្សំ</button>
+                            <button type="button" class="btn btn-sm" style="background: var(--expense-bg); color: var(--expense); border-color: #fecaca;" onclick="openGoalAction('${g.id}', 'withdraw')">- ដកប្រាក់</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderTxListInto(containerId, list) {
+            const el = document.getElementById(containerId);
+            if (!el) return;
+            if (list.length === 0) {
+                el.innerHTML = `<div class="empty-state"><div style="font-size: 32px; margin-bottom: 6px;">📭</div><div style="font-weight: 700;">មិនមានប្រតិបត្តិការត្រូវនឹងការស្វែងរកទេ</div></div>`;
+                return;
+            }
+            el.innerHTML = list.map(tx => {
+                const cat = getCategory(tx.type, tx.category);
+                const w = getWallet(tx.walletId);
+                const isInc = tx.type === 'income';
+                const isBank = tx.paymentMethod === 'bank';
+                const payTag = isBank
+                    ? `<span class="pay-badge-bank">🏦 ${escapeHTML(tx.bankName || 'ធនាគារ')}</span>`
+                    : `<span class="pay-badge-cash">💵 សាច់ប្រាក់</span>`;
+                const sign = isInc ? '+' : '-';
+                const color = isInc ? 'var(--income)' : 'var(--expense)';
+                const converted = convertMoney(tx.amount, tx.currency, config.currency);
+
+                return `
+                    <div class="list-item">
+                        <div class="item-left">
+                            <div class="item-icon" style="background: ${cat.bg};">${cat.emoji}</div>
+                            <div class="item-info">
+                                <div class="item-title">${escapeHTML(tx.note) || cat.name}</div>
+                                <div class="item-sub">
+                                    <span>${cat.name}</span>
+                                    <span>•</span>
+                                    <span>${formatKhmerDate(tx.date)}</span>
+                                    <span class="tag-pill">${w.emoji} ${escapeHTML(w.name)}</span>
+                                    ${payTag}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <div>
+                                <div class="item-amount" style="color: ${color};">${sign}${formatMoney(tx.amount, tx.currency)}</div>
+                                ${tx.currency !== config.currency ? `<div class="item-sub-amount">≈ ${formatMoney(converted, config.currency)}</div>` : ''}
+                            </div>
+                            <button type="button" class="icon-btn" onclick="openTxModal('${tx.id}')" title="កែប្រែ">✏️</button>
+                            <button type="button" class="icon-btn del" onclick="deleteTransaction('${tx.id}')" title="លុប">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 6. MODALS & MOBILE KEYBOARD VIEWPORT ADJUSTMENT
+        function openModalById(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            document.body.classList.add('modal-open');
+            modal.classList.add('open');
+            adjustModalForKeyboard();
+        }
+
+        function closeModalById(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.remove('open');
+            if (!document.querySelector('.modal-backdrop.open')) {
+                document.body.classList.remove('modal-open');
+            }
+        }
+
+        function adjustModalForKeyboard() {
+            const openModal = document.querySelector('.modal-backdrop.open');
+            if (!openModal) return;
+            const sheet = openModal.querySelector('.modal-sheet');
+            if (!sheet) return;
+            if (window.innerWidth <= 860 && window.visualViewport) {
+                const vvHeight = window.visualViewport.height;
+                openModal.style.height = vvHeight + 'px';
+                sheet.style.maxHeight = vvHeight + 'px';
+            } else {
+                openModal.style.height = '';
+                sheet.style.maxHeight = '';
+            }
+        }
+
+        function ensureFieldVisibleOnMobile(el) {
+            if (window.innerWidth > 860 || !el) return;
+            setTimeout(() => {
+                adjustModalForKeyboard();
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 250);
+        }
+
+        // 7. SINGLE & BULK TRANSACTIONS
+        function openTxModal(editId = null) {
+            const walletSel = document.getElementById('txWalletId');
+            walletSel.innerHTML = wallets.map(w => `<option value="${w.id}">${w.emoji} ${escapeHTML(w.name)}</option>`).join('');
+
+            if (editId) {
+                const tx = transactions.find(t => t.id === editId);
+                if (!tx) return;
+                document.getElementById('txModalHeading').textContent = '✏️ កែប្រែប្រតិបត្តិការ';
+                document.getElementById('editTxId').value = tx.id;
+                walletSel.value = tx.walletId || wallets[0].id;
+                document.getElementById('txAmount').value = tx.amount;
+                document.getElementById('txCurrency').value = tx.currency;
+                document.getElementById('txDate').value = tx.date;
+                document.getElementById('txNote').value = tx.note || '';
+                setTxFormType(tx.type, tx.category);
+                setTxPaymentMethod(tx.paymentMethod || 'cash', tx.bankName || 'ABA Bank');
+            } else {
+                document.getElementById('txModalHeading').textContent = '➕ កត់ត្រាចំណូល-ចំណាយថ្មី';
+                document.getElementById('editTxId').value = '';
+                walletSel.value = activeWalletId !== 'all' ? activeWalletId : wallets[0].id;
+                document.getElementById('txAmount').value = '';
+                document.getElementById('txCurrency').value = config.currency;
+                document.getElementById('txDate').value = getTodayStr();
+                document.getElementById('txNote').value = '';
+                setTxFormType('expense');
+                setTxPaymentMethod('cash', 'ABA Bank');
+            }
+
+            renderQuickAmountChips();
+            renderDailyNoteChips();
+            openModalById('txModal');
+        }
+
+        function setTxFormType(type, selectedCat = null) {
+            document.getElementById('txType').value = type;
+            const btnExp = document.getElementById('btnTypeExpense');
+            const btnInc = document.getElementById('btnTypeIncome');
+            if (type === 'expense') {
+                btnExp.className = 'btn btn-danger';
+                btnInc.className = 'btn btn-secondary';
+            } else {
+                btnInc.className = 'btn btn-primary';
+                btnExp.className = 'btn btn-secondary';
+            }
+
+            const catSel = document.getElementById('txCategory');
+            const list = CATEGORIES[type] || CATEGORIES.expense;
+            catSel.innerHTML = list.map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+            if (selectedCat && list.some(c => c.id === selectedCat)) {
+                catSel.value = selectedCat;
+            }
+        }
+
+        function setTxPaymentMethod(method, bankName = null) {
+            document.getElementById('txPaymentMethod').value = method;
+            const btnCash = document.getElementById('btnPayCash');
+            const btnBank = document.getElementById('btnPayBank');
+            const bankWrap = document.getElementById('bankNameWrapper');
+            if (method === 'bank') {
+                btnBank.style.borderColor = '#0284c7';
+                btnBank.style.background = '#e0f2fe';
+                btnBank.style.color = '#0369a1';
+                btnCash.style.borderColor = 'var(--border)';
+                btnCash.style.background = '#f8fafc';
+                btnCash.style.color = 'var(--text-main)';
+                bankWrap.style.display = 'block';
+                if (bankName) document.getElementById('txBankName').value = bankName;
+            } else {
+                btnCash.style.borderColor = 'var(--primary)';
+                btnCash.style.background = 'var(--income-bg)';
+                btnCash.style.color = 'var(--primary-dark)';
+                btnBank.style.borderColor = 'var(--border)';
+                btnBank.style.background = '#f8fafc';
+                btnBank.style.color = 'var(--text-main)';
+                bankWrap.style.display = 'none';
+            }
+        }
+
+        function renderQuickAmountChips() {
+            const curr = document.getElementById('txCurrency').value;
+            const amounts = curr === 'USD' ? [1, 5, 10, 20, 50, 100] : [5000, 10000, 20000, 50000, 100000];
+            document.getElementById('quickAmountChips').innerHTML = amounts.map(val => `
+                <button type="button" class="chip-btn" onclick="addQuickAmount(${val})">+${curr === 'USD' ? '$' + val : val.toLocaleString('en-US') + '៛'}</button>
+            `).join('');
+        }
+
+        function addQuickAmount(delta) {
+            const inp = document.getElementById('txAmount');
+            inp.value = (parseFloat(inp.value) || 0) + delta;
+        }
+
+        function renderDailyNoteChips() {
+            const targetDate = document.getElementById('txDate').value || getTodayStr();
+            const sameDayNotes = [...new Set(
+                transactions
+                    .filter(t => t.date === targetDate && t.note && t.note.trim())
+                    .map(t => t.note.trim())
+            )].slice(0, 8);
+
+            const wrap = document.getElementById('dailyNoteChips');
+            if (!wrap) return;
+            wrap.innerHTML = sameDayNotes.map(note => `
+                <button type="button" class="chip-btn note-chip" onclick="document.getElementById('txNote').value = ${JSON.stringify(note)}">📝 ${escapeHTML(note)}</button>
+            `).join('');
+        }
+
+        function saveTransaction(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editTxId').value;
+            const walletId = document.getElementById('txWalletId').value || wallets[0].id;
+            const type = document.getElementById('txType').value;
+            const paymentMethod = document.getElementById('txPaymentMethod').value || 'cash';
+            const bankName = paymentMethod === 'bank' ? (document.getElementById('txBankName').value || 'ABA Bank') : '';
+            const amount = parseFloat(document.getElementById('txAmount').value);
+            const currency = document.getElementById('txCurrency').value;
+            const category = document.getElementById('txCategory').value;
+            const date = document.getElementById('txDate').value;
+            const note = document.getElementById('txNote').value.trim();
+
+            if (!amount || amount <= 0 || !date) {
+                notify('សូមបញ្ចូលចំនួនទឹកប្រាក់ និងកាលបរិច្ឆេទឱ្យបានត្រឹមត្រូវ!');
+                return;
+            }
+
+            if (editId) {
+                const idx = transactions.findIndex(t => t.id === editId);
+                if (idx !== -1) {
+                    transactions[idx] = { ...transactions[idx], walletId, type, paymentMethod, bankName, amount, currency, category, date, note };
+                }
+                notify('បានកែប្រែប្រតិបត្តិការជោគជ័យ!');
+            } else {
+                transactions.unshift({
+                    id: 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+                    walletId, type, paymentMethod, bankName, amount, currency, category, date, note
+                });
+                notify('បានរក្សាទុកកំណត់ត្រាថ្មីជោគជ័យ!');
+            }
+
+            saveData();
+            closeModalById('txModal');
+            renderAll();
+        }
+
+        function deleteTransaction(txId) {
+            const idx = transactions.findIndex(t => t.id === txId);
+            if (idx === -1) return;
+            deletedTxBuffer = { item: transactions[idx], index: idx };
+            transactions.splice(idx, 1);
+            saveData();
+            renderAll();
+            notify('បានលុបប្រតិបត្តិការរួចរាល់', true);
+        }
+
+        function undoLastDelete() {
+            if (!deletedTxBuffer) return;
+            transactions.splice(deletedTxBuffer.index, 0, deletedTxBuffer.item);
+            deletedTxBuffer = null;
+            saveData();
+            renderAll();
+            notify('បានទាញយកទិន្នន័យត្រឡប់មកវិញ!');
+        }
+
+        function openBulkModal() {
+            const wSel = document.getElementById('bulkWalletId');
+            wSel.innerHTML = wallets.map(w => `<option value="${w.id}">${w.emoji} ${escapeHTML(w.name)}</option>`).join('');
+            wSel.value = activeWalletId !== 'all' ? activeWalletId : wallets[0].id;
+            document.getElementById('bulkCommonDate').value = getTodayStr();
+            document.getElementById('bulkRowsContainer').innerHTML = '';
+            addBulkRows(4);
+            openModalById('bulkModal');
+        }
+
+        function addBulkRows(count = 1) {
+            const container = document.getElementById('bulkRowsContainer');
+            const expOpts = CATEGORIES.expense.map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+            for (let i = 0; i < count; i++) {
+                const rowIdx = container.children.length + 1;
+                const card = document.createElement('div');
+                card.className = 'bulk-row-card';
+                card.innerHTML = `
+                    <div class="bulk-row-top">
+                        <span style="font-weight: 800; color: var(--primary); font-size: 13px;">#${rowIdx}</span>
+                        <select class="input-control bulk-type" style="padding: 7px 8px; font-size: 14px;" onchange="onBulkTypeChange(this)">
+                            <option value="expense">↑ ចំណាយ</option>
+                            <option value="income">↓ ចំណូល</option>
+                        </select>
+                        <select class="input-control bulk-cat" style="padding: 7px 8px; font-size: 14px;">${expOpts}</select>
+                        <select class="input-control bulk-pay" style="padding: 7px 8px; font-size: 14px;">
+                            <option value="cash">💵 សាច់ប្រាក់</option>
+                            <option value="bank:ABA Bank">🏦 ABA</option>
+                            <option value="bank:ACLEDA Bank">🏦 អេស៊ីលីដា</option>
+                            <option value="bank:Wing Bank">🏦 Wing</option>
+                            <option value="bank:ធនាគារផ្សេងៗ">🏦 ធនាគារ</option>
+                        </select>
+                        <button type="button" class="icon-btn del" onclick="this.closest('.bulk-row-card').remove(); updateBulkSummary();">✕</button>
+                    </div>
+                    <div class="bulk-row-mid">
+                        <input type="number" inputmode="decimal" step="any" min="0" class="input-control bulk-amount" placeholder="ចំនួនទឹកប្រាក់..." style="font-weight: 800;" oninput="updateBulkSummary()" onfocus="ensureFieldVisibleOnMobile(this)">
+                        <select class="input-control bulk-curr" style="padding: 8px 6px; font-weight: 800;" onchange="updateBulkSummary()">
+                            <option value="KHR" ${config.currency === 'KHR' ? 'selected' : ''}>៛</option>
+                            <option value="USD" ${config.currency === 'USD' ? 'selected' : ''}>$</option>
+                        </select>
+                    </div>
+                    <input type="text" class="input-control bulk-note" placeholder="កំណត់ចំណាំ (ឧ. ម្ហូប, កាហ្វេ)..." onfocus="ensureFieldVisibleOnMobile(this)">
+                `;
+                container.appendChild(card);
+            }
+            updateBulkSummary();
+        }
+
+        function onBulkTypeChange(selEl) {
+            const card = selEl.closest('.bulk-row-card');
+            const catSel = card.querySelector('.bulk-cat');
+            const list = CATEGORIES[selEl.value] || CATEGORIES.expense;
+            catSel.innerHTML = list.map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+            updateBulkSummary();
+        }
+
+        function updateBulkSummary() {
+            const cards = document.querySelectorAll('#bulkRowsContainer .bulk-row-card');
+            let validCount = 0;
+            let total = 0;
+            cards.forEach(card => {
+                const amt = parseFloat(card.querySelector('.bulk-amount').value);
+                const curr = card.querySelector('.bulk-curr').value;
+                if (amt && amt > 0) {
+                    validCount++;
+                    total += convertMoney(amt, curr, config.currency);
+                }
+            });
+            document.getElementById('bulkSummaryBar').innerHTML = `
+                <span>បានបំពេញ៖ <strong>${validCount} ជួរ</strong></span>
+                <span>សរុបប៉ាន់ស្មាន៖ <strong>${formatMoney(total, config.currency)}</strong></span>
+            `;
+        }
+
+        function saveBulkRows() {
+            const walletId = document.getElementById('bulkWalletId').value || wallets[0].id;
+            const date = document.getElementById('bulkCommonDate').value || getTodayStr();
+            const cards = document.querySelectorAll('#bulkRowsContainer .bulk-row-card');
+            const added = [];
+
+            cards.forEach((card, idx) => {
+                const amount = parseFloat(card.querySelector('.bulk-amount').value);
+                if (!amount || amount <= 0) return;
+                const type = card.querySelector('.bulk-type').value;
+                const category = card.querySelector('.bulk-cat').value;
+                const payRaw = card.querySelector('.bulk-pay').value;
+                const paymentMethod = payRaw.startsWith('bank:') ? 'bank' : 'cash';
+                const bankName = payRaw.startsWith('bank:') ? payRaw.split(':')[1] : '';
+                const currency = card.querySelector('.bulk-curr').value;
+                const note = card.querySelector('.bulk-note').value.trim();
+
+                added.push({
+                    id: 'tx_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
+                    walletId, type, paymentMethod, bankName, amount, currency, category, date, note
+                });
+            });
+
+            if (added.length === 0) {
+                notify('សូមបញ្ចូលចំនួនទឹកប្រាក់យ៉ាងតិច ១ ជួរ!');
+                return;
+            }
+
+            transactions = [...added, ...transactions];
+            saveData();
+            closeModalById('bulkModal');
+            renderAll();
+            notify(`បានរក្សាទុកកំណត់ត្រាចំនួន ${added.length} ជួរជោគជ័យ!`);
+        }
+
+        // 8. SETTINGS & WALLETS
+        function renderSettings() {
+            document.getElementById('setCurrency').value = config.currency;
+            document.getElementById('setRate').value = config.rate;
+            const syncInp = document.getElementById('syncRoomInput');
+            if (syncInp && config.syncCode) syncInp.value = config.syncCode;
+            updateSyncStatusUI(config.syncCode ? `✅ បានភ្ជាប់ (${config.syncCode})` : 'មិនទាន់ភ្ជាប់', Boolean(config.syncCode));
+
+            document.getElementById('settingsWalletList').innerHTML = wallets.map(w => `
+                <div class="list-item" style="margin-bottom: 8px; padding: 10px 14px;">
+                    <div class="item-left">
+                        <div class="item-icon" style="width: 38px; height: 38px; font-size: 18px; background: #f1f5f9;">${w.emoji}</div>
+                        <div class="item-info">
+                            <div class="item-title">${escapeHTML(w.name)}</div>
+                        </div>
+                    </div>
+                    ${wallets.length > 1 ? `<button type="button" class="icon-btn del" onclick="deleteWallet('${w.id}')">🗑️</button>` : '<span class="tag-pill">លំនាំដើម</span>'}
+                </div>
+            `).join('');
+
+            const pinStatus = document.getElementById('pinStatusText');
+            const disableBtn = document.getElementById('btnDisablePin');
+            if (config.pin && config.pin.length === 4) {
+                pinStatus.innerHTML = 'បច្ចុប្បន្ន៖ <strong>បានបើកការចាក់សោ PIN រួចរាល់ ✅</strong>';
+                disableBtn.style.display = 'inline-flex';
+            } else {
+                pinStatus.innerHTML = 'បច្ចុប្បន្ន៖ <strong>មិនទាន់បានបើកការចាក់សោ PIN ទេ</strong>';
+                disableBtn.style.display = 'none';
+            }
+        }
+
+        function saveGeneralSettings() {
+            const curr = document.getElementById('setCurrency').value;
+            const rate = parseFloat(document.getElementById('setRate').value);
+            if (!rate || rate <= 0) {
+                notify('សូមបញ្ចូលអត្រាប្តូរប្រាក់ឱ្យបានត្រឹមត្រូវ!');
+                return;
+            }
+            config.currency = curr;
+            config.rate = rate;
+            saveData();
+            updateCurrencyButtons();
+            renderAll();
+            notify('បានរក្សាទុកការកំណត់រួចរាល់!');
+        }
+
+        function addNewWallet() {
+            const emoji = document.getElementById('newWalletEmoji').value;
+            const name = document.getElementById('newWalletName').value.trim();
+            if (!name) {
+                notify('សូមបញ្ចូលឈ្មោះកាបូបលុយ!');
+                return;
+            }
+            wallets.push({ id: 'w_' + Date.now(), name, emoji });
+            document.getElementById('newWalletName').value = '';
+            saveData();
+            renderWalletPills();
+            renderSettings();
+            notify(`បានបង្កើតកាបូប "${name}" រួចរាល់!`);
+        }
+
+        function deleteWallet(wId) {
+            if (wallets.length <= 1) return;
+            wallets = wallets.filter(w => w.id !== wId);
+            transactions = transactions.map(t => t.walletId === wId ? { ...t, walletId: wallets[0].id } : t);
+            if (activeWalletId === wId) activeWalletId = 'all';
+            saveData();
+            renderWalletPills();
+            renderSettings();
+            renderAll();
+            notify('បានលុបកាបូបលុយរួចរាល់');
+        }
+
+        // 9. REPORTS & SAVINGS GOALS
+        function renderReports() {
+            const yearSel = document.getElementById('reportYearSelect');
+            const currentYear = new Date().getFullYear();
+            if (yearSel.options.length === 0) {
+                for (let y = currentYear + 1; y >= currentYear - 4; y--) {
+                    const opt = document.createElement('option');
+                    opt.value = String(y);
+                    opt.textContent = `ឆ្នាំ ${y}`;
+                    if (y === currentYear) opt.selected = true;
+                    yearSel.appendChild(opt);
+                }
+            }
+            const targetYear = yearSel.value || String(currentYear);
+            const walletTx = getWalletScopedTx();
+
+            let yrInc = 0, yrExp = 0;
+            const monthlyStats = Array.from({ length: 12 }, (_, mIdx) => {
+                const mStr = `${targetYear}-${String(mIdx + 1).padStart(2, '0')}`;
+                let inc = 0, exp = 0, count = 0;
+                walletTx.forEach(tx => {
+                    if ((tx.date || '').startsWith(mStr)) {
+                        const val = convertMoney(tx.amount, tx.currency, config.currency);
+                        if (tx.type === 'income') inc += val; else exp += val;
+                        count++;
+                    }
+                });
+                yrInc += inc;
+                yrExp += exp;
+                return { monthIdx: mIdx, mStr, inc, exp, net: inc - exp, count };
+            });
+
+            document.getElementById('reportYearlyOverview').innerHTML = `
+                <div style="background: var(--income-bg); padding: 14px; border-radius: var(--radius-md); border: 1px solid #99f6e4;">
+                    <div style="font-size: 13.5px; color: var(--income); font-weight: 700;">ចំណូលសរុបឆ្នាំ ${targetYear}</div>
+                    <div style="font-size: 20px; font-weight: 800; color: var(--income); margin-top: 2px;">${formatMoney(yrInc, config.currency)}</div>
+                </div>
+                <div style="background: var(--expense-bg); padding: 14px; border-radius: var(--radius-md); border: 1px solid #fecaca;">
+                    <div style="font-size: 13.5px; color: var(--expense); font-weight: 700;">ចំណាយសរុបឆ្នាំ ${targetYear}</div>
+                    <div style="font-size: 20px; font-weight: 800; color: var(--expense); margin-top: 2px;">${formatMoney(yrExp, config.currency)}</div>
+                </div>
+            `;
+
+            const maxVal = Math.max(1, ...monthlyStats.map(s => Math.max(s.inc, s.exp)));
+            document.getElementById('yearlyBarChart').innerHTML = monthlyStats.map(s => {
+                const incH = Math.round((s.inc / maxVal) * 105);
+                const expH = Math.round((s.exp / maxVal) * 105);
+                return `
+                    <div class="bar-col" onclick="jumpToMonth('${s.mStr}')" title="${KHMER_MONTHS[s.monthIdx]}">
+                        <div class="bar-pair">
+                            <div class="bar-stick inc" style="height: ${Math.max(4, incH)}px;"></div>
+                            <div class="bar-stick exp" style="height: ${Math.max(4, expH)}px;"></div>
+                        </div>
+                        <div class="bar-label">ខែ ${s.monthIdx + 1}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('monthlyBreakdownCards').innerHTML = monthlyStats.map(s => `
+                <div class="list-item" style="cursor: pointer;" onclick="jumpToMonth('${s.mStr}')">
+                    <div class="item-left">
+                        <div class="item-icon" style="background: #f0fdfa; color: var(--primary); font-weight: 800; font-size: 14px;">ខែ ${s.monthIdx + 1}</div>
+                        <div class="item-info">
+                            <div class="item-title">${KHMER_MONTHS[s.monthIdx]} ${targetYear} (${s.count} ប្រតិបត្តិការ)</div>
+                            <div class="item-sub">
+                                <span style="color: var(--income); font-weight: 700;">↓ ${formatMoney(s.inc, config.currency)}</span> •
+                                <span style="color: var(--expense); font-weight: 700;">↑ ${formatMoney(s.exp, config.currency)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <div class="item-amount" style="color: ${s.net >= 0 ? 'var(--primary)' : 'var(--expense)'};">
+                            ${s.net >= 0 ? '+' : ''}${formatMoney(s.net, config.currency)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function jumpToMonth(mStr) {
+            selectedMonth = mStr;
+            document.getElementById('monthPicker').value = mStr;
+            setTimeframeMode('month');
+            switchView('transactions');
+        }
+
+        function renderSavingsViews() {
+            const container = document.getElementById('savingsListContainer');
+            if (!container) return;
+            if (goals.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div style="font-size: 36px; margin-bottom: 6px;">🐷</div><div style="font-weight: 700;">មិនទាន់មានគោលដៅប្រាក់សន្សំនៅឡើយទេ</div></div>`;
+                return;
+            }
+            container.innerHTML = goals.map(g => {
+                const target = convertMoney(g.target, g.currency, config.currency);
+                const saved = convertMoney(g.saved, g.currency, config.currency);
+                const pct = target > 0 ? Math.min(100, Math.round((saved / target) * 100)) : 0;
+                const remain = Math.max(0, target - saved);
+
+                return `
+                    <div class="card" style="margin-bottom: 12px; border: 1.5px solid var(--border);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 44px; height: 44px; border-radius: 12px; background: #fef3c7; display: flex; align-items: center; justify-content: center; font-size: 22px;">${g.emoji || '🐷'}</div>
+                                <div>
+                                    <div style="font-size: 16px; font-weight: 800;">${escapeHTML(g.name)}</div>
+                                    <div style="font-size: 13.5px; color: var(--text-muted);">គោលដៅ៖ <strong>${formatMoney(target, config.currency)}</strong> • នៅខ្វះ៖ ${formatMoney(remain, config.currency)}</div>
+                                </div>
+                            </div>
+                            <button type="button" class="icon-btn del" onclick="deleteGoal('${g.id}')">🗑️</button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; margin-bottom: 4px;">
+                            <span style="color: var(--primary);">សន្សំបាន៖ ${formatMoney(saved, config.currency)}</span>
+                            <span>${pct}%</span>
+                        </div>
+                        <div class="progress-track" style="height: 10px; margin-bottom: 12px;">
+                            <div class="progress-fill" style="width: ${pct}%; background: linear-gradient(90deg, var(--primary), #10b981);"></div>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="openGoalAction('${g.id}', 'deposit')">➕ ដាក់សន្សំបន្ថែម</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openGoalAction('${g.id}', 'withdraw')">➖ ដកប្រាក់សន្សំ</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openGoalModal() {
+            document.getElementById('goalName').value = '';
+            document.getElementById('goalTarget').value = '';
+            document.getElementById('goalCurrency').value = config.currency;
+            openModalById('goalModal');
+        }
+
+        function saveGoal(e) {
+            e.preventDefault();
+            const emoji = document.getElementById('goalEmoji').value;
+            const name = document.getElementById('goalName').value.trim();
+            const target = parseFloat(document.getElementById('goalTarget').value);
+            const currency = document.getElementById('goalCurrency').value;
+            if (!name || !target || target <= 0) return;
+
+            goals.unshift({ id: 'g_' + Date.now(), emoji, name, target, saved: 0, currency });
+            saveData();
+            closeModalById('goalModal');
+            renderSavingsViews();
+            renderAll();
+            notify('បានបង្កើតគោលដៅប្រាក់សន្សំថ្មី!');
+        }
+
+        function openGoalAction(gId, actionType) {
+            const g = goals.find(item => item.id === gId);
+            if (!g) return;
+            document.getElementById('goalActId').value = gId;
+            document.getElementById('goalActType').value = actionType;
+            document.getElementById('goalActAmount').value = '';
+            document.getElementById('goalActionTitle').textContent = actionType === 'deposit' ? `➕ ដាក់ប្រាក់សន្សំ (${g.name})` : `➖ ដកប្រាក់សន្សំ (${g.name})`;
+            openModalById('goalActionModal');
+        }
+
+        function submitGoalAction(e) {
+            e.preventDefault();
+            const gId = document.getElementById('goalActId').value;
+            const actionType = document.getElementById('goalActType').value;
+            const amount = parseFloat(document.getElementById('goalActAmount').value);
+            const syncToLedger = document.getElementById('goalSyncLedger').checked;
+
+            const g = goals.find(item => item.id === gId);
+            if (!g || !amount || amount <= 0) return;
+
+            if (actionType === 'deposit') {
+                g.saved += amount;
+                if (syncToLedger) {
+                    transactions.unshift({
+                        id: 'tx_' + Date.now(),
+                        walletId: activeWalletId !== 'all' ? activeWalletId : wallets[0].id,
+                        type: 'expense',
+                        paymentMethod: 'cash',
+                        bankName: '',
+                        amount,
+                        currency: g.currency,
+                        category: 'other_exp',
+                        date: getTodayStr(),
+                        note: `ដាក់ប្រាក់សន្សំ៖ ${g.name}`
+                    });
+                }
+                notify(`បានដាក់ប្រាក់សន្សំ ${formatMoney(amount, g.currency)} រួចរាល់!`);
+            } else {
+                g.saved = Math.max(0, g.saved - amount);
+                if (syncToLedger) {
+                    transactions.unshift({
+                        id: 'tx_' + Date.now(),
+                        walletId: activeWalletId !== 'all' ? activeWalletId : wallets[0].id,
+                        type: 'income',
+                        paymentMethod: 'cash',
+                        bankName: '',
+                        amount,
+                        currency: g.currency,
+                        category: 'other_inc',
+                        date: getTodayStr(),
+                        note: `ដកប្រាក់សន្សំ៖ ${g.name}`
+                    });
+                }
+                notify(`បានដកប្រាក់សន្សំ ${formatMoney(amount, g.currency)} រួចរាល់!`);
+            }
+
+            saveData();
+            closeModalById('goalActionModal');
+            renderSavingsViews();
+            renderAll();
+        }
+
+        function deleteGoal(gId) {
+            goals = goals.filter(g => g.id !== gId);
+            saveData();
+            renderSavingsViews();
+            renderAll();
+            notify('បានលុបគោលដៅប្រាក់សន្សំ');
+        }
+
+        // 10. EXCEL CSV / WORD PASTE / JSON BACKUP
+        function exportCSV(currentPeriodOnly = false) {
+            const list = currentPeriodOnly ? getPeriodFilteredTx() : getWalletScopedTx();
+            if (list.length === 0) {
+                notify('មិនមានទិន្នន័យសម្រាប់ទាញយកទេ!');
+                return;
+            }
+            const headers = ['កាលបរិច្ឆេទ', 'កាបូបលុយ', 'ប្រភេទប្រតិបត្តិការ', 'វិធីសាស្ត្រទូទាត់', 'មុខទំនិញ/ប្រភេទ', 'ចំនួនទឹកប្រាក់ដើម', 'រូបិយប័ណ្ណ', 'គិតជាប្រាក់រៀល (៛)', 'គិតជាប្រាក់ដុល្លារ ($)', 'កំណត់ចំណាំ'];
+            const sorted = [...list].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const rows = sorted.map(tx => [
+                tx.date,
+                `"${getWallet(tx.walletId).name.replace(/"/g, '""')}"`,
+                tx.type === 'income' ? 'ចំណូល' : 'ចំណាយ',
+                tx.paymentMethod === 'bank' ? `"កុងធនាគារ (${tx.bankName || 'Bank'})"` : 'សាច់ប្រាក់សុទ្ធ',
+                getCategory(tx.type, tx.category).name,
+                tx.amount,
+                tx.currency,
+                Math.round(convertMoney(tx.amount, tx.currency, 'KHR')),
+                convertMoney(tx.amount, tx.currency, 'USD').toFixed(2),
+                `"${(tx.note || '').replace(/"/g, '""')}"`
+            ].join(','));
+
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            triggerDownload(blob, `Expense_Report_${getTodayStr()}.csv`);
+            notify('បានទាញយកឯកសារ Excel (CSV) រួចរាល់!');
+        }
+
+        function downloadExcelTemplate() {
+            const headers = ['កាលបរិច្ឆេទ', 'ប្រភេទ', 'ការទូទាត់', 'មុខទំនិញ', 'ចំនួនទឹកប្រាក់', 'រូបិយប័ណ្ណ', 'កំណត់ចំណាំ'];
+            const today = getTodayStr();
+            const sample1 = [today, 'ចំណាយ', 'សាច់ប្រាក់', 'អាហារ', '15000', 'KHR', 'បាយថ្ងៃត្រង់'];
+            const sample2 = [today, 'ចំណាយ', 'ABA Bank', 'ភេសជ្ជៈ', '2.5', 'USD', 'កាហ្វេពេលព្រឹក'];
+            const sample3 = [today, 'ចំណូល', 'ACLEDA Bank', 'ប្រាក់ខែ', '500', 'USD', 'ប្រាក់ខែប្រចាំខែ'];
+            const csvContent = '\uFEFF' + [headers.join(','), sample1.join(','), sample2.join(','), sample3.join(',')].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            triggerDownload(blob, 'Khmer_Expense_Template.csv');
+            notify('បានទាញយកគំរូ Excel រួចរាល់!');
+        }
+
+        function handleCsvUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                document.getElementById('smartPasteBox').value = ev.target.result;
+                parseAndImportText();
+            };
+            reader.readAsText(file, 'UTF-8');
+            e.target.value = '';
+        }
+
+        function parseAndImportText() {
+            const raw = document.getElementById('smartPasteBox').value.trim();
+            if (!raw) {
+                notify('សូមជ្រើសរើសឯកសារ CSV ឬ Paste ទិន្នន័យជាមុនសិន!');
+                return;
+            }
+            const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            const targetWalletId = activeWalletId !== 'all' ? activeWalletId : wallets[0].id;
+            const imported = [];
+
+            lines.forEach((line, idx) => {
+                if (idx === 0 && (line.includes('កាលបរិច្ឆេទ') || line.toLowerCase().includes('date'))) return;
+                const delimiter = line.includes('\t') ? '\t' : (line.includes('|') ? '|' : ',');
+                const cols = line.split(delimiter).map(c => c.replace(/^["']|["']$/g, '').trim());
+                if (cols.length < 2) return;
+
+                let date = getTodayStr();
+                let type = 'expense';
+                let paymentMethod = 'cash';
+                let bankName = '';
+                let category = 'other_exp';
+                let amount = 0;
+                let currency = config.currency;
+                let note = '';
+
+                cols.forEach(cell => {
+                    const lower = cell.toLowerCase();
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(cell)) {
+                        date = cell;
+                    } else if (cell.includes('ចំណូល') || lower === 'income') {
+                        type = 'income';
+                    } else if (cell.includes('ចំណាយ') || lower === 'expense') {
+                        type = 'expense';
+                    } else if (lower.includes('aba')) {
+                        paymentMethod = 'bank'; bankName = 'ABA Bank';
+                    } else if (lower.includes('acleda') || cell.includes('អេស៊ីលីដា')) {
+                        paymentMethod = 'bank'; bankName = 'ACLEDA Bank';
+                    } else if (lower.includes('wing')) {
+                        paymentMethod = 'bank'; bankName = 'Wing Bank';
+                    } else if (cell.includes('ធនាគារ') || lower === 'bank') {
+                        paymentMethod = 'bank'; bankName = 'ធនាគារផ្សេងៗ';
+                    } else if (lower === 'usd' || cell === '$') {
+                        currency = 'USD';
+                    } else if (lower === 'khr' || cell === '៛') {
+                        currency = 'KHR';
+                    } else {
+                        const num = parseFloat(cell.replace(/[,៛$]/g, ''));
+                        if (!isNaN(num) && num > 0 && amount === 0) {
+                            amount = num;
+                        } else if (cell && !cell.includes('សាច់ប្រាក់')) {
+                            const matchedCat = [...CATEGORIES.expense, ...CATEGORIES.income].find(c => cell.includes(c.name));
+                            if (matchedCat) {
+                                category = matchedCat.id;
+                                type = CATEGORIES.income.some(ic => ic.id === matchedCat.id) ? 'income' : 'expense';
+                            } else {
+                                note = note ? `${note} - ${cell}` : cell;
+                            }
+                        }
+                    }
+                });
+
+                if (amount > 0) {
+                    if (type === 'income' && category === 'other_exp') category = 'other_inc';
+                    imported.push({
+                        id: 'tx_' + Date.now() + '_' + idx + '_' + Math.random().toString(36).slice(2, 5),
+                        walletId: targetWalletId,
+                        type,
+                        paymentMethod,
+                        bankName,
+                        amount,
+                        currency,
+                        category,
+                        date,
+                        note
+                    });
+                }
+            });
+
+            if (imported.length === 0) {
+                notify('រកមិនឃើញទិន្នន័យទឹកប្រាក់ត្រឹមត្រូវទេ សូមពិនិត្យទម្រង់ម្តងទៀត!');
+                return;
+            }
+
+            transactions = [...imported, ...transactions];
+            saveData();
+            document.getElementById('smartPasteBox').value = '';
+            renderAll();
+            notify(`បាននាំចូលទិន្នន័យចំនួន ${imported.length} ប្រតិបត្តិការជោគជ័យ!`);
+        }
+
+        function exportBackupJSON() {
+            const backup = {
+                app: 'KhmerExpenseUniversal',
+                version: 6,
+                exportedAt: new Date().toISOString(),
+                config: { currency: config.currency, rate: config.rate },
+                wallets,
+                transactions,
+                goals
+            };
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            triggerDownload(blob, `Khmer_Expense_Backup_${getTodayStr()}.json`);
+            notify('បានទាញយកឯកសារ Backup (JSON) រួចរាល់!');
+        }
+
+        function handleBackupUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const parsed = JSON.parse(ev.target.result);
+                    if (!parsed || !Array.isArray(parsed.transactions)) {
+                        notify('ឯកសារ Backup មិនត្រឹមត្រូវទេ!');
+                        return;
+                    }
+                    pendingBackupData = parsed;
+                    openModalById('restoreChoiceModal');
+                } catch (err) {
+                    notify('មិនអាចអានឯកសារ JSON បានទេ!');
+                }
+            };
+            reader.readAsText(file, 'UTF-8');
+            e.target.value = '';
+        }
+
+        function applyBackupRestore(mode) {
+            if (!pendingBackupData) return;
+            if (mode === 'overwrite') {
+                if (Array.isArray(pendingBackupData.wallets) && pendingBackupData.wallets.length > 0) wallets = pendingBackupData.wallets;
+                transactions = pendingBackupData.transactions.map(t => ({
+                    ...t,
+                    walletId: t.walletId || wallets[0].id,
+                    paymentMethod: t.paymentMethod || 'cash',
+                    bankName: t.bankName || ''
+                }));
+                if (Array.isArray(pendingBackupData.goals)) goals = pendingBackupData.goals;
+                notify(`បានជំនួសទិន្នន័យសរុប ${transactions.length} ប្រតិបត្តិការជោគជ័យ!`);
+            } else {
+                const wMap = new Map(wallets.map(w => [w.id, w]));
+                (pendingBackupData.wallets || []).forEach(w => { if (!wMap.has(w.id)) wMap.set(w.id, w); });
+                wallets = Array.from(wMap.values());
+
+                const txMap = new Map(transactions.map(t => [t.id, t]));
+                let addedCount = 0;
+                pendingBackupData.transactions.forEach(t => {
+                    if (!txMap.has(t.id)) {
+                        txMap.set(t.id, {
+                            ...t,
+                            walletId: t.walletId || wallets[0].id,
+                            paymentMethod: t.paymentMethod || 'cash',
+                            bankName: t.bankName || ''
+                        });
+                        addedCount++;
+                    }
+                });
+                transactions = Array.from(txMap.values());
+
+                const gMap = new Map(goals.map(g => [g.id, g]));
+                (pendingBackupData.goals || []).forEach(g => { if (!gMap.has(g.id)) gMap.set(g.id, g); });
+                goals = Array.from(gMap.values());
+                notify(`បានបូកបញ្ចូលទិន្នន័យថ្មីបន្ថែម ${addedCount} ប្រតិបត្តិការ!`);
+            }
+
+            pendingBackupData = null;
+            saveData();
+            closeModalById('restoreChoiceModal');
+            renderWalletPills();
+            renderSettings();
+            renderAll();
+        }
+
+        function triggerDownload(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        // 11. PIN LOCK & KEYBOARD SHORTCUTS
+        function savePinSetting() {
+            const val = document.getElementById('newPinInput').value.trim();
+            if (!/^\d{4}$/.test(val)) {
+                notify('សូមបញ្ចូលលេខកូដសម្ងាត់ ៤ ខ្ទង់ (0-9)!');
+                return;
+            }
+            config.pin = val;
+            document.getElementById('newPinInput').value = '';
+            saveData();
+            renderSettings();
+            notify('បានកំណត់លេខកូដសម្ងាត់ PIN រួចរាល់!');
+        }
+
+        function disablePinSetting() {
+            config.pin = '';
+            saveData();
+            renderSettings();
+            notify('បានបិទការចាក់សោ PIN រួចរាល់!');
+        }
+
+        function lockAppNow() {
+            if (!config.pin || config.pin.length !== 4) {
+                switchView('settings');
+                notify('សូមកំណត់លេខកូដ PIN ៤ ខ្ទង់ជាមុនសិន!');
+                return;
+            }
+            pinBuffer = '';
+            updatePinDots();
+            document.getElementById('pinLockScreen').classList.add('active');
+        }
+
+        function pressPinKey(digit) {
+            if (pinBuffer.length >= 4) return;
+            pinBuffer += digit;
+            updatePinDots();
+            if (pinBuffer.length === 4) {
+                if (pinBuffer === config.pin) {
+                    setTimeout(() => {
+                        document.getElementById('pinLockScreen').classList.remove('active');
+                        pinBuffer = '';
+                        updatePinDots();
+                    }, 120);
+                } else {
+                    const errEl = document.getElementById('pinErrText');
+                    errEl.textContent = '❌ លេខកូដសម្ងាត់មិនត្រឹមត្រូវ សូមសាកល្បងម្តងទៀត!';
+                    setTimeout(() => {
+                        pinBuffer = '';
+                        updatePinDots();
+                        errEl.textContent = '';
+                    }, 700);
+                }
+            }
+        }
+
+        function clearPinKey() {
+            pinBuffer = '';
+            updatePinDots();
+        }
+
+        function backPinKey() {
+            pinBuffer = pinBuffer.slice(0, -1);
+            updatePinDots();
+        }
+
+        function updatePinDots() {
+            document.querySelectorAll('#pinDotsRow .pin-dot').forEach((dot, idx) => {
+                dot.classList.toggle('filled', idx < pinBuffer.length);
+            });
+        }
+
+        // 12. INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+
+            const today = getTodayStr();
+            lastKnownTodayStr = today;
+            selectedDate = today;
+            selectedMonth = today.slice(0, 7);
+
+            document.getElementById('dayPicker').value = selectedDate;
+            document.getElementById('monthPicker').value = selectedMonth;
+
+            updateCurrencyButtons();
+            renderWalletPills();
+            setTimeframeMode('month');
+
+            document.querySelectorAll('.modal-backdrop:not(.no-backdrop-close)').forEach(backdrop => {
+                backdrop.addEventListener('click', (e) => {
+                    if (e.target === backdrop) closeModalById(backdrop.id);
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                const lockActive = document.getElementById('pinLockScreen').classList.contains('active');
+                if (lockActive) {
+                    if (/^[0-9]$/.test(e.key)) pressPinKey(e.key);
+                    else if (e.key === 'Backspace') backPinKey();
+                    return;
+                }
+
+                const anyModalOpen = document.querySelector('.modal-backdrop.open');
+                if (e.key === 'Escape' && anyModalOpen) {
+                    closeModalById(anyModalOpen.id);
+                    return;
+                }
+
+                const tag = (e.target.tagName || '').toLowerCase();
+                if (tag === 'input' || tag === 'textarea' || tag === 'select' || anyModalOpen) return;
+
+                if (e.key.toLowerCase() === 'n') {
+                    e.preventDefault();
+                    openTxModal();
+                } else if (e.key.toLowerCase() === 'b') {
+                    e.preventDefault();
+                    openBulkModal();
+                } else if (e.key === '/') {
+                    e.preventDefault();
+                    switchView('transactions');
+                    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+                }
+            });
+
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', adjustModalForKeyboard);
+            }
+
+            const checkMidnightRollover = () => {
+                const nowToday = getTodayStr();
+                if (lastKnownTodayStr && nowToday !== lastKnownTodayStr) {
+                    lastKnownTodayStr = nowToday;
+                    selectedDate = nowToday;
+                    selectedMonth = nowToday.slice(0, 7);
+                    document.getElementById('dayPicker').value = selectedDate;
+                    document.getElementById('monthPicker').value = selectedMonth;
+                    renderAll();
+                }
+            };
+            window.addEventListener('focus', checkMidnightRollover);
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) checkMidnightRollover();
+            });
+
+            if (config.pin && config.pin.length === 4) {
+                lockAppNow();
+            }
+
+            const startCloud = async () => {
+                if (!window.CloudBridge) return;
+                const ok = await window.CloudBridge.init();
+                if (ok && config.syncCode) {
+                    const remote = await window.CloudBridge.pullOnce(config.syncCode);
+                    if (remote) mergeRemoteSnapshot(remote);
+                    await pushToCloudNow();
+                    window.CloudBridge.subscribe(config.syncCode, mergeRemoteSnapshot);
+                }
+            };
+            if (window.CloudBridge) startCloud();
+            else window.addEventListener('cloud-bridge-ready', startCloud);
+            window.addEventListener('online', () => { if (config.syncCode) pushToCloudNow(); });
+        });
+    </script>
+</body>
+</html>

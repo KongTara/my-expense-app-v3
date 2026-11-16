@@ -975,6 +975,38 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
+        /* Transactions Filter Bar Layout */
+        .tx-filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .tx-filter-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tx-filter-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tx-search-input {
+            flex: 1;
+            min-width: 210px;
+        }
+
         /* ==========================================
            100% OFFLINE REPORT CHARTS
            ========================================== */
@@ -1564,6 +1596,50 @@
                 gap: 12px;
             }
 
+            /* Clean Stacked Filter Controls on Mobile (#view-transactions) */
+            .tx-filter-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .tx-filter-left {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+                gap: 9px;
+            }
+
+            .tx-search-input {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .tx-filter-left .segmented-control {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .tx-filter-left .seg-btn {
+                text-align: center;
+                padding: 8px 6px;
+            }
+
+            #paymentFilterSelect {
+                width: 100%;
+            }
+
+            .tx-filter-right {
+                width: 100%;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            .tx-filter-right .active-period-badge {
+                flex-shrink: 0;
+            }
+
             .input-control,
             select,
             textarea {
@@ -1875,9 +1951,9 @@
                  ========================================== -->
             <section id="view-transactions" class="view-section">
                 <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; min-width: 0;">
-                            <input type="text" id="searchInput" class="input-control" style="flex: 1; min-width: 210px;" oninput="renderAll()" placeholder="🔍 ស្វែងរកតាមឈ្មោះមុខទំនិញ កំណត់ចំណាំ ឬធនាគារ...">
+                    <div class="tx-filter-header">
+                        <div class="tx-filter-left">
+                            <input type="text" id="searchInput" class="input-control tx-search-input" oninput="renderAll()" placeholder="🔍 ស្វែងរកតាមឈ្មោះមុខទំនិញ កំណត់ចំណាំ ឬធនាគារ...">
                             <div class="segmented-control">
                                 <button type="button" id="seg-all" class="seg-btn active" onclick="setTypeFilter('all')">ទាំងអស់</button>
                                 <button type="button" id="seg-income" class="seg-btn" onclick="setTypeFilter('income')">ចំណូល</button>
@@ -1889,10 +1965,12 @@
                                 <option value="bank">🏦 ធនាគារ</option>
                             </select>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <div class="tx-filter-right">
                             <span id="txCountBadge" class="active-period-badge">0 ប្រតិបត្តិការ</span>
-                            <button type="button" class="btn-secondary" onclick="exportCSV(true)">📥 Excel</button>
-                            <button type="button" class="btn-secondary" onclick="exportWord(true)">📄 Word</button>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <button type="button" class="btn-secondary" style="padding: 7px 11px;" onclick="exportCSV(true)">📥 Excel</button>
+                                <button type="button" class="btn-secondary" style="padding: 7px 11px;" onclick="exportWord(true)">📄 Word</button>
+                            </div>
                         </div>
                     </div>
 

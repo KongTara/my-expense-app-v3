@@ -2031,11 +2031,15 @@
                                 <input type="text" id="cloudSyncKeyInput" class="input-control" style="flex: 1; min-width: 160px;" placeholder="ឧ. tara-family-2026">
                                 <button type="button" class="btn-secondary" onclick="generateSyncKey()">🎲 បង្កើតកូដ</button>
                             </div>
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                <button type="button" class="btn-primary" onclick="cloudPushData()">☁️ រុញឡើង Cloud</button>
-                                <button type="button" class="btn-secondary" onclick="cloudPullData()">📥 ទាញពី Cloud</button>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;">
+                                <button type="button" id="btnCloudPush" class="btn-primary" onclick="cloudPushData()">☁️ រុញឡើង Cloud</button>
+                                <button type="button" id="btnCloudPull" class="btn-secondary" onclick="cloudPullData()">📥 ទាញពី Cloud</button>
                             </div>
-                            <div id="cloudSyncStatus" style="font-size: 12.5px; color: var(--text-muted); margin-top: 8px;">ស្ថានភាព៖ រក្សាទុកក្នុងឧបករណ៍ (Offline)</div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; padding-top: 8px; border-top: 1px dashed var(--border);">
+                                <button type="button" class="btn-secondary" style="font-size: 12.5px; padding: 6px 11px;" onclick="copySyncTextCode()">📋 ចម្លងកូដទិន្នន័យ (Copy)</button>
+                                <button type="button" class="btn-secondary" style="font-size: 12.5px; padding: 6px 11px;" onclick="openPasteSyncModal()">📥 បិទភ្ជាប់កូដ (Paste)</button>
+                            </div>
+                            <div id="cloudSyncStatus" style="font-size: 12.5px; color: var(--text-muted); margin-top: 8px; font-weight: 600;">ស្ថានភាព៖ រក្សាទុកក្នុងឧបករណ៍ (Offline)</div>
                         </div>
 
                         <!-- Box 5: Export Reports (Excel & Word) -->
@@ -2286,6 +2290,24 @@
             <div style="display: flex; justify-content: center; gap: 10px; margin-top: 6px;">
                 <button type="button" class="btn-secondary" onclick="closeConfirmModal()">បោះបង់</button>
                 <button type="button" id="confirmModalActionBtn" class="btn-danger">🗑️ បញ្ជាក់ការលុប</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paste Sync Text Code Modal -->
+    <div id="pasteSyncModal" class="modal-backdrop" onclick="if(event.target===this) closePasteSyncModal()">
+        <div class="modal-box" style="max-width: 460px;">
+            <div class="modal-header">
+                <div class="modal-title">📥 បិទភ្ជាប់កូដទិន្នន័យ (Paste Sync Code)</div>
+                <button type="button" class="action-icon-btn" onclick="closePasteSyncModal()">✕</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted);">
+                បិទភ្ជាប់កូដទិន្នន័យដែលបានចម្លងពីកុំព្យូទ័រ ឬទូរសព្ទផ្សេងទៀតនៅខាងក្រោម ដើម្បីធ្វើបច្ចុប្បន្នភាពទិន្នន័យភ្លាមៗ៖
+            </p>
+            <textarea id="pasteSyncTextarea" class="input-control" rows="5" style="width: 100%; resize: vertical; font-size: 12.5px;" placeholder="បិទភ្ជាប់កូដ KHSYNC:... នៅទីនេះ"></textarea>
+            <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                <button type="button" class="btn-secondary" onclick="closePasteSyncModal()">បោះបង់</button>
+                <button type="button" class="btn-primary" onclick="applyPastedSyncCode()">✅ ទាញយកទិន្នន័យ</button>
             </div>
         </div>
     </div>
@@ -3591,9 +3613,11 @@
             if (!g) return;
             document.getElementById('adjustGoalId').value = goalId;
             document.getElementById('adjustGoalMode').value = mode;
-            document.getElementById('goalAdjustTitle').textContent = mode === 'add' ? `＋ ដាក់សន្សំ៖ ${g.title}` : `－ ដកប្រាក់៖ ${g.title}`;
-            document.getElementById('goalAdjustLabel').textContent = `ចំនួនទឹកប្រាក់ (${config.currency === 'KHR' ? '៛ រៀល' : '$ ដុល្លារ'})`;
             document.getElementById('goalAdjustAmount').value = '';
+            document.getElementById('goalAdjustTitle').textContent = mode === 'add'
+                ? `➕ ដាក់ប្រាក់សន្សំ (${g.title})`
+                : `➖ ដកប្រាក់សន្សំ (${g.title})`;
+            document.getElementById('goalAdjustLabel').textContent = `ចំនួនទឹកប្រាក់ (${config.currency === 'USD' ? '$' : '៛'}) *`;
             document.getElementById('goalAdjustModal').classList.add('open');
         }
 
@@ -3608,16 +3632,16 @@
             const rawAmt = parseFloat(document.getElementById('goalAdjustAmount').value) || 0;
             if (rawAmt <= 0) return;
 
-            const amtKHR = convertMoney(rawAmt, config.currency, 'KHR');
-            const g = goals.find(item => item.id === goalId);
-            if (!g) return;
+            const idx = goals.findIndex(g => g.id === goalId);
+            if (idx === -1) return;
 
+            const amtKHR = convertMoney(rawAmt, config.currency, 'KHR');
             if (mode === 'add') {
-                g.saved = (Number(g.saved) || 0) + amtKHR;
-                showToast('✅ បានដាក់ប្រាក់សន្សំបន្ថែម!');
+                goals[idx].saved = (Number(goals[idx].saved) || 0) + amtKHR;
+                showToast('💰 បានបន្ថែមប្រាក់សន្សំជោគជ័យ!');
             } else {
-                g.saved = Math.max(0, (Number(g.saved) || 0) - amtKHR);
-                showToast('✅ បានដកប្រាក់សន្សំរួចរាល់!');
+                goals[idx].saved = Math.max(0, (Number(goals[idx].saved) || 0) - amtKHR);
+                showToast('💸 បានដកប្រាក់សន្សំរួចរាល់!');
             }
 
             saveStorage();
@@ -3627,7 +3651,7 @@
 
         function deleteGoal(goalId) {
             document.getElementById('confirmModalTitle').textContent = 'លុបគោលដៅប្រាក់សន្សំនេះ?';
-            document.getElementById('confirmModalDesc').textContent = 'គោលដៅនេះនឹងត្រូវលុបចេញពីបញ្ជី។';
+            document.getElementById('confirmModalDesc').textContent = 'គោលដៅប្រាក់សន្សំនេះនឹងត្រូវលុបចេញពីបញ្ជី។';
             pendingConfirmCallback = () => {
                 goals = goals.filter(g => g.id !== goalId);
                 saveStorage();
@@ -3638,23 +3662,36 @@
         }
 
         /* ==========================================
-           9. SETTINGS, PIN LOCK, CLOUD SYNC & EXPORT
+           9. SETTINGS, WALLETS, PIN & CLOUD SYNC
            ========================================== */
         function renderSettingsUI() {
-            document.getElementById('settingCurrency').value = config.currency;
-            document.getElementById('settingRate').value = config.exchangeRate;
-            document.getElementById('cloudSyncKeyInput').value = config.syncKey || '';
-            document.getElementById('pinStatusHint').textContent = config.pin
-                ? '🟢 បានបើកដំណើរការលេខកូដ PIN សុវត្ថិភាពរួចរាល់'
-                : 'មិនទាន់បានកំណត់លេខកូដ PIN នៅឡើយទេ';
+            const curSel = document.getElementById('settingCurrency');
+            const rateIn = document.getElementById('settingRate');
+            const syncIn = document.getElementById('cloudSyncKeyInput');
+            const pinHint = document.getElementById('pinStatusHint');
+            const syncStatus = document.getElementById('cloudSyncStatus');
+
+            if (curSel) curSel.value = config.currency || 'KHR';
+            if (rateIn) rateIn.value = config.exchangeRate || 4000;
+            if (syncIn) syncIn.value = config.syncKey || '';
+            if (pinHint) {
+                pinHint.textContent = (config.pin && /^\d{4}$/.test(config.pin))
+                    ? '✅ បានបើកដំណើរការលេខកូដ PIN ៤ ខ្ទង់រួចរាល់'
+                    : 'មិនទាន់បានកំណត់លេខកូដ PIN នៅឡើយទេ';
+            }
+            if (syncStatus && config.lastSync) {
+                syncStatus.textContent = `ស្ថានភាព៖ ធ្វើសមកាលកម្មចុងក្រោយម៉ោង ${config.lastSync}`;
+            }
 
             const wList = document.getElementById('settingsWalletList');
-            wList.innerHTML = wallets.map(w => `
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border: 1px solid var(--border); border-radius: 11px;">
-                    <span style="font-weight: 700;">${w.emoji} ${escapeHTML(w.name)}</span>
-                    ${wallets.length > 1 ? `<button type="button" class="action-icon-btn del" onclick="deleteWallet('${w.id}')">🗑️</button>` : '<span style="font-size: 11px; color: var(--text-muted);">គោល</span>'}
-                </div>
-            `).join('');
+            if (wList) {
+                wList.innerHTML = wallets.map(w => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border: 1px solid var(--border); border-radius: 11px; background: #f8fafc;">
+                        <span style="font-weight: 700;">${w.emoji} ${escapeHTML(w.name)}</span>
+                        ${wallets.length > 1 ? `<button type="button" class="action-icon-btn del" onclick="deleteWallet('${w.id}')" title="លុប">🗑️</button>` : '<span style="font-size: 11.5px; color: var(--text-muted);">គោល</span>'}
+                    </div>
+                `).join('');
+            }
         }
 
         function saveSettingsConfig() {
@@ -3673,10 +3710,17 @@
         }
 
         function addNewWallet() {
-            const emoji = document.getElementById('newWalletEmoji').value;
+            const emoji = document.getElementById('newWalletEmoji').value || '👛';
             const name = document.getElementById('newWalletName').value.trim();
-            if (!name) return;
-            wallets.push({ id: 'w_' + Date.now(), name, emoji });
+            if (!name) {
+                showToast('⚠️ សូមបញ្ចូលឈ្មោះកាបូបលុយ');
+                return;
+            }
+            wallets.push({
+                id: 'w_' + Date.now(),
+                name,
+                emoji
+            });
             document.getElementById('newWalletName').value = '';
             saveStorage();
             renderWalletUI();
@@ -3695,14 +3739,13 @@
             showToast('🗑️ បានលុបកាបូបលុយ');
         }
 
-        /* PIN Lock */
         function savePinSetting() {
-            const pinVal = (document.getElementById('settingPinInput').value || '').trim();
-            if (!/^\d{4}$/.test(pinVal)) {
-                showToast('⚠️ សូមបញ្ចូលលេខ PIN ៤ ខ្ទង់ (ឧ. 1234)');
+            const val = (document.getElementById('settingPinInput').value || '').trim();
+            if (!/^\d{4}$/.test(val)) {
+                showToast('⚠️ សូមបញ្ចូលលេខកូដ PIN ៤ ខ្ទង់ (លេខសុទ្ធ)');
                 return;
             }
-            config.pin = pinVal;
+            config.pin = val;
             document.getElementById('settingPinInput').value = '';
             saveStorage();
             renderSettingsUI();
@@ -3713,18 +3756,24 @@
             config.pin = '';
             saveStorage();
             renderSettingsUI();
-            showToast('🔓 បានដកលេខកូដ PIN ចេញ');
+            showToast('🔓 បានដកលេខកូដ PIN ចេញរួចរាល់');
         }
 
         function lockAppNow() {
-            if (!config.pin) {
+            if (!config.pin || !/^\d{4}$/.test(config.pin)) {
                 switchView('settings');
-                showToast('ℹ️ សូមកំណត់លេខកូដ PIN ៤ ខ្ទង់ជាមុនសិន');
+                showToast('ℹ️ សូមកំណត់លេខកូដ PIN ៤ ខ្ទង់នៅទីនេះជាមុនសិន');
                 return;
             }
             enteredPin = '';
             updatePinDots();
+            document.getElementById('pinErrorMsg').textContent = 'សូមបញ្ចូលលេខកូដ PIN ៤ ខ្ទង់';
             document.getElementById('pinOverlay').classList.add('open');
+        }
+
+        function updatePinDots() {
+            const dots = document.querySelectorAll('#pinDots .pin-dot');
+            dots.forEach((d, idx) => d.classList.toggle('filled', idx < enteredPin.length));
         }
 
         function pressPinKey(digit) {
@@ -3732,18 +3781,17 @@
             enteredPin += digit;
             updatePinDots();
             if (enteredPin.length === 4) {
-                if (enteredPin === config.pin) {
-                    document.getElementById('pinOverlay').classList.remove('open');
-                    enteredPin = '';
-                    updatePinDots();
-                } else {
-                    document.getElementById('pinErrorMsg').textContent = '❌ លេខកូដ PIN មិនត្រឹមត្រូវ សូមសាកល្បងម្តងទៀត';
-                    document.getElementById('pinErrorMsg').style.color = 'var(--expense)';
-                    setTimeout(() => {
+                setTimeout(() => {
+                    if (enteredPin === config.pin) {
+                        document.getElementById('pinOverlay').classList.remove('open');
                         enteredPin = '';
                         updatePinDots();
-                    }, 350);
-                }
+                    } else {
+                        document.getElementById('pinErrorMsg').textContent = '❌ លេខកូដ PIN មិនត្រឹមត្រូវ សូមសាកល្បងម្តងទៀត';
+                        enteredPin = '';
+                        updatePinDots();
+                    }
+                }, 140);
             }
         }
 
@@ -3757,71 +3805,240 @@
             updatePinDots();
         }
 
-        function updatePinDots() {
-            const dots = document.querySelectorAll('#pinDots .pin-dot');
-            dots.forEach((dot, idx) => dot.classList.toggle('filled', idx < enteredPin.length));
-        }
-
-        /* Cloud Sync Cross-Device */
+        /* Cloud Sync Cross-Device (Multi-Server CORS-Safe + UTF-8 Base64) */
         function generateSyncKey() {
             const rnd = 'kh-' + Math.random().toString(36).slice(2, 7) + '-' + new Date().getFullYear();
             document.getElementById('cloudSyncKeyInput').value = rnd;
+            config.syncKey = rnd;
+            saveStorage();
+            showToast('🎲 បានបង្កើតលេខកូដសម្ងាត់ថ្មី៖ ' + rnd);
+        }
+
+        function sanitizeCloudTopic(rawKey) {
+            const clean = String(rawKey || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+            return 'kh_fin_sync_v3_' + clean;
+        }
+
+        function encodeSyncPayload(obj) {
+            const jsonStr = JSON.stringify(obj);
+            const bytes = new TextEncoder().encode(jsonStr);
+            let bin = '';
+            for (let i = 0; i < bytes.length; i++) {
+                bin += String.fromCharCode(bytes[i]);
+            }
+            return 'KHSYNC:' + btoa(bin);
+        }
+
+        function decodeSyncPayload(rawText) {
+            const trimmed = String(rawText || '').trim();
+            if (!trimmed) return null;
+            if (trimmed.startsWith('KHSYNC:')) {
+                const b64 = trimmed.slice(7);
+                const bin = atob(b64);
+                const bytes = new Uint8Array(bin.length);
+                for (let i = 0; i < bin.length; i++) {
+                    bytes[i] = bin.charCodeAt(i);
+                }
+                const jsonStr = new TextDecoder().decode(bytes);
+                return JSON.parse(jsonStr);
+            }
+            return JSON.parse(trimmed);
+        }
+
+        function applySyncedDataset(data, key) {
+            if (!data || typeof data !== 'object') return false;
+            if (Array.isArray(data.transactions)) transactions = data.transactions;
+            if (Array.isArray(data.wallets) && data.wallets.length > 0) wallets = data.wallets;
+            if (Array.isArray(data.goals)) goals = data.goals;
+            if (data.config && typeof data.config === 'object') {
+                config = { ...config, ...data.config, syncKey: key || config.syncKey };
+            }
+            saveStorage();
+            updateCurrencyToggleUI();
+            renderWalletUI();
+            renderSettingsUI();
+            renderAll();
+            return true;
         }
 
         async function cloudPushData() {
             const key = (document.getElementById('cloudSyncKeyInput').value || '').trim();
-            if (!key) {
-                showToast('⚠️ សូមបញ្ចូល ឬបង្កើតលេខកូដ Cloud Sync ជាមុនសិន');
+            if (!key || key.length < 4) {
+                showToast('⚠️ សូមបញ្ចូលលេខកូដសម្ងាត់យ៉ាងតិច ៤ ខ្ទង់ (ឬចុច បង្កើតកូដ)');
                 return;
             }
             config.syncKey = key;
             saveStorage();
-            const statusEl = document.getElementById('cloudSyncStatus');
-            statusEl.textContent = '⏳ កំពុងបញ្ជូនទិន្នន័យទៅ Cloud...';
 
+            const statusEl = document.getElementById('cloudSyncStatus');
+            const btnPush = document.getElementById('btnCloudPush');
+            if (btnPush) btnPush.disabled = true;
+            statusEl.style.color = 'var(--primary-dark)';
+            statusEl.textContent = '⏳ កំពុងបញ្ជូនទិន្នន័យទៅ Cloud Server...';
+
+            const topic = sanitizeCloudTopic(key);
+            const payloadObj = { config, wallets, transactions, goals, updatedAt: new Date().toISOString() };
+            const encodedBody = encodeSyncPayload(payloadObj);
+
+            let pushedSuccess = false;
+
+            // Server 1: ntfy.sh CORS-enabled Simple POST (Zero Preflight on iOS Safari & Chrome)
             try {
-                const payload = { config, wallets, transactions, goals, updatedAt: new Date().toISOString() };
-                const res = await fetch(`https://kvdb.io/A9xKp7mN2qR8vL4wZ1yT/${encodeURIComponent(key)}`, {
+                const res1 = await fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
                     method: 'POST',
-                    body: JSON.stringify(payload)
+                    body: encodedBody
                 });
-                if (!res.ok) throw new Error('Sync failed');
-                statusEl.textContent = `✅ បានរុញឡើង Cloud ជោគជ័យ (${new Date().toLocaleTimeString()})`;
-                showToast('☁️ រុញទិន្នន័យឡើង Cloud ជោគជ័យ!');
-            } catch (err) {
-                statusEl.textContent = '⚠️ មិនអាចភ្ជាប់អ៊ីនធឺណិតបានទេ (ទិន្នន័យត្រូវបានរក្សាទុក Offline)';
-                showToast('⚠️ មិនអាចភ្ជាប់ Cloud បានទេ សូមពិនិត្យអ៊ីនធឺណិត');
+                if (res1.ok) pushedSuccess = true;
+            } catch (e1) {
+                console.warn('Primary Cloud endpoint fallback:', e1);
+            }
+
+            // Server 2: kvdb.io Fallback
+            if (!pushedSuccess) {
+                try {
+                    const res2 = await fetch(`https://kvdb.io/Drb3c6s8V5p9q2L7x4N1m9/${encodeURIComponent(topic)}`, {
+                        method: 'POST',
+                        body: encodedBody
+                    });
+                    if (res2.ok) pushedSuccess = true;
+                } catch (e2) {
+                    console.warn('Secondary Cloud endpoint fallback:', e2);
+                }
+            }
+
+            if (btnPush) btnPush.disabled = false;
+
+            if (pushedSuccess) {
+                const timeStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                config.lastSync = timeStr;
+                saveStorage();
+                statusEl.style.color = 'var(--income)';
+                statusEl.textContent = `✅ រុញទិន្នន័យឡើង Cloud បានជោគជ័យ! (${transactions.length} ប្រតិបត្តិការ • ម៉ោង ${timeStr})`;
+                showToast('☁️ រុញទិន្នន័យឡើង Cloud បានជោគជ័យ!');
+            } else {
+                statusEl.style.color = 'var(--expense)';
+                statusEl.textContent = '⚠️ មិនអាចភ្ជាប់ Cloud Server បានទេ សូមពិនិត្យអ៊ីនធឺណិត ឬប្រើប៊ូតុង «📋 ចម្លងកូដទិន្នន័យ»';
+                showToast('⚠️ មិនអាចភ្ជាប់ Cloud Server បានទេ សូមពិនិត្យអ៊ីនធឺណិត');
             }
         }
 
         async function cloudPullData() {
             const key = (document.getElementById('cloudSyncKeyInput').value || '').trim();
-            if (!key) {
-                showToast('⚠️ សូមបញ្ចូលលេខកូដ Cloud Sync របស់អ្នក');
+            if (!key || key.length < 4) {
+                showToast('⚠️ សូមបញ្ចូលលេខកូដសម្ងាត់ដូចគ្នានឹងឧបករណ៍ដើម');
                 return;
             }
             config.syncKey = key;
-            const statusEl = document.getElementById('cloudSyncStatus');
-            statusEl.textContent = '⏳ កំពុងទាញទិន្នន័យពី Cloud...';
+            saveStorage();
 
+            const statusEl = document.getElementById('cloudSyncStatus');
+            const btnPull = document.getElementById('btnCloudPull');
+            if (btnPull) btnPull.disabled = true;
+            statusEl.style.color = 'var(--primary-dark)';
+            statusEl.textContent = '⏳ កំពុងទាញទិន្នន័យពី Cloud Server...';
+
+            const topic = sanitizeCloudTopic(key);
+            let pulledData = null;
+
+            // Server 1: ntfy.sh cached JSON stream
             try {
-                const res = await fetch(`https://kvdb.io/A9xKp7mN2qR8vL4wZ1yT/${encodeURIComponent(key)}`);
-                if (!res.ok) throw new Error('Not found');
-                const data = await res.json();
-                if (Array.isArray(data.transactions)) transactions = data.transactions;
-                if (Array.isArray(data.wallets) && data.wallets.length) wallets = data.wallets;
-                if (Array.isArray(data.goals)) goals = data.goals;
-                if (data.config) config = { ...config, ...data.config, syncKey: key };
-                saveStorage();
-                updateCurrencyToggleUI();
-                renderWalletUI();
-                renderSettingsUI();
-                renderAll();
-                statusEl.textContent = `✅ បានទាញទិន្នន័យពី Cloud ជោគជ័យ (${new Date().toLocaleTimeString()})`;
-                showToast('📥 ទាញទិន្នន័យពី Cloud ជោគជ័យ!');
+                const res1 = await fetch(`https://ntfy.sh/${encodeURIComponent(topic)}/json?poll=1&since=all`, {
+                    cache: 'no-store'
+                });
+                if (res1.ok) {
+                    const rawLines = await res1.text();
+                    const lines = rawLines.trim().split('\n').filter(Boolean);
+                    for (let i = lines.length - 1; i >= 0; i--) {
+                        try {
+                            const msgObj = JSON.parse(lines[i]);
+                            if (msgObj && msgObj.message) {
+                                const decoded = decodeSyncPayload(msgObj.message);
+                                if (decoded && Array.isArray(decoded.transactions)) {
+                                    pulledData = decoded;
+                                    break;
+                                }
+                            }
+                        } catch (parseErr) {}
+                    }
+                }
+            } catch (e1) {
+                console.warn('Primary pull fallback:', e1);
+            }
+
+            // Server 2: kvdb.io Fallback
+            if (!pulledData) {
+                try {
+                    const res2 = await fetch(`https://kvdb.io/Drb3c6s8V5p9q2L7x4N1m9/${encodeURIComponent(topic)}`, {
+                        cache: 'no-store'
+                    });
+                    if (res2.ok) {
+                        const rawText = await res2.text();
+                        const decoded = decodeSyncPayload(rawText);
+                        if (decoded && Array.isArray(decoded.transactions)) {
+                            pulledData = decoded;
+                        }
+                    }
+                } catch (e2) {
+                    console.warn('Secondary pull fallback:', e2);
+                }
+            }
+
+            if (btnPull) btnPull.disabled = false;
+
+            if (pulledData && applySyncedDataset(pulledData, key)) {
+                const timeStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                statusEl.style.color = 'var(--income)';
+                statusEl.textContent = `✅ ទាញទិន្នន័យពី Cloud បានជោគជ័យ! (${transactions.length} ប្រតិបត្តិការ • ម៉ោង ${timeStr})`;
+                showToast('📥 ទាញទិន្នន័យពី Cloud បានជោគជ័យ!');
+            } else {
+                statusEl.style.color = 'var(--expense)';
+                statusEl.textContent = '⚠️ រកមិនឃើញទិន្នន័យសម្រាប់កូដនេះទេ សូមចុច «☁️ រុញឡើង Cloud» លើឧបករណ៍ដើមជាមុនសិន';
+                showToast('⚠️ រកមិនឃើញទិន្នន័យសម្រាប់កូដនេះទេ');
+            }
+        }
+
+        function copySyncTextCode() {
+            const payloadObj = { config, wallets, transactions, goals, updatedAt: new Date().toISOString() };
+            const code = encodeSyncPayload(payloadObj);
+            const temp = document.createElement('textarea');
+            temp.value = code;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                showToast('📋 បានចម្លងកូដទិន្នន័យ! អាចផ្ញើតាម Telegram ទៅឧបករណ៍ផ្សេងបាន');
             } catch (err) {
-                statusEl.textContent = '⚠️ រកមិនឃើញទិន្នន័យសម្រាប់កូដនេះ ឬគ្មានអ៊ីនធឺណិត';
-                showToast('⚠️ មិនអាចទាញទិន្នន័យពី Cloud បានទេ');
+                showToast('⚠️ មិនអាចចម្លងកូដដោយស្វ័យប្រវត្តិបានទេ');
+            }
+            document.body.removeChild(temp);
+        }
+
+        function openPasteSyncModal() {
+            document.getElementById('pasteSyncTextarea').value = '';
+            document.getElementById('pasteSyncModal').classList.add('open');
+        }
+
+        function closePasteSyncModal() {
+            document.getElementById('pasteSyncModal').classList.remove('open');
+        }
+
+        function applyPastedSyncCode() {
+            const raw = document.getElementById('pasteSyncTextarea').value;
+            try {
+                const decoded = decodeSyncPayload(raw);
+                if (decoded && applySyncedDataset(decoded, config.syncKey)) {
+                    closePasteSyncModal();
+                    const statusEl = document.getElementById('cloudSyncStatus');
+                    if (statusEl) {
+                        statusEl.style.color = 'var(--income)';
+                        statusEl.textContent = `✅ បានទាញទិន្នន័យពីកូដបិទភ្ជាប់ជោគជ័យ! (${transactions.length} ប្រតិបត្តិការ)`;
+                    }
+                    showToast('✅ បានធ្វើសមកាលកម្មទិន្នន័យជោគជ័យ!');
+                } else {
+                    showToast('⚠️ កូដទិន្នន័យមិនត្រឹមត្រូវទេ');
+                }
+            } catch (err) {
+                showToast('⚠️ កូដទិន្នន័យមិនត្រឹមត្រូវ ឬខូចទ្រង់ទ្រាយ');
             }
         }
 
@@ -3943,6 +4160,7 @@
                 closeGoalModal();
                 closeGoalAdjustModal();
                 closeConfirmModal();
+                closePasteSyncModal();
                 return;
             }
             const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';

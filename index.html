@@ -1333,6 +1333,14 @@
                 border-radius: 22px 22px 0 0;
                 max-height: 92dvh;
                 padding: 16px 14px calc(18px + env(safe-area-inset-bottom, 0px));
+                overflow-x: hidden !important;
+                overscroll-behavior: none !important;
+            }
+            .bulk-scroll-wrap {
+                overflow-x: hidden !important;
+                overscroll-behavior: none !important;
+                touch-action: pan-y !important;
+                width: 100% !important;
             }
             .bulk-table thead {
                 display: none;
@@ -1341,6 +1349,8 @@
                 display: block;
                 width: 100% !important;
                 min-width: 0 !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
             }
             .bulk-table tr {
                 border: 1px solid var(--border);
@@ -1863,23 +1873,6 @@
                             <div id="cloudSyncStatus" style="margin-top: 8px; font-size: 12px; color: var(--text-muted); font-weight: 600;"></div>
                         </div>
 
-                        <!-- Custom Categories Manager -->
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="card-title">🏷️ គ្រប់គ្រងប្រភេទមុខទំនិញផ្ទាល់ខ្លួន</span>
-                            </div>
-                            <div style="display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;">
-                                <select id="newCatType" class="input-control" style="width: 115px;">
-                                    <option value="expense">↑ ចំណាយ</option>
-                                    <option value="income">↓ ចំណូល</option>
-                                </select>
-                                <input type="text" id="newCatEmoji" class="input-control" style="width: 56px; text-align: center;" value="🛒" maxlength="2">
-                                <input type="text" id="newCatName" class="input-control" style="flex: 1; min-width: 130px;" placeholder="ឈ្មោះប្រភេទថ្មី...">
-                                <button type="button" class="btn-primary" onclick="addCustomCategory()">+ បន្ថែម</button>
-                            </div>
-                            <div id="customCategoriesList" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
-                        </div>
-
                         <!-- Security PIN -->
                         <div class="card">
                             <div class="card-header">
@@ -2042,7 +2035,7 @@
                 <button type="button" class="btn-secondary" onclick="addBulkRow()">+ បន្ថែមជួរថ្មី</button>
             </div>
 
-            <div class="table-wrapper" style="max-height: 56dvh; overflow-y: auto;">
+            <div class="table-wrapper bulk-scroll-wrap" style="max-height: 56dvh; overflow-y: auto;">
                 <table class="tx-table bulk-table">
                     <thead>
                         <tr>
@@ -2226,7 +2219,7 @@
         /* =========================================================
            0. APP VERSION & ZERO-DATA-LOSS AUTO-UPDATE + SCROLL LOCK
            ========================================================= */
-        const APP_VERSION = 'v3.3.1';
+        const APP_VERSION = 'v3.3.2';
         const STORAGE_APP_VER = 'kh_expense_installed_version';
         let _lockedScrollY = 0;
 

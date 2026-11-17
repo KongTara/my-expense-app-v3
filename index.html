@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* =========================================================
-           1. DESIGN TOKENS & GLOBAL RESET (DESKTOP, IPAD, MOBILE)
+           1. DESIGN TOKENS & GLOBAL RESET (READABLE FONTS v3.3.9)
            ========================================================= */
         :root {
             --primary: #0f766e;
@@ -53,8 +53,8 @@
         html, body {
             background-color: var(--bg-app);
             color: var(--text-main);
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 15.5px;
+            line-height: 1.55;
             width: 100%;
             max-width: 100vw;
             overflow-x: hidden;
@@ -91,14 +91,14 @@
             z-index: 9999;
             background: linear-gradient(135deg, #0f766e, #0d9488);
             color: #ffffff;
-            padding: 10px 16px;
+            padding: 10px 18px;
             border-radius: 999px;
             box-shadow: 0 12px 28px rgba(15, 118, 110, 0.35);
             align-items: center;
             gap: 12px;
             max-width: 94vw;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
         }
         .update-banner.show {
             display: flex;
@@ -107,10 +107,10 @@
             background: #facc15;
             color: #0f172a;
             border: none;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 999px;
             font-weight: 800;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
             white-space: nowrap;
         }
@@ -150,27 +150,27 @@
         }
 
         .brand-logo {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 11px;
             background: linear-gradient(135deg, #0f766e, #115e59);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 21px;
             box-shadow: 0 4px 10px rgba(15, 118, 110, 0.25);
             flex-shrink: 0;
         }
 
         .brand-title {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 800;
             color: var(--primary-dark);
             line-height: 1.25;
         }
 
         .brand-sub {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
             font-weight: 600;
         }
@@ -178,20 +178,20 @@
         .nav-menu {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 13px;
+            padding: 11px 14px;
             border-radius: 12px;
             border: none;
             background: transparent;
             color: var(--text-muted);
             font-weight: 700;
-            font-size: 13.5px;
+            font-size: 14.5px;
             cursor: pointer;
             text-align: left;
             transition: all 0.16s ease;
@@ -216,13 +216,13 @@
 
         .pin-lock-btn {
             width: 100%;
-            padding: 10px 12px;
+            padding: 11px 12px;
             border-radius: 12px;
             border: 1px solid var(--border);
             background: #f8fafc;
             color: var(--text-main);
             font-weight: 700;
-            font-size: 12.5px;
+            font-size: 13.5px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -241,7 +241,7 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 10px 12px;
-            font-size: 11.5px;
+            font-size: 12.5px;
             color: var(--text-muted);
         }
 
@@ -256,13 +256,13 @@
             background: #ffffff;
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 1px 6px;
+            padding: 1px 7px;
             font-weight: 800;
-            font-size: 10.5px;
+            font-size: 11.5px;
             color: var(--text-main);
         }
 
-        /* Mobile Top Header (Solid White, Zero Blur Obstruction) */
+        /* Mobile Top Header */
         .mobile-header {
             display: none;
             position: sticky;
@@ -311,13 +311,13 @@
         }
 
         .wallet-pill {
-            padding: 7px 14px;
+            padding: 8px 15px;
             border-radius: 999px;
             border: 1px solid var(--border);
             background: #ffffff;
             color: var(--text-main);
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -347,10 +347,10 @@
             background: var(--primary);
             color: #ffffff;
             border: none;
-            padding: 8px 15px;
+            padding: 9px 16px;
             border-radius: 999px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -367,10 +367,10 @@
             background: #ffffff;
             color: var(--text-main);
             border: 1px solid var(--border);
-            padding: 8px 13px;
+            padding: 9px 14px;
             border-radius: 999px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -389,6 +389,7 @@
             border: 1px solid var(--border);
             border-radius: 999px;
             font-weight: 700;
+            font-size: 13px;
             cursor: pointer;
             transition: 0.15s;
         }
@@ -401,10 +402,10 @@
         .input-control {
             border: 1px solid var(--border);
             border-radius: 11px;
-            padding: 8px 12px;
+            padding: 9px 12px;
             background: #ffffff;
             color: var(--text-main);
-            font-size: 13.5px;
+            font-size: 14.5px;
             outline: none;
             transition: 0.15s;
         }
@@ -420,7 +421,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-card);
-            padding: 11px 16px;
+            padding: 12px 16px;
             box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
@@ -437,13 +438,13 @@
         }
 
         .period-pill {
-            padding: 7px 13px;
+            padding: 8px 14px;
             border-radius: 999px;
             border: 1px solid var(--border);
             background: #f8fafc;
             color: var(--text-main);
             font-weight: 700;
-            font-size: 12.5px;
+            font-size: 13.5px;
             cursor: pointer;
             transition: 0.15s;
         }
@@ -464,13 +465,13 @@
         .active-period-badge {
             background: var(--primary-soft);
             color: var(--primary-dark);
-            padding: 6px 12px;
+            padding: 7px 13px;
             border-radius: 999px;
             font-weight: 800;
-            font-size: 12.5px;
+            font-size: 13.5px;
         }
 
-        /* 4-Column Quick Period Strip (Today • This Week • This Month • This Year) */
+        /* 4-Column Quick Period Strip */
         .quick-period-strip {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -483,7 +484,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 11px 14px;
+            padding: 12px 14px;
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
@@ -506,14 +507,14 @@
         }
 
         .qp-title {
-            font-size: 12.5px;
+            font-size: 13.5px;
             font-weight: 800;
             color: var(--text-main);
             white-space: nowrap;
         }
 
         .qp-date {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
             font-weight: 600;
             white-space: nowrap;
@@ -526,7 +527,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            font-size: 12.5px;
+            font-size: 13.5px;
             font-weight: 800;
         }
 
@@ -545,7 +546,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-card);
-            padding: 15px 16px;
+            padding: 16px;
             box-shadow: var(--shadow-sm);
             display: flex;
             flex-direction: column;
@@ -561,32 +562,32 @@
         }
 
         .kpi-label {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-muted);
         }
 
         .kpi-icon {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 15px;
+            font-size: 16px;
             flex-shrink: 0;
         }
 
         .kpi-value {
-            font-size: 22px;
+            font-size: 23px;
             font-weight: 800;
             line-height: 1.25;
             word-break: break-word;
         }
 
         .kpi-sub {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-muted);
             font-weight: 600;
             margin-top: 2px;
@@ -624,7 +625,7 @@
         }
 
         .card-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 800;
             color: var(--text-main);
             display: flex;
@@ -662,8 +663,8 @@
 
         .tx-table th {
             text-align: left;
-            padding: 10px 10px;
-            font-size: 12px;
+            padding: 10px;
+            font-size: 13px;
             font-weight: 800;
             color: var(--text-muted);
             border-bottom: 1px solid var(--border);
@@ -671,9 +672,9 @@
         }
 
         .tx-table td {
-            padding: 11px 10px;
+            padding: 12px 10px;
             border-bottom: 1px solid #f1f5f9;
-            font-size: 13px;
+            font-size: 14px;
             vertical-align: middle;
         }
 
@@ -689,32 +690,32 @@
         }
 
         .cat-icon-sm {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 10px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 17px;
+            font-size: 18px;
             flex-shrink: 0;
         }
 
         .wallet-badge {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            padding: 3px 9px;
+            gap: 5px;
+            padding: 4px 10px;
             border-radius: 999px;
             background: #f1f5f9;
             color: var(--text-main);
-            font-size: 11.5px;
+            font-size: 12.5px;
             font-weight: 700;
             white-space: nowrap;
         }
 
         .action-icon-btn {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
             border: 1px solid var(--border);
             background: #ffffff;
@@ -722,7 +723,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 14px;
             transition: 0.15s;
         }
         .action-icon-btn.edit:hover {
@@ -744,7 +745,7 @@
         .m-tx-card {
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 12px;
+            padding: 13px;
             background: #ffffff;
             display: flex;
             flex-direction: column;
@@ -778,13 +779,13 @@
         }
 
         .seg-btn {
-            padding: 6px 14px;
+            padding: 7px 14px;
             border-radius: 999px;
             border: none;
             background: transparent;
             color: var(--text-muted);
             font-weight: 700;
-            font-size: 12.5px;
+            font-size: 13.5px;
             cursor: pointer;
             transition: 0.15s;
         }
@@ -800,8 +801,8 @@
         .cat-bar-item {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            margin-bottom: 12px;
+            gap: 6px;
+            margin-bottom: 13px;
         }
 
         .cat-bar-head {
@@ -809,13 +810,13 @@
             justify-content: space-between;
             align-items: center;
             gap: 8px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
         }
 
         .progress-track {
             width: 100%;
-            height: 9px;
+            height: 10px;
             background: #e2e8f0;
             border-radius: 999px;
             overflow: hidden;
@@ -830,7 +831,7 @@
         .goal-item-card {
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 13px;
+            padding: 14px;
             background: #fafafa;
             display: flex;
             flex-direction: column;
@@ -842,9 +843,9 @@
             background: var(--warning-bg);
             border: 1px solid #fcd34d;
             color: #92400e;
-            padding: 10px 14px;
+            padding: 11px 15px;
             border-radius: 13px;
-            font-size: 12.5px;
+            font-size: 13.5px;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -867,7 +868,7 @@
         .bar-chart-wrap {
             position: relative;
             width: 100%;
-            height: 315px;
+            height: 320px;
             padding-top: 96px;
             padding-bottom: 28px;
             overflow-x: auto;
@@ -915,18 +916,13 @@
             transition: height 0.3s ease, opacity 0.2s;
         }
 
-        .bar-col.inc {
-            background: var(--income);
-        }
-
-        .bar-col.exp {
-            background: var(--expense);
-        }
+        .bar-col.inc { background: var(--income); }
+        .bar-col.exp { background: var(--expense); }
 
         .bar-x-label {
             position: absolute;
             bottom: -24px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-muted);
             white-space: nowrap;
@@ -940,9 +936,9 @@
             transform: translateX(-50%);
             background: #0f172a;
             color: #ffffff;
-            padding: 8px 11px;
+            padding: 9px 12px;
             border-radius: 10px;
-            font-size: 12.5px;
+            font-size: 13px;
             line-height: 1.45;
             white-space: nowrap;
             z-index: 60;
@@ -955,19 +951,11 @@
             display: block;
         }
 
-        .bar-group.tip-left .bar-tooltip {
-            left: 0;
-            transform: none;
-        }
-
-        .bar-group.tip-right .bar-tooltip {
-            left: auto;
-            right: 0;
-            transform: none;
-        }
+        .bar-group.tip-left .bar-tooltip { left: 0; transform: none; }
+        .bar-group.tip-right .bar-tooltip { left: auto; right: 0; transform: none; }
 
         /* =========================================================
-           10. SETTINGS 50% / 50% GRID & MODALS
+           10. SETTINGS 2-COLUMN MASONRY & MODALS
            ========================================================= */
         .settings-grid {
             display: grid;
@@ -1055,15 +1043,9 @@
         }
 
         .form-label {
-            font-size: 12.5px;
+            font-size: 13.5px;
             font-weight: 800;
             color: var(--text-main);
-        }
-
-        .form-row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
         }
 
         /* Bulk Entry Table Column Widths */
@@ -1094,7 +1076,7 @@
             margin-top: 8px;
         }
         .calc-btn {
-            padding: 8px;
+            padding: 9px;
             border-radius: 9px;
             border: 1px solid var(--border);
             background: #ffffff;
@@ -1165,9 +1147,9 @@
             transform: translateX(-50%) translateY(20px);
             background: #0f172a;
             color: #ffffff;
-            padding: 10px 18px;
+            padding: 11px 18px;
             border-radius: 999px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             box-shadow: var(--shadow-lg);
             opacity: 0;
@@ -1203,16 +1185,27 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            flex: 1 1 0;
+            min-width: 0;
+            max-width: 78px;
+            height: 48px;
             gap: 2px;
-            padding: 6px 12px;
+            padding: 4px 2px;
             border: none;
             background: transparent;
             color: var(--text-muted);
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 700;
             cursor: pointer;
             border-radius: 999px;
             transition: 0.15s;
+        }
+
+        .b-nav-btn span:last-child {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
         }
 
         .b-nav-btn:hover,
@@ -1224,6 +1217,7 @@
         }
 
         .b-nav-fab {
+            flex: 0 0 48px;
             width: 48px;
             height: 48px;
             border-radius: 50%;
@@ -1244,31 +1238,17 @@
            11. RESPONSIVE BREAKPOINTS (IPAD, IPHONE, ANDROID)
            ========================================================= */
         @media (max-width: 1024px) and (min-width: 861px) {
-            .sidebar {
-                width: 215px;
-            }
-            .main-wrap {
-                margin-left: 215px;
-                padding: 14px;
-            }
-            .kpi-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-            .quick-period-strip {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+            .sidebar { width: 215px; }
+            .main-wrap { margin-left: 215px; padding: 14px; }
+            .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .quick-period-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 860px) {
-            .sidebar {
-                display: none;
-            }
-            .mobile-header {
-                display: flex;
-            }
-            .bottom-nav {
-                display: flex;
-            }
+            html, body { font-size: 15px; }
+            .sidebar { display: none; }
+            .mobile-header { display: flex; }
+            .bottom-nav { display: flex; }
             .main-wrap {
                 margin-left: 0;
                 padding: 12px 12px calc(88px + env(safe-area-inset-bottom, 0px));
@@ -1276,33 +1256,14 @@
                 max-width: 100vw;
                 overflow-x: hidden;
             }
-            input, select, textarea {
-                font-size: 16px !important;
-            }
-            .quick-period-strip {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 9px;
-            }
-            .kpi-grid {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 10px;
-            }
-            .dashboard-split {
-                grid-template-columns: minmax(0, 1fr);
-                gap: 12px;
-            }
-            .report-charts-grid {
-                grid-template-columns: minmax(0, 1fr);
-            }
-            .settings-grid {
-                grid-template-columns: minmax(0, 1fr);
-            }
-            .desktop-only-table {
-                display: none !important;
-            }
-            .mobile-tx-list {
-                display: flex !important;
-            }
+            input, select, textarea { font-size: 16px !important; }
+            .quick-period-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+            .kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+            .dashboard-split { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+            .report-charts-grid { grid-template-columns: minmax(0, 1fr); }
+            .settings-grid { grid-template-columns: minmax(0, 1fr); }
+            .desktop-only-table { display: none !important; }
+            .mobile-tx-list { display: flex !important; }
             .tx-toolbar-mobile {
                 flex-direction: column !important;
                 align-items: stretch !important;
@@ -1342,9 +1303,7 @@
                 touch-action: pan-y !important;
                 width: 100% !important;
             }
-            .bulk-table thead {
-                display: none;
-            }
+            .bulk-table thead { display: none; }
             .bulk-table, .bulk-table tbody, .bulk-table tr, .bulk-table td {
                 display: block;
                 width: 100% !important;
@@ -1359,14 +1318,11 @@
                 margin-bottom: 10px;
                 background: #f8fafc;
             }
-            .bulk-table td {
-                padding: 4px 0;
-                border: none;
-            }
+            .bulk-table td { padding: 4px 0; border: none; }
             .bulk-table td[data-label]::before {
                 content: attr(data-label);
                 display: block;
-                font-size: 11.5px;
+                font-size: 12px;
                 font-weight: 800;
                 color: var(--text-muted);
                 margin-bottom: 3px;
@@ -1378,21 +1334,21 @@
 
     <!-- Auto-Update Notification Banner -->
     <div id="updateAvailableBanner" class="update-banner">
-        <span>🚀 មានកំណែទម្រង់កម្មវិធីថ្មី (<strong id="newVersionTag">v3.3.0</strong>)!</span>
+        <span>🚀 មានកំណែទម្រង់កម្មវិធីថ្មី (<strong id="newVersionTag">v3.3.9</strong>)!</span>
         <button type="button" class="update-banner-btn" onclick="applySafeAppUpdate()">✨ ធ្វើបច្ចុប្បន្នភាពឥឡូវនេះ</button>
     </div>
 
     <!-- PIN Lock Screen -->
     <div id="pinLockScreen" class="pin-overlay">
         <div style="font-size: 44px;">🔐</div>
-        <div style="font-size: 18px; font-weight: 800;">បញ្ចូលលេខកូដសម្ងាត់ PIN</div>
+        <div style="font-size: 19px; font-weight: 800;">បញ្ចូលលេខកូដសម្ងាត់ PIN</div>
         <div class="pin-dots">
             <div id="pinDot1" class="pin-dot"></div>
             <div id="pinDot2" class="pin-dot"></div>
             <div id="pinDot3" class="pin-dot"></div>
             <div id="pinDot4" class="pin-dot"></div>
         </div>
-        <div id="pinErrorMsg" style="font-size: 13px; color: #fde047; min-height: 20px; font-weight: 700;"></div>
+        <div id="pinErrorMsg" style="font-size: 13.5px; color: #fde047; min-height: 20px; font-weight: 700;"></div>
         <div class="pin-keypad">
             <button type="button" class="pin-key" onclick="pressPinKey(1)">1</button>
             <button type="button" class="pin-key" onclick="pressPinKey(2)">2</button>
@@ -1403,7 +1359,7 @@
             <button type="button" class="pin-key" onclick="pressPinKey(7)">7</button>
             <button type="button" class="pin-key" onclick="pressPinKey(8)">8</button>
             <button type="button" class="pin-key" onclick="pressPinKey(9)">9</button>
-            <button type="button" class="pin-key" onclick="clearPinInput()" style="font-size: 14px;">លុប</button>
+            <button type="button" class="pin-key" onclick="clearPinInput()" style="font-size: 15px;">លុប</button>
             <button type="button" class="pin-key" onclick="pressPinKey(0)">0</button>
             <button type="button" class="pin-key" onclick="backspacePin()">⌫</button>
         </div>
@@ -1412,11 +1368,11 @@
     <!-- Mobile Top Header -->
     <header class="mobile-header">
         <div style="display: flex; align-items: center; gap: 9px;">
-            <div class="brand-logo" style="width: 34px; height: 34px; font-size: 18px;">📒</div>
-            <div class="brand-title" style="font-size: 16px;">ចំណូល-ចំណាយ</div>
+            <div class="brand-logo" style="width: 36px; height: 36px; font-size: 19px;">📒</div>
+            <div class="brand-title" style="font-size: 17px;">ចំណូល-ចំណាយ</div>
         </div>
         <div style="display: flex; align-items: center; gap: 6px;">
-            <button type="button" class="btn-secondary" style="padding: 6px 10px; font-size: 12px;" onclick="openBulkModal()">📑 ម្តងច្រើន</button>
+            <button type="button" class="btn-secondary" style="padding: 6px 11px; font-size: 13px;" onclick="openBulkModal()">📑 ម្តងច្រើន</button>
             <button type="button" class="action-icon-btn" onclick="lockAppNow()" title="ចាក់សោ PIN">🔒</button>
         </div>
     </header>
@@ -1485,10 +1441,10 @@
                 </div>
             </div>
 
-            <!-- Budget Alert Banner (Shown if any category reaches >=85% of monthly budget) -->
+            <!-- Budget Alert Banner -->
             <div id="budgetAlertContainer" style="display: none;"></div>
 
-            <!-- 4-Column Quick Period Comparison Strip (Today • This Week • This Month • This Year) -->
+            <!-- 4-Column Quick Period Comparison Strip -->
             <div id="quickPeriodStrip" class="quick-period-strip">
                 <div class="qp-box" onclick="setTimeframeMode('day')">
                     <div class="qp-head">
@@ -1541,7 +1497,7 @@
                     </div>
                     <div id="totalBalance" class="kpi-value" style="color: var(--primary);">0 ៛</div>
                     <div id="secondaryBalance" class="kpi-sub">≈ $0.00</div>
-                    <div id="balancePaymentBreakdown" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 11.5px; color: var(--text-muted); line-height: 1.6;">
+                    <div id="balancePaymentBreakdown" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">
                         <div>💵 សាច់ប្រាក់៖ <strong>0 ៛</strong></div>
                         <div>🏦 ធនាគារ៖ <strong>0 ៛</strong></div>
                     </div>
@@ -1554,7 +1510,7 @@
                     </div>
                     <div id="totalIncome" class="kpi-value" style="color: var(--income);">0 ៛</div>
                     <div id="secondaryIncome" class="kpi-sub">≈ $0.00</div>
-                    <div id="incomePaymentBreakdown" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 11.5px; color: var(--text-muted); line-height: 1.6;">
+                    <div id="incomePaymentBreakdown" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">
                         <div>💵 សាច់ប្រាក់៖ <strong>0 ៛</strong></div>
                         <div>🏦 ធនាគារ៖ <strong>0 ៛</strong></div>
                     </div>
@@ -1567,7 +1523,7 @@
                     </div>
                     <div id="totalExpense" class="kpi-value" style="color: var(--expense);">0 ៛</div>
                     <div id="secondaryExpense" class="kpi-sub">≈ $0.00</div>
-                    <div id="expensePaymentBreakdown" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 11.5px; color: var(--text-muted); line-height: 1.6;">
+                    <div id="expensePaymentBreakdown" style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">
                         <div>💵 សាច់ប្រាក់៖ <strong>0 ៛</strong></div>
                         <div>🏦 ធនាគារ៖ <strong>0 ៛</strong></div>
                     </div>
@@ -1580,7 +1536,7 @@
                     </div>
                     <div id="totalSavingsVal" class="kpi-value" style="color: var(--savings);">0 ៛</div>
                     <div id="secondarySavingsVal" class="kpi-sub">≈ $0.00</div>
-                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 11.5px; color: var(--text-muted); line-height: 1.6;">
+                    <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between;"><span>គោលដៅកំពុងសន្សំ</span><strong id="activeGoalCountLabel">0 គោលដៅ</strong></div>
                         <div><a href="javascript:void(0)" onclick="switchTab('goals')" style="color: var(--savings); font-weight: 800; text-decoration: none;">គ្រប់គ្រងគោលដៅ →</a></div>
                     </div>
@@ -1590,13 +1546,12 @@
             <!-- VIEW 1: DASHBOARD -->
             <section id="view-dashboard" class="view-section active">
                 <div class="dashboard-split">
-                    <!-- Left Column: Recent Transactions -->
                     <div class="card" style="display: flex; flex-direction: column;">
                         <div class="card-header">
                             <span class="card-title">🕒 ប្រតិបត្តិការថ្មីៗ</span>
                             <div style="display: flex; gap: 8px;">
-                                <button type="button" class="btn-secondary" style="padding: 6px 11px; font-size: 12px;" onclick="openBulkModal()">📑 ម្តងច្រើន</button>
-                                <button type="button" class="btn-secondary" style="padding: 6px 11px; font-size: 12px;" onclick="switchTab('transactions')">មើលទាំងអស់ →</button>
+                                <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="openBulkModal()">📑 ម្តងច្រើន</button>
+                                <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="switchTab('transactions')">មើលទាំងអស់ →</button>
                             </div>
                         </div>
 
@@ -1618,7 +1573,6 @@
                         <div id="recentMobileTxList" class="mobile-tx-list"></div>
                     </div>
 
-                    <!-- Right Column: Category Ratio + Monthly Budgets + Savings Goals -->
                     <div class="dashboard-right-col">
                         <div class="card">
                             <div class="card-header">
@@ -1631,7 +1585,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <span class="card-title">🎯 ផែនការថវិកាប្រចាំខែ</span>
-                                <button type="button" class="btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="switchTab('budgets')">កំណត់ថវិកា →</button>
+                                <button type="button" class="btn-secondary" style="padding: 5px 11px; font-size: 13px;" onclick="switchTab('budgets')">កំណត់ថវិកា →</button>
                             </div>
                             <div id="dashboardBudgetSummaryList"></div>
                         </div>
@@ -1639,7 +1593,7 @@
                         <div class="card" style="flex: 1;">
                             <div class="card-header">
                                 <span class="card-title">🐷 គោលដៅប្រាក់សន្សំ</span>
-                                <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="openGoalModal()">+ បង្កើតថ្មី</button>
+                                <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 13px;" onclick="openGoalModal()">+ បង្កើតថ្មី</button>
                             </div>
                             <div id="dashboardGoalsList"></div>
                         </div>
@@ -1672,8 +1626,8 @@
                         </div>
                         <div class="tx-toolbar-actions" style="display: flex; align-items: center; gap: 8px;">
                             <span id="txCountBadge" class="active-period-badge">0 ប្រតិបត្តិការ</span>
-                            <button type="button" class="btn-secondary" style="padding: 6px 11px; font-size: 12px;" onclick="exportExcelCSV()">📥 Excel</button>
-                            <button type="button" class="btn-secondary" style="padding: 6px 11px; font-size: 12px;" onclick="exportWordDOC()">📄 Word</button>
+                            <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="exportExcelCSV()">📥 Excel</button>
+                            <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="exportWordDOC()">📄 Word</button>
                         </div>
                     </div>
 
@@ -1698,7 +1652,7 @@
                 </div>
             </section>
 
-            <!-- VIEW 3: REPORTS (MONTHLY & YEARLY OFFLINE CHARTS + INSIGHTS) -->
+            <!-- VIEW 3: REPORTS -->
             <section id="view-reports" class="view-section">
                 <div class="kpi-grid" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
                     <div class="kpi-card">
@@ -1719,13 +1673,13 @@
                     <div class="card">
                         <div class="card-header">
                             <span id="reportBarChartTitle" class="card-title">📈 ក្រាហ្វសសរប្រៀបធៀបចំណូល និង ចំណាយ</span>
-                            <div style="display: flex; gap: 10px; font-size: 12px; font-weight: 700;">
+                            <div style="display: flex; gap: 10px; font-size: 13px; font-weight: 700;">
                                 <span style="color: var(--income);">● ចំណូល</span>
                                 <span style="color: var(--expense);">● ចំណាយ</span>
                             </div>
                         </div>
                         <div id="reportBarChartContainer"></div>
-                        <div id="reportBarDetailBox" style="margin-top: 12px; padding: 10px 14px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--border); font-size: 13.5px; font-weight: 700;">
+                        <div id="reportBarDetailBox" style="margin-top: 12px; padding: 11px 14px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--border); font-size: 14px; font-weight: 700;">
                             📅 ចុច ឬដាក់ Mouse លើសសរក្រាហ្វដើម្បីមើលតួលេខលម្អិត
                         </div>
                     </div>
@@ -1746,27 +1700,25 @@
                 </div>
             </section>
 
-            <!-- VIEW 4: MONTHLY BUDGETS & RECURRING TRANSACTIONS -->
+            <!-- VIEW 4: MONTHLY BUDGETS & RECURRING -->
             <section id="view-budgets" class="view-section">
                 <div class="settings-grid">
-                    <!-- Monthly Category Budgets -->
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title">🎯 កំណត់កម្រិតថវិកាចំណាយប្រចាំខែ</span>
                         </div>
-                        <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;">
                             កំណត់ពិដានចំណាយអតិបរមាក្នុង ១ ខែសម្រាប់ប្រភេទនីមួយៗ ដើម្បីទទួលបានការដាស់តឿនពេលចំណាយជិតលើសកម្រិត។
                         </p>
                         <div id="budgetSettingsList" style="display: flex; flex-direction: column; gap: 10px;"></div>
                     </div>
 
-                    <!-- Recurring Automatic Transactions -->
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title">🔁 ប្រតិបត្តិការកើតឡើងដដែលៗ (ប្រចាំខែ/ឆ្នាំ)</span>
-                            <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="openRecurringModal()">+ បន្ថែមថ្មី</button>
+                            <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 13px;" onclick="openRecurringModal()">+ បន្ថែមថ្មី</button>
                         </div>
-                        <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px;">
                             កំណត់ចំណូល ឬចំណាយទៀងទាត់ (ឧ. ប្រាក់ខែ, ថ្លៃជួលផ្ទះ, អ៊ីនធឺណិត) ដើម្បីឱ្យកម្មវិធីកត់ត្រាស្វ័យប្រវត្តិ។
                         </p>
                         <div id="recurringListContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
@@ -1785,12 +1737,11 @@
                 </div>
             </section>
 
-            <!-- VIEW 6: SETTINGS & BACKUP -->
+            <!-- VIEW 6: SETTINGS & BACKUP (2-Column Masonry Layout, No Custom Categories Card) -->
             <section id="view-settings" class="view-section">
                 <div class="settings-grid">
-                    <!-- Left Column (Masonry Stack - Zero Vertical Gaps) -->
+                    <!-- Left Column -->
                     <div class="settings-col">
-                        <!-- Currency & Exchange Rate -->
                         <div class="card">
                             <div class="card-header">
                                 <span class="card-title">💱 រូបិយប័ណ្ណ និងអត្រាប្តូរប្រាក់</span>
@@ -1810,13 +1761,12 @@
                             </div>
                         </div>
 
-                        <!-- Wallets Management -->
                         <div class="card">
                             <div class="card-header">
                                 <span class="card-title">👛 គ្រប់គ្រងកាបូបលុយ (Wallets)</span>
                             </div>
                             <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                                <select id="newWalletEmoji" class="input-control" style="width: 72px;">
+                                <select id="newWalletEmoji" class="input-control" style="width: 74px;">
                                     <option value="👤">👤</option>
                                     <option value="🏠">🏠</option>
                                     <option value="💼">💼</option>
@@ -1829,7 +1779,6 @@
                             <div id="settingsWalletList" style="display: flex; flex-direction: column; gap: 8px;"></div>
                         </div>
 
-                        <!-- Backup & Restore -->
                         <div class="card">
                             <div class="card-header">
                                 <span class="card-title">💾 បម្រុងទុក និងស្តារទិន្នន័យ (Backup)</span>
@@ -1844,20 +1793,19 @@
                                 <button type="button" class="btn-secondary" onclick="exportWordDOC()">📄 នាំចេញ Word (.doc)</button>
                             </div>
                             <div style="padding-top: 10px; border-top: 1px dashed var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                <span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">ជំនាន់កម្មវិធីបច្ចុប្បន្ន៖ <strong id="settingsAppVersionLabel">v3.3.1</strong></span>
-                                <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="manualCheckAppUpdate()">🔄 ពិនិត្យកំណែថ្មី (Update)</button>
+                                <span style="font-size: 13px; color: var(--text-muted); font-weight: 700;">ជំនាន់កម្មវិធីបច្ចុប្បន្ន៖ <strong id="settingsAppVersionLabel">v3.3.9</strong></span>
+                                <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;" onclick="manualCheckAppUpdate()">🔄 ពិនិត្យកំណែថ្មី (Update)</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column (Masonry Stack - Zero Vertical Gaps) -->
+                    <!-- Right Column -->
                     <div class="settings-col">
-                        <!-- Cloud Sync Across Devices -->
                         <div class="card">
                             <div class="card-header">
                                 <span class="card-title">☁️ ធ្វើសមកាលកម្មឆ្លងឧបករណ៍ (Cloud Sync)</span>
                             </div>
-                            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 10px;">
+                            <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;">
                                 ភ្ជាប់ទិន្នន័យរវាង <strong>កុំព្យូទ័រ, iPad និង ទូរសព្ទដៃ</strong> ដោយប្រើលេខកូដសម្ងាត់ផ្ទាល់ខ្លួនរបស់អ្នក។
                             </p>
                             <div style="display: flex; gap: 8px; margin-bottom: 10px;">
@@ -1870,16 +1818,15 @@
                                 <button type="button" class="btn-secondary" onclick="copySyncTextCode()">📋 ចម្លងកូដទិន្នន័យ</button>
                                 <button type="button" class="btn-secondary" onclick="openPasteSyncModal()">📥 បិទភ្ជាប់កូដ</button>
                             </div>
-                            <div id="cloudSyncStatus" style="margin-top: 8px; font-size: 12px; color: var(--text-muted); font-weight: 600;"></div>
+                            <div id="cloudSyncStatus" style="margin-top: 8px; font-size: 13px; color: var(--text-muted); font-weight: 600;"></div>
                         </div>
 
-                        <!-- Security PIN -->
                         <div class="card">
                             <div class="card-header">
                                 <span class="card-title">🔐 សុវត្ថិភាពចាក់សោកម្មវិធី (PIN ៤ ខ្ទង់)</span>
                             </div>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                <input type="password" id="settingPinInput" maxlength="4" inputmode="numeric" class="input-control" style="width: 140px; text-align: center; font-weight: 800; letter-spacing: 4px;" placeholder="••••">
+                                <input type="password" id="settingPinInput" maxlength="4" inputmode="numeric" class="input-control" style="width: 145px; text-align: center; font-weight: 800; letter-spacing: 4px;" placeholder="••••">
                                 <button type="button" class="btn-primary" onclick="savePinSetting()">💾 រក្សាទុក PIN</button>
                                 <button type="button" class="btn-secondary" onclick="removePinSetting()">🔓 ដោះ PIN ចេញ</button>
                             </div>
@@ -1893,20 +1840,20 @@
     <!-- Mobile Bottom Navigation -->
     <nav class="bottom-nav">
         <button type="button" id="bnav-dashboard" class="b-nav-btn active" onclick="switchTab('dashboard')">
-            <span style="font-size: 18px;">🏠</span>
+            <span style="font-size: 19px;">🏠</span>
             <span>ទំព័រដើម</span>
         </button>
         <button type="button" id="bnav-transactions" class="b-nav-btn" onclick="switchTab('transactions')">
-            <span style="font-size: 18px;">📋</span>
+            <span style="font-size: 19px;">📋</span>
             <span>បញ្ជី</span>
         </button>
         <button type="button" class="b-nav-fab" onclick="openTxModal()" title="កត់ត្រាថ្មី">+</button>
         <button type="button" id="bnav-reports" class="b-nav-btn" onclick="switchTab('reports')">
-            <span style="font-size: 18px;">📊</span>
+            <span style="font-size: 19px;">📊</span>
             <span>របាយការណ៍</span>
         </button>
         <button type="button" id="bnav-settings" class="b-nav-btn" onclick="switchTab('settings')">
-            <span style="font-size: 18px;">⚙️</span>
+            <span style="font-size: 19px;">⚙️</span>
             <span>ការកំណត់</span>
         </button>
     </nav>
@@ -1915,7 +1862,7 @@
     <div id="txModal" class="modal-backdrop" onclick="if(event.target===this) closeTxModal()">
         <div class="modal-box">
             <div class="modal-head">
-                <span id="txModalTitle" style="font-size: 16px; font-weight: 800;">កត់ត្រាចំណូល-ចំណាយថ្មី</span>
+                <span id="txModalTitle" style="font-size: 17px; font-weight: 800;">កត់ត្រាចំណូល-ចំណាយថ្មី</span>
                 <button type="button" class="action-icon-btn" onclick="closeTxModal()">✕</button>
             </div>
             <form id="txForm" onsubmit="saveTransaction(event)" style="display: flex; flex-direction: column; gap: 12px;">
@@ -1961,7 +1908,7 @@
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label class="form-label">ចំនួនទឹកប្រាក់ *</label>
-                            <button type="button" class="pill-btn" style="padding: 2px 8px; font-size: 11px;" onclick="toggleQuickCalc()">🧮 គិតលេខ</button>
+                            <button type="button" class="pill-btn" style="padding: 2px 9px; font-size: 12px;" onclick="toggleQuickCalc()">🧮 គិតលេខ</button>
                         </div>
                         <input type="number" id="txAmount" step="any" min="0.01" class="input-control" style="font-weight: 800;" placeholder="0" required>
                     </div>
@@ -2023,19 +1970,21 @@
     <div id="bulkModal" class="modal-backdrop" onclick="if(event.target===this) closeBulkModal()">
         <div class="modal-box bulk-wide">
             <div class="modal-head">
-                <span style="font-size: 16px; font-weight: 800;">📑 កត់ត្រាចំណូល-ចំណាយម្តងច្រើនជួរ</span>
+                <span style="font-size: 17px; font-weight: 800;">📑 កត់ត្រាចំណូល-ចំណាយម្តងច្រើនជួរ</span>
                 <button type="button" class="action-icon-btn" onclick="closeBulkModal()">✕</button>
             </div>
 
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-weight: 800; font-size: 13px;">កាបូបលុយ៖</span>
+                    <span style="font-weight: 800; font-size: 14px;">កាបូបលុយ៖</span>
                     <select id="bulkWalletId" class="input-control" style="font-weight: 700;"></select>
                 </div>
                 <button type="button" class="btn-secondary" onclick="addBulkRow()">+ បន្ថែមជួរថ្មី</button>
             </div>
 
-            <div class="table-wrapper bulk-scroll-wrap" style="max-height: 56dvh; overflow-y: auto;">
+            <div id="bulkDailyNoteChips" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;"></div>
+
+            <div class="table-wrapper bulk-scroll-wrap" style="max-height: 54dvh; overflow-y: auto;">
                 <table class="tx-table bulk-table">
                     <thead>
                         <tr>
@@ -2055,7 +2004,7 @@
             </div>
 
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--border);">
-                <span id="bulkValidCount" style="font-weight: 800; color: var(--primary); font-size: 13px;">0 ជួរមានទិន្នន័យរួចរាល់</span>
+                <span id="bulkValidCount" style="font-weight: 800; color: var(--primary); font-size: 14px;">0 ជួរមានទិន្នន័យរួចរាល់</span>
                 <div style="display: flex; gap: 8px;">
                     <button type="button" class="btn-secondary" onclick="closeBulkModal()">បោះបង់</button>
                     <button type="button" class="btn-primary" onclick="saveBulkTransactions()">💾 រក្សាទុកទាំងអស់</button>
@@ -2068,7 +2017,7 @@
     <div id="recurringModal" class="modal-backdrop" onclick="if(event.target===this) closeRecurringModal()">
         <div class="modal-box" style="max-width: 460px;">
             <div class="modal-head">
-                <span style="font-size: 16px; font-weight: 800;">🔁 បន្ថែមប្រតិបត្តិការកើតឡើងដដែលៗ</span>
+                <span style="font-size: 17px; font-weight: 800;">🔁 បន្ថែមប្រតិបត្តិការកើតឡើងដដែលៗ</span>
                 <button type="button" class="action-icon-btn" onclick="closeRecurringModal()">✕</button>
             </div>
             <form id="recurringForm" onsubmit="saveRecurringRule(event)" style="display: flex; flex-direction: column; gap: 12px;">
@@ -2126,10 +2075,10 @@
 
     <!-- MODAL 4: DELETE CONFIRM -->
     <div id="deleteModal" class="modal-backdrop" onclick="if(event.target===this) closeDeleteModal()">
-        <div class="modal-box" style="max-width: 380px; text-align: center;">
+        <div class="modal-box" style="max-width: 390px; text-align: center;">
             <div style="font-size: 38px;">🗑️</div>
-            <div style="font-size: 16px; font-weight: 800;">បញ្ជាក់ការលុបប្រតិបត្តិការ</div>
-            <p style="font-size: 13px; color: var(--text-muted);">តើអ្នកពិតជាចង់លុបប្រតិបត្តិការនេះមែនទេ? សកម្មភាពនេះមិនអាចត្រឡប់ក្រោយបានទេ។</p>
+            <div style="font-size: 17px; font-weight: 800;">បញ្ជាក់ការលុបប្រតិបត្តិការ</div>
+            <p style="font-size: 14px; color: var(--text-muted);">តើអ្នកពិតជាចង់លុបប្រតិបត្តិការនេះមែនទេ? សកម្មភាពនេះមិនអាចត្រឡប់ក្រោយបានទេ។</p>
             <div style="display: flex; justify-content: center; gap: 10px; margin-top: 6px;">
                 <button type="button" class="btn-secondary" onclick="closeDeleteModal()">បោះបង់</button>
                 <button type="button" class="btn-primary" style="background: var(--expense);" onclick="confirmDeleteTx()">លុបចេញ</button>
@@ -2141,7 +2090,7 @@
     <div id="goalModal" class="modal-backdrop" onclick="if(event.target===this) closeGoalModal()">
         <div class="modal-box" style="max-width: 440px;">
             <div class="modal-head">
-                <span style="font-size: 16px; font-weight: 800;">🐷 បង្កើតគោលដៅប្រាក់សន្សំថ្មី</span>
+                <span style="font-size: 17px; font-weight: 800;">🐷 បង្កើតគោលដៅប្រាក់សន្សំថ្មី</span>
                 <button type="button" class="action-icon-btn" onclick="closeGoalModal()">✕</button>
             </div>
             <form id="goalForm" onsubmit="saveGoal(event)" style="display: flex; flex-direction: column; gap: 12px;">
@@ -2178,10 +2127,10 @@
     <div id="goalAdjustModal" class="modal-backdrop" onclick="if(event.target===this) closeGoalAdjustModal()">
         <div class="modal-box" style="max-width: 400px;">
             <div class="modal-head">
-                <span id="goalAdjustTitle" style="font-size: 16px; font-weight: 800;">💰 បន្ថែមប្រាក់សន្សំ</span>
+                <span id="goalAdjustTitle" style="font-size: 17px; font-weight: 800;">💰 បន្ថែមប្រាក់សន្សំ</span>
                 <button type="button" class="action-icon-btn" onclick="closeGoalAdjustModal()">✕</button>
             </div>
-            <div id="goalAdjustSubtitle" style="font-size: 13px; color: var(--text-muted); font-weight: 700;"></div>
+            <div id="goalAdjustSubtitle" style="font-size: 14px; color: var(--text-muted); font-weight: 700;"></div>
             <form onsubmit="confirmGoalAdjust(event)" style="display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" id="adjGoalId">
                 <input type="hidden" id="adjGoalMode">
@@ -2201,11 +2150,11 @@
     <div id="pasteSyncModal" class="modal-backdrop" onclick="if(event.target===this) closePasteSyncModal()">
         <div class="modal-box" style="max-width: 460px;">
             <div class="modal-head">
-                <span style="font-size: 16px; font-weight: 800;">📥 បិទភ្ជាប់កូដទិន្នន័យ (Sync Code)</span>
+                <span style="font-size: 17px; font-weight: 800;">📥 បិទភ្ជាប់កូដទិន្នន័យ (Sync Code)</span>
                 <button type="button" class="action-icon-btn" onclick="closePasteSyncModal()">✕</button>
             </div>
-            <p style="font-size: 12.5px; color: var(--text-muted);">បិទភ្ជាប់កូដ <code>KHSYNC:...</code> ដែលបានចម្លងពីឧបករណ៍មួយទៀតនៅខាងក្រោម៖</p>
-            <textarea id="pasteSyncTextarea" rows="4" class="input-control" style="width: 100%; font-family: monospace; font-size: 12px;" placeholder="KHSYNC:..."></textarea>
+            <p style="font-size: 13.5px; color: var(--text-muted);">បិទភ្ជាប់កូដ <code>KHSYNC:...</code> ដែលបានចម្លងពីឧបករណ៍មួយទៀតនៅខាងក្រោម៖</p>
+            <textarea id="pasteSyncTextarea" rows="4" class="input-control" style="width: 100%; font-family: monospace; font-size: 13px;" placeholder="KHSYNC:..."></textarea>
             <div style="display: flex; justify-content: flex-end; gap: 8px;">
                 <button type="button" class="btn-secondary" onclick="closePasteSyncModal()">បោះបង់</button>
                 <button type="button" class="btn-primary" onclick="applyPastedSyncCode()">💾 បញ្ចូលទិន្នន័យ</button>
@@ -2219,7 +2168,7 @@
         /* =========================================================
            0. APP VERSION & ZERO-DATA-LOSS AUTO-UPDATE + SCROLL LOCK
            ========================================================= */
-        const APP_VERSION = 'v3.3.2';
+        const APP_VERSION = 'v3.3.9';
         const STORAGE_APP_VER = 'kh_expense_installed_version';
         let _lockedScrollY = 0;
 
@@ -2382,9 +2331,9 @@
         let customCategories = { expense: [], income: [] };
         let transactions = [];
         let wallets = [
-            { id: 'w_personal', name: 'ផ្ទាល់ខ្លួន', emoji: '👤' },
-            { id: 'w_family', name: 'គ្រួសារ', emoji: '🏠' },
-            { id: 'w_work', name: 'ការងារ', emoji: '💼' }
+            { id: 'w_personal', name: 'ផ្ទាល់ខ្លួន', emoji: '👤', icon: '👤' },
+            { id: 'w_family', name: 'គ្រួសារ', emoji: '🏠', icon: '🏠' },
+            { id: 'w_work', name: 'ការងារ', emoji: '💼', icon: '💼' }
         ];
         let goals = [];
         let budgets = {};
@@ -2400,6 +2349,33 @@
         let activeWalletFilter = 'all';
         let timeframeMode = 'month';
         let typeFilter = 'all';
+
+        /* Safe Icon Resolver (Fixes any `undefined` icon/emoji from older versions) */
+        function getWalletIcon(w) {
+            if (!w) return '👛';
+            if (w.emoji && w.emoji !== 'undefined') return w.emoji;
+            if (w.icon && w.icon !== 'undefined') return w.icon;
+            const idStr = String(w.id || '').toLowerCase();
+            const nameStr = String(w.name || '');
+            if (idStr.includes('personal') || nameStr.includes('ផ្ទាល់ខ្លួន')) return '👤';
+            if (idStr.includes('family') || nameStr.includes('គ្រួសារ')) return '🏠';
+            if (idStr.includes('work') || nameStr.includes('ការងារ')) return '💼';
+            return '👛';
+        }
+
+        function normalizeWalletList(list) {
+            if (!Array.isArray(list) || list.length === 0) return wallets;
+            return list.map(w => {
+                const safeIcon = getWalletIcon(w);
+                return {
+                    ...w,
+                    id: w.id || ('w_' + Math.random().toString(36).slice(2, 7)),
+                    name: (w.name && w.name !== 'undefined') ? w.name : 'កាបូបលុយ',
+                    emoji: safeIcon,
+                    icon: safeIcon
+                };
+            });
+        }
 
         function getAllCategories(type) {
             return [...(BASE_CATEGORIES[type] || []), ...(customCategories[type] || [])];
@@ -2423,7 +2399,9 @@
                 const rawW = localStorage.getItem(STORAGE_WALLETS);
                 if (rawW) {
                     const parsedW = JSON.parse(rawW);
-                    if (Array.isArray(parsedW) && parsedW.length > 0) wallets = parsedW;
+                    if (Array.isArray(parsedW) && parsedW.length > 0) {
+                        wallets = normalizeWalletList(parsedW);
+                    }
                 }
                 const rawC = localStorage.getItem(STORAGE_CONFIG);
                 if (rawC) config = { ...config, ...JSON.parse(rawC) };
@@ -2444,11 +2422,12 @@
                 if (rawTx) {
                     transactions = JSON.parse(rawTx).map(tx => ({
                         ...tx,
-                        walletId: tx.walletId || wallets[0].id,
-                        paymentMethod: tx.paymentMethod || 'cash',
+                        walletId: tx.walletId || tx.wallet || wallets[0].id,
+                        paymentMethod: tx.paymentMethod || tx.method || 'cash',
                         bankName: tx.bankName || ''
                     }));
                 }
+                saveStorage();
             } catch (e) {}
         }
 
@@ -2533,11 +2512,22 @@
 
         function getCategory(type, id) {
             const list = getAllCategories(type);
-            return list.find(c => c.id === id) || { id, name: 'ផ្សេងៗ', emoji: '📌', bg: '#f1f5f9', color: '#475569' };
+            const found = list.find(c => c.id === id);
+            if (found) {
+                return {
+                    ...found,
+                    emoji: found.emoji || found.icon || '📌'
+                };
+            }
+            return { id, name: 'ផ្សេងៗ', emoji: '📌', bg: '#f1f5f9', color: '#475569' };
         }
 
         function getWallet(id) {
-            return wallets.find(w => w.id === id) || wallets[0] || { id: 'w_personal', name: 'ផ្ទាល់ខ្លួន', emoji: '👤' };
+            const found = wallets.find(w => w.id === id) || wallets[0] || { id: 'w_personal', name: 'ផ្ទាល់ខ្លួន', emoji: '👤' };
+            return {
+                ...found,
+                emoji: getWalletIcon(found)
+            };
         }
 
         function showToast(msg) {
@@ -2595,7 +2585,7 @@
             const allBtn = `<button type="button" class="wallet-pill ${activeWalletFilter === 'all' ? 'active' : ''}" onclick="setWalletFilter('all')">🌐 ទាំងអស់</button>`;
             const wBtns = wallets.map(w => `
                 <button type="button" class="wallet-pill ${activeWalletFilter === w.id ? 'active' : ''}" onclick="setWalletFilter('${w.id}')">
-                    ${w.emoji} ${escapeHTML(w.name)}
+                    ${getWalletIcon(w)} ${escapeHTML(w.name)}
                 </button>
             `).join('');
             box.innerHTML = allBtn + wBtns;
@@ -2693,8 +2683,72 @@
         }
 
         /* =========================================================
-           5. MAIN RENDER PIPELINE
+           5. MAIN RENDER PIPELINE & BUDGET ALERTS
            ========================================================= */
+        function renderMonthlyBudgetAlerts(walletTx, monthStr) {
+            const alertBox = document.getElementById('budgetAlertContainer');
+            const dashSummary = document.getElementById('dashboardBudgetSummaryList');
+            const budgetEntries = Object.entries(budgets).filter(([, limitKhr]) => Number(limitKhr) > 0);
+
+            if (budgetEntries.length === 0) {
+                if (alertBox) alertBox.style.display = 'none';
+                if (dashSummary) {
+                    dashSummary.innerHTML = `<div style="text-align: center; padding: 14px; color: var(--text-muted); font-size: 13.5px;">មិនទាន់បានកំណត់ផែនការថវិកាប្រចាំខែទេ</div>`;
+                }
+                return;
+            }
+
+            const monthExpMap = {};
+            walletTx.forEach(tx => {
+                if (tx.type === 'expense' && tx.date && tx.date.startsWith(monthStr)) {
+                    monthExpMap[tx.category] = (monthExpMap[tx.category] || 0) + convertMoney(tx.amount, tx.currency, 'KHR');
+                }
+            });
+
+            const warnings = [];
+            const summaryHTML = budgetEntries.map(([catId, limitKhr]) => {
+                const cat = getCategory('expense', catId);
+                const spentKhr = monthExpMap[catId] || 0;
+                const pct = Math.round((spentKhr / limitKhr) * 100);
+                const barPct = Math.min(100, pct);
+                const barColor = pct >= 100 ? 'var(--expense)' : (pct >= 85 ? 'var(--warning)' : 'var(--primary)');
+
+                if (pct >= 85) {
+                    warnings.push(`${cat.emoji} ${cat.name} (${pct}%)`);
+                }
+
+                const spentDisp = formatMoney(convertMoney(spentKhr, 'KHR', config.currency), config.currency);
+                const limitDisp = formatMoney(convertMoney(limitKhr, 'KHR', config.currency), config.currency);
+                return `
+                    <div class="cat-bar-item">
+                        <div class="cat-bar-head">
+                            <span>${cat.emoji} ${cat.name} (${pct}%)</span>
+                            <span style="color: ${barColor};">${spentDisp} / ${limitDisp}</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: ${barPct}%; background: ${barColor};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (dashSummary) dashSummary.innerHTML = summaryHTML;
+
+            if (alertBox) {
+                if (warnings.length > 0 && activeTab === 'dashboard') {
+                    alertBox.style.display = 'block';
+                    alertBox.innerHTML = `
+                        <div class="budget-alert-banner">
+                            <span>⚠️ ការដាស់តឿនថវិកាប្រចាំខែ៖ <strong>${warnings.join(', ')}</strong> បានប្រើជិតដល់ ឬលើសកម្រិតកំណត់ហើយ!</span>
+                            <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="switchTab('budgets')">ពិនិត្យថវិកា</button>
+                        </div>
+                    `;
+                } else {
+                    alertBox.style.display = 'none';
+                }
+            }
+        }
+
         function renderAll() {
             const currBtn = document.getElementById('currencyToggleBtn');
             if (currBtn) {
@@ -2792,7 +2846,6 @@
             document.getElementById('secondarySavingsVal').textContent = `≈ ${formatMoney(convertMoney(totalSaved, config.currency, otherCurr), otherCurr)}`;
             document.getElementById('activeGoalCountLabel').textContent = `${goals.length} គោលដៅ`;
 
-            // Monthly Budget Alerts & Summary
             renderMonthlyBudgetAlerts(walletTx, monthStr);
 
             const sortedTx = [...periodTx].sort((a, b) => b.date.localeCompare(a.date));
@@ -2809,65 +2862,65 @@
             }
         }
 
-        function renderMonthlyBudgetAlerts(walletTx, monthStr) {
-            const alertBox = document.getElementById('budgetAlertContainer');
-            const dashList = document.getElementById('dashboardBudgetSummaryList');
-            const monthExpMap = {};
-            walletTx.forEach(tx => {
-                if (tx.type === 'expense' && tx.date && tx.date.startsWith(monthStr)) {
-                    monthExpMap[tx.category] = (monthExpMap[tx.category] || 0) + convertMoney(tx.amount, tx.currency, config.currency);
-                }
+        function applyNoteHistoryToInput(text, targetEl = null) {
+            const input = targetEl || document.getElementById('txNote');
+            if (!input) return;
+            input.value = text;
+            input.focus();
+            try {
+                const len = input.value.length;
+                input.setSelectionRange(len, len);
+            } catch (e) {}
+        }
+
+        function applyBulkNoteHistory(text) {
+            let target = window._activeBulkNoteInput;
+            if (!target || !document.body.contains(target)) {
+                const inputs = Array.from(document.querySelectorAll('#bulkRowsBody .bulk-note'));
+                target = inputs.find(inp => !inp.value.trim()) || inputs[0];
+            }
+            if (target) {
+                applyNoteHistoryToInput(text, target);
+                window._activeBulkNoteInput = target;
+            }
+        }
+
+        function renderDailyNoteChips() {
+            const box = document.getElementById('dailyNoteChips');
+            const bulkBox = document.getElementById('bulkDailyNoteChips');
+            const dataList = document.getElementById('dailyNoteHistoryList');
+            const selectedDate = document.getElementById('txDate')?.value || getTodayStr();
+            const dayNotes = [];
+            const allNotes = [];
+
+            transactions.forEach(tx => {
+                const n = (tx.note || '').trim();
+                if (!n) return;
+                if (tx.date === selectedDate && !dayNotes.includes(n)) dayNotes.push(n);
+                if (!allNotes.includes(n)) allNotes.push(n);
             });
 
-            const activeBudgets = Object.entries(budgets).filter(([_, lim]) => Number(lim) > 0);
-            const warnings = [];
+            if (dataList) {
+                dataList.innerHTML = allNotes.slice(0, 25).map(n => `<option value="${escapeHTML(n)}"></option>`).join('');
+            }
 
-            activeBudgets.forEach(([catId, limBase]) => {
-                const limit = convertMoney(limBase, 'KHR', config.currency);
-                const spent = monthExpMap[catId] || 0;
-                const pct = Math.round((spent / limit) * 100);
-                const cat = getCategory('expense', catId);
-                if (pct >= 85) {
-                    warnings.push(`${cat.emoji} ${cat.name} (${pct}%)`);
-                }
-            });
+            const suggestions = dayNotes.length > 0 ? dayNotes.slice(0, 6) : allNotes.slice(0, 6);
 
-            if (alertBox) {
-                if (warnings.length > 0 && activeTab !== 'settings') {
-                    alertBox.style.display = 'block';
-                    alertBox.innerHTML = `
-                        <div class="budget-alert-banner">
-                            <span>⚠️ ការដាស់តឿនថវិកាប្រចាំខែ៖ ការចំណាយលើ <strong>${warnings.join(', ')}</strong> ជិតដល់ ឬលើសកម្រិតកំណត់ហើយ!</span>
-                            <button type="button" class="pill-btn" style="padding: 4px 10px; font-size: 11.5px;" onclick="switchTab('budgets')">ពិនិត្យថវិកា</button>
-                        </div>
-                    `;
+            if (box) {
+                if (suggestions.length === 0) {
+                    box.innerHTML = '';
                 } else {
-                    alertBox.style.display = 'none';
+                    box.innerHTML = `<span style="font-size: 12px; color: var(--text-muted); font-weight: 700; align-self: center;">🕒 ប្រវត្តិ (ចុចដើម្បីកែ)៖</span>` +
+                        suggestions.map(n => `<button type="button" class="pill-btn" style="padding: 4px 10px; font-size: 12.5px;" onclick="applyNoteHistoryToInput(${escapeHTML(JSON.stringify(n))})">${escapeHTML(n)}</button>`).join('');
                 }
             }
 
-            if (dashList) {
-                if (activeBudgets.length === 0) {
-                    dashList.innerHTML = `<div style="text-align: center; padding: 14px; color: var(--text-muted); font-size: 12.5px;">មិនទាន់បានកំណត់ពិដានថវិកាប្រចាំខែនៅឡើយទេ</div>`;
+            if (bulkBox) {
+                if (suggestions.length === 0) {
+                    bulkBox.innerHTML = '';
                 } else {
-                    dashList.innerHTML = activeBudgets.slice(0, 4).map(([catId, limBase]) => {
-                        const limit = convertMoney(limBase, 'KHR', config.currency);
-                        const spent = monthExpMap[catId] || 0;
-                        const pct = Math.min(100, Math.round((spent / limit) * 100));
-                        const cat = getCategory('expense', catId);
-                        const barColor = spent > limit ? 'var(--expense)' : (pct >= 85 ? 'var(--warning)' : 'var(--primary)');
-                        return `
-                            <div class="cat-bar-item">
-                                <div class="cat-bar-head">
-                                    <span>${cat.emoji} ${cat.name}</span>
-                                    <span style="font-size: 12px;">${formatMoney(spent, config.currency)} / ${formatMoney(limit, config.currency)}</span>
-                                </div>
-                                <div class="progress-track">
-                                    <div class="progress-fill" style="width: ${pct}%; background: ${barColor};"></div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
+                    bulkBox.innerHTML = `<span style="font-size: 12px; color: var(--text-muted); font-weight: 700;">🕒 ប្រវត្តិកំណត់ចំណាំ (ចុចបញ្ចូល)៖</span>` +
+                        suggestions.map(n => `<button type="button" class="pill-btn" style="padding: 4px 10px; font-size: 12.5px;" onclick="applyBulkNoteHistory(${escapeHTML(JSON.stringify(n))})">${escapeHTML(n)}</button>`).join('');
                 }
             }
         }
@@ -2902,12 +2955,12 @@
                                 <span class="cat-icon-sm" style="background: ${cat.bg};">${cat.emoji}</span>
                                 <div>
                                     <div>${cat.name}</div>
-                                    ${tx.note ? `<div style="font-size: 11px; color: var(--text-muted); font-weight: 500;">${escapeHTML(tx.note)}</div>` : ''}
+                                    ${tx.note ? `<div style="font-size: 12px; color: var(--text-muted); font-weight: 500;">${escapeHTML(tx.note)}</div>` : ''}
                                 </div>
                             </div>
                         </td>
                         <td>${payBadge}</td>
-                        <td style="color: var(--text-muted); font-size: 12.5px; white-space: nowrap;">${formatKhmerDate(tx.date)}</td>
+                        <td style="color: var(--text-muted); font-size: 13.5px; white-space: nowrap;">${formatKhmerDate(tx.date)}</td>
                         <td style="text-align: right; font-weight: 800; color: ${isInc ? 'var(--income)' : 'var(--expense)'}; white-space: nowrap;">
                             ${isInc ? '+' : '-'}${formatMoney(tx.amount, tx.currency)}
                         </td>
@@ -2936,18 +2989,18 @@
                             <span class="cat-icon-sm" style="background: ${cat.bg};">${cat.emoji}</span>
                             <div style="min-width: 0;">
                                 <div style="font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${cat.name}</div>
-                                <div style="font-size: 11.5px; color: var(--text-muted);">${formatKhmerDate(tx.date)}</div>
+                                <div style="font-size: 12.5px; color: var(--text-muted);">${formatKhmerDate(tx.date)}</div>
                             </div>
                         </div>
-                        <div style="font-weight: 800; font-size: 14px; color: ${isInc ? 'var(--income)' : 'var(--expense)'}; white-space: nowrap;">
+                        <div style="font-weight: 800; font-size: 15px; color: ${isInc ? 'var(--income)' : 'var(--expense)'}; white-space: nowrap;">
                             ${isInc ? '+' : '-'}${formatMoney(tx.amount, tx.currency)}
                         </div>
                     </div>
-                    ${tx.note ? `<div style="font-size: 12px; color: var(--text-muted);">📝 ${escapeHTML(tx.note)}</div>` : ''}
+                    ${tx.note ? `<div style="font-size: 13px; color: var(--text-muted);">📝 ${escapeHTML(tx.note)}</div>` : ''}
                     <div class="m-tx-bottom">
                         <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                             ${payBadge}
-                            <span class="wallet-badge">${w.emoji} ${escapeHTML(w.name)}</span>
+                            <span class="wallet-badge">${getWalletIcon(w)} ${escapeHTML(w.name)}</span>
                         </div>
                         <div style="display: flex; gap: 6px;">
                             <button type="button" class="action-icon-btn edit" onclick="openTxModal('${tx.id}')">✏️</button>
@@ -3008,7 +3061,7 @@
                                 <span>${cat.name}</span>
                             </div>
                         </td>
-                        <td><span class="wallet-badge">${w.emoji} ${escapeHTML(w.name)}</span></td>
+                        <td><span class="wallet-badge">${getWalletIcon(w)} ${escapeHTML(w.name)}</span></td>
                         <td>${payBadge}</td>
                         <td style="white-space: nowrap; color: var(--text-muted);">${formatKhmerDate(tx.date)}</td>
                         <td>${escapeHTML(tx.note) || '—'}</td>
@@ -3035,7 +3088,7 @@
 
             const entries = Object.entries(catExpMap).sort((a, b) => b[1] - a[1]);
             if (entries.length === 0 || totalExp <= 0) {
-                box.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">មិនទាន់មានទិន្នន័យចំណាយក្នុងអំឡុងពេលនេះទេ</div>`;
+                box.innerHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13.5px;">មិនទាន់មានទិន្នន័យចំណាយក្នុងអំឡុងពេលនេះទេ</div>`;
                 return;
             }
 
@@ -3066,13 +3119,13 @@
                 return `
                     <div class="goal-item-card">
                         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-                            <span style="font-weight: 800; font-size: 14px;">🐷 ${escapeHTML(g.name)}</span>
+                            <span style="font-weight: 800; font-size: 15px;">🐷 ${escapeHTML(g.name)}</span>
                             ${showDelete ? `<button type="button" class="action-icon-btn del" onclick="deleteGoal('${g.id}')">🗑️</button>` : ''}
                         </div>
-                        <div style="font-size: 13.5px; font-weight: 800;">
+                        <div style="font-size: 14px; font-weight: 800;">
                             សន្សំបាន៖ <span style="color: var(--primary);">${formatMoney(g.saved, g.currency)}</span> / ${formatMoney(g.target, g.currency)} (${pct}%)
                         </div>
-                        <div style="font-size: 12px; color: var(--text-muted);">នៅខ្វះ៖ ${formatMoney(rem, g.currency)}</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">នៅខ្វះ៖ ${formatMoney(rem, g.currency)}</div>
                         <div class="progress-track">
                             <div class="progress-fill" style="width: ${pct}%; background: var(--primary);"></div>
                         </div>
@@ -3084,7 +3137,7 @@
                 `;
             };
 
-            const emptyHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px;">មិនទាន់មានគោលដៅប្រាក់សន្សំទេ</div>`;
+            const emptyHTML = `<div style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 13.5px;">មិនទាន់មានគោលដៅប្រាក់សន្សំទេ</div>`;
             if (dashBox) dashBox.innerHTML = goals.length ? goals.map(g => buildGoalHTML(g, false)).join('') : emptyHTML;
             if (fullBox) fullBox.innerHTML = goals.length ? goals.map(g => buildGoalHTML(g, true)).join('') : emptyHTML;
         }
@@ -3199,7 +3252,7 @@
                     const cat = getCategory('expense', catId);
                     const pct = Math.round((val / sumExp) * 100);
                     return `
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; padding: 4px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; padding: 4px 0;">
                             <span style="display: flex; align-items: center; gap: 6px; font-weight: 700;">
                                 <span style="width: 10px; height: 10px; border-radius: 50%; background: ${cat.color}; display: inline-block;"></span>
                                 ${cat.emoji} ${cat.name} (${pct}%)
@@ -3224,20 +3277,20 @@
                 const topCat = entries.length > 0 ? getCategory('expense', entries[0][0]) : null;
                 const avgExp = buckets.length > 0 ? sumExp / buckets.length : 0;
                 insightsBox.innerHTML = `
-                    <div style="padding: 12px; border-radius: 13px; background: #f8fafc; border: 1px solid var(--border);">
-                        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">📊 អត្រាសន្សំសុទ្ធ (Savings Rate)</div>
-                        <div style="font-size: 18px; font-weight: 800; color: ${savingsRate >= 20 ? 'var(--income)' : 'var(--warning)'}; margin-top: 4px;">${savingsRate}%</div>
-                        <div style="font-size: 11.5px; color: var(--text-muted);">${savingsRate >= 20 ? 'ល្អប្រសើរ! អ្នកសន្សំបានលើស ២០% នៃចំណូល' : 'គួរព្យាយាមកាត់បន្ថយចំណាយមិនចាំបាច់'}</div>
+                    <div style="padding: 13px; border-radius: 13px; background: #f8fafc; border: 1px solid var(--border);">
+                        <div style="font-size: 13px; color: var(--text-muted); font-weight: 700;">📊 អត្រាសន្សំសុទ្ធ (Savings Rate)</div>
+                        <div style="font-size: 19px; font-weight: 800; color: ${savingsRate >= 20 ? 'var(--income)' : 'var(--warning)'}; margin-top: 4px;">${savingsRate}%</div>
+                        <div style="font-size: 12.5px; color: var(--text-muted);">${savingsRate >= 20 ? 'ល្អប្រសើរ! អ្នកសន្សំបានលើស ២០% នៃចំណូល' : 'គួរព្យាយាមកាត់បន្ថយចំណាយមិនចាំបាច់'}</div>
                     </div>
-                    <div style="padding: 12px; border-radius: 13px; background: #f8fafc; border: 1px solid var(--border);">
-                        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">🔥 ប្រភេទចំណាយខ្ពស់ជាងគេ</div>
-                        <div style="font-size: 16px; font-weight: 800; margin-top: 4px;">${topCat ? `${topCat.emoji} ${topCat.name}` : '—'}</div>
-                        <div style="font-size: 11.5px; color: var(--expense); font-weight: 700;">${entries.length > 0 ? formatMoney(entries[0][1], config.currency) : '0'}</div>
+                    <div style="padding: 13px; border-radius: 13px; background: #f8fafc; border: 1px solid var(--border);">
+                        <div style="font-size: 13px; color: var(--text-muted); font-weight: 700;">🔥 ប្រភេទចំណាយខ្ពស់ជាងគេ</div>
+                        <div style="font-size: 17px; font-weight: 800; margin-top: 4px;">${topCat ? `${topCat.emoji} ${topCat.name}` : '—'}</div>
+                        <div style="font-size: 12.5px; color: var(--expense); font-weight: 700;">${entries.length > 0 ? formatMoney(entries[0][1], config.currency) : '0'}</div>
                     </div>
-                    <div style="padding: 12px; border-radius: 13px; background: #f8fafc; border: 1px solid var(--border);">
-                        <div style="font-size: 12px; color: var(--text-muted); font-weight: 700;">⚖️ មធ្យមភាគចំណាយតាមចន្លោះពេល</div>
-                        <div style="font-size: 16px; font-weight: 800; color: var(--primary); margin-top: 4px;">${formatMoney(avgExp, config.currency)}</div>
-                        <div style="font-size: 11.5px; color: var(--text-muted);">គណនាផ្អែកលើ ${buckets.length} ចំណុចទិន្នន័យ</div>
+                    <div style="padding: 13px; border-radius: 13px; background: #f8fafc; border: 1px solid var(--border);">
+                        <div style="font-size: 13px; color: var(--text-muted); font-weight: 700;">⚖️ មធ្យមភាគចំណាយតាមចន្លោះពេល</div>
+                        <div style="font-size: 17px; font-weight: 800; color: var(--primary); margin-top: 4px;">${formatMoney(avgExp, config.currency)}</div>
+                        <div style="font-size: 12.5px; color: var(--text-muted);">គណនាផ្អែកលើ ${buckets.length} ចំណុចទិន្នន័យ</div>
                     </div>
                 `;
             }
@@ -3254,11 +3307,11 @@
                     const savedKhr = budgets[c.id] || 0;
                     const displayVal = savedKhr > 0 ? Math.round(convertMoney(savedKhr, 'KHR', config.currency) * 100) / 100 : '';
                     return `
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 12px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px;">
                             <span style="font-weight: 700;">${c.emoji} ${c.name}</span>
                             <div style="display: flex; align-items: center; gap: 6px;">
-                                <input type="number" step="any" min="0" class="input-control" style="width: 130px; text-align: right; font-weight: 700;" value="${displayVal}" placeholder="គ្មានកំណត់" onchange="updateCategoryBudget('${c.id}', this.value)">
-                                <span style="font-weight: 800; font-size: 12px; color: var(--text-muted);">${config.currency === 'USD' ? '$' : '៛'}</span>
+                                <input type="number" step="any" min="0" class="input-control" style="width: 135px; text-align: right; font-weight: 700;" value="${displayVal}" placeholder="គ្មានកំណត់" onchange="updateCategoryBudget('${c.id}', this.value)">
+                                <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">${config.currency === 'USD' ? '$' : '៛'}</span>
                             </div>
                         </div>
                     `;
@@ -3268,7 +3321,7 @@
             const rList = document.getElementById('recurringListContainer');
             if (rList) {
                 if (recurringRules.length === 0) {
-                    rList.innerHTML = `<div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px;">មិនទាន់មានប្រតិបត្តិការកើតឡើងដដែលៗទេ</div>`;
+                    rList.innerHTML = `<div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 13.5px;">មិនទាន់មានប្រតិបត្តិការកើតឡើងដដែលៗទេ</div>`;
                 } else {
                     const freqMap = { monthly: 'ប្រចាំខែ', weekly: 'ប្រចាំសប្តាហ៍', yearly: 'ប្រចាំឆ្នាំ' };
                     rList.innerHTML = recurringRules.map(r => {
@@ -3277,7 +3330,7 @@
                             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: #f8fafc;">
                                 <div>
                                     <div style="font-weight: 800;">${cat.emoji} ${cat.name} (${freqMap[r.frequency] || r.frequency})</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">ថ្ងៃបន្ទាប់៖ ${formatKhmerDate(r.nextDate)} ${r.note ? '• ' + escapeHTML(r.note) : ''}</div>
+                                    <div style="font-size: 12.5px; color: var(--text-muted);">ថ្ងៃបន្ទាប់៖ ${formatKhmerDate(r.nextDate)} ${r.note ? '• ' + escapeHTML(r.note) : ''}</div>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <strong style="color: ${r.type === 'income' ? 'var(--income)' : 'var(--expense)'};">${formatMoney(r.amount, r.currency)}</strong>
@@ -3393,7 +3446,7 @@
             const sel = document.getElementById('txWalletId');
             if (!sel) return;
             const target = selectedId || (activeWalletFilter !== 'all' ? activeWalletFilter : wallets[0].id);
-            sel.innerHTML = wallets.map(w => `<option value="${w.id}">${w.emoji} ${escapeHTML(w.name)}</option>`).join('');
+            sel.innerHTML = wallets.map(w => `<option value="${w.id}">${getWalletIcon(w)} ${escapeHTML(w.name)}</option>`).join('');
             sel.value = target;
         }
 
@@ -3462,37 +3515,8 @@
 
             box.innerHTML = presets.map(val => {
                 const label = curr === 'USD' ? `$${val.toFixed(2)}` : `${val.toLocaleString('en-US')} ៛`;
-                return `<button type="button" class="pill-btn" style="padding: 4px 10px; font-size: 12px;" onclick="document.getElementById('txAmount').value = ${val}">${label}</button>`;
+                return `<button type="button" class="pill-btn" style="padding: 5px 11px; font-size: 12.5px;" onclick="document.getElementById('txAmount').value = ${val}">${label}</button>`;
             }).join('');
-        }
-
-        function renderDailyNoteChips() {
-            const box = document.getElementById('dailyNoteChips');
-            const dataList = document.getElementById('dailyNoteHistoryList');
-            const selectedDate = document.getElementById('txDate')?.value || getTodayStr();
-            const dayNotes = [];
-            const allNotes = [];
-
-            transactions.forEach(tx => {
-                const n = (tx.note || '').trim();
-                if (!n) return;
-                if (tx.date === selectedDate && !dayNotes.includes(n)) dayNotes.push(n);
-                if (!allNotes.includes(n)) allNotes.push(n);
-            });
-
-            if (dataList) {
-                dataList.innerHTML = allNotes.slice(0, 25).map(n => `<option value="${escapeHTML(n)}"></option>`).join('');
-            }
-
-            if (box) {
-                const suggestions = dayNotes.length > 0 ? dayNotes.slice(0, 6) : allNotes.slice(0, 5);
-                if (suggestions.length === 0) {
-                    box.innerHTML = '';
-                } else {
-                    box.innerHTML = `<span style="font-size: 11.5px; color: var(--text-muted); font-weight: 700; align-self: center;">🕒 ប្រវត្តិ៖</span>` +
-                        suggestions.map(n => `<button type="button" class="pill-btn" style="padding: 3px 9px; font-size: 11.5px;" onclick="document.getElementById('txNote').value = ${JSON.stringify(n)}">${escapeHTML(n)}</button>`).join('');
-                }
-            }
         }
 
         function openTxModal(editId = null) {
@@ -3568,7 +3592,7 @@
         }
 
         /* =========================================================
-           9. BULK ENTRY MODAL
+           9. BULK ENTRY MODAL (4 INITIAL ROWS, ZERO RUBBER-BAND)
            ========================================================= */
         function buildCatOptionsHTML(type) {
             return getAllCategories(type).map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
@@ -3583,18 +3607,18 @@
             tr.innerHTML = `
                 <td data-label="ជួរទី" style="font-weight: 800; color: var(--text-muted);">${rowNum}</td>
                 <td data-label="ប្រភេទ">
-                    <select class="input-control bulk-type" style="padding: 7px 8px; width: 100%; font-weight: 700;" onchange="this.closest('tr').querySelector('.bulk-cat').innerHTML = buildCatOptionsHTML(this.value)">
+                    <select class="input-control bulk-type" style="padding: 8px; width: 100%; font-weight: 700;" onchange="this.closest('tr').querySelector('.bulk-cat').innerHTML = buildCatOptionsHTML(this.value)">
                         <option value="expense">↑ ចំណាយ</option>
                         <option value="income">↓ ចំណូល</option>
                     </select>
                 </td>
                 <td data-label="មុខទំនិញ">
-                    <select class="input-control bulk-cat" style="padding: 7px 8px; width: 100%;">
+                    <select class="input-control bulk-cat" style="padding: 8px; width: 100%;">
                         ${buildCatOptionsHTML('expense')}
                     </select>
                 </td>
                 <td data-label="ការទូទាត់">
-                    <select class="input-control bulk-pay" style="padding: 7px 8px; width: 100%; font-weight: 700;">
+                    <select class="input-control bulk-pay" style="padding: 8px; width: 100%; font-weight: 700;">
                         <option value="cash">💵 សាច់ប្រាក់</option>
                         <option value="bank:ABA Bank">🏦 ABA Bank</option>
                         <option value="bank:ACLEDA Bank">🏦 អេស៊ីលីដា</option>
@@ -3603,19 +3627,19 @@
                     </select>
                 </td>
                 <td data-label="ទឹកប្រាក់ *">
-                    <input type="number" class="input-control bulk-amount" step="any" min="0" placeholder="0" style="padding: 7px 10px; width: 100%; font-weight: 800;" oninput="updateBulkLiveSummary()">
+                    <input type="number" class="input-control bulk-amount" step="any" min="0" placeholder="0" style="padding: 8px 10px; width: 100%; font-weight: 800;" oninput="updateBulkLiveSummary()">
                 </td>
                 <td data-label="រូបិយប័ណ្ណ">
-                    <select class="input-control bulk-curr" style="padding: 7px 8px; width: 100%; font-weight: 700;">
+                    <select class="input-control bulk-curr" style="padding: 8px; width: 100%; font-weight: 700;">
                         <option value="KHR" ${config.currency === 'KHR' ? 'selected' : ''}>៛ KHR</option>
                         <option value="USD" ${config.currency === 'USD' ? 'selected' : ''}>$ USD</option>
                     </select>
                 </td>
                 <td data-label="កាលបរិច្ឆេទ">
-                    <input type="date" class="input-control bulk-date" value="${today}" style="padding: 7px 8px; width: 100%;">
+                    <input type="date" class="input-control bulk-date" value="${today}" style="padding: 8px; width: 100%;">
                 </td>
                 <td data-label="កំណត់ចំណាំ">
-                    <input type="text" class="input-control bulk-note" list="dailyNoteHistoryList" placeholder="កំណត់ចំណាំ..." style="padding: 7px 10px; width: 100%;">
+                    <input type="text" class="input-control bulk-note" list="dailyNoteHistoryList" placeholder="កំណត់ចំណាំ..." style="padding: 8px 10px; width: 100%;" onfocus="window._activeBulkNoteInput = this">
                 </td>
                 <td style="text-align: center;">
                     <button type="button" class="action-icon-btn del" onclick="this.closest('tr').remove(); updateBulkLiveSummary();" title="លុបជួរ">✕</button>
@@ -3641,7 +3665,7 @@
         function openBulkModal() {
             const wSel = document.getElementById('bulkWalletId');
             if (wSel) {
-                wSel.innerHTML = wallets.map(w => `<option value="${w.id}">${w.emoji} ${escapeHTML(w.name)}</option>`).join('');
+                wSel.innerHTML = wallets.map(w => `<option value="${w.id}">${getWalletIcon(w)} ${escapeHTML(w.name)}</option>`).join('');
                 wSel.value = activeWalletFilter !== 'all' ? activeWalletFilter : wallets[0].id;
             }
             const tbody = document.getElementById('bulkRowsBody');
@@ -3696,7 +3720,7 @@
         }
 
         /* =========================================================
-           10. DELETE, SAVINGS GOALS, CUSTOM CATEGORIES, SETTINGS & PIN
+           10. DELETE, SAVINGS GOALS, SETTINGS & PIN
            ========================================================= */
         let pendingDeleteTxId = null;
 
@@ -3793,34 +3817,6 @@
             showToast('បានលុបគោលដៅប្រាក់សន្សំ');
         }
 
-        function addCustomCategory() {
-            const type = document.getElementById('newCatType')?.value || 'expense';
-            const emoji = (document.getElementById('newCatEmoji')?.value || '🛒').trim();
-            const name = (document.getElementById('newCatName')?.value || '').trim();
-            if (!name) {
-                showToast('សូមវាយឈ្មោះប្រភេទមុខទំនិញថ្មី!');
-                return;
-            }
-            customCategories[type].push({
-                id: 'ccat_' + Date.now(),
-                name,
-                emoji: emoji || '🛒',
-                bg: type === 'income' ? '#d1fae5' : '#e0f2fe',
-                color: type === 'income' ? '#059669' : '#0284c7'
-            });
-            document.getElementById('newCatName').value = '';
-            saveStorage();
-            renderSettingsUI();
-            showToast(`បានបន្ថែមប្រភេទ «${name}»!`);
-        }
-
-        function deleteCustomCategory(type, id) {
-            customCategories[type] = (customCategories[type] || []).filter(c => c.id !== id);
-            saveStorage();
-            renderSettingsUI();
-            showToast('បានលុបប្រភេទមុខទំនិញ');
-        }
-
         function renderSettingsUI() {
             const currSel = document.getElementById('settingCurrency');
             const rateIn = document.getElementById('settingRate');
@@ -3835,29 +3831,11 @@
             const wList = document.getElementById('settingsWalletList');
             if (wList) {
                 wList.innerHTML = wallets.map(w => `
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-app);">
-                        <span style="font-weight: 700;">${w.emoji} ${escapeHTML(w.name)}</span>
-                        ${wallets.length > 1 ? `<button type="button" class="action-icon-btn del" onclick="deleteWallet('${w.id}')" title="លុបកាបូប">🗑️</button>` : '<span style="font-size: 11px; color: var(--text-muted);">គោល</span>'}
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-app);">
+                        <span style="font-weight: 700;">${getWalletIcon(w)} ${escapeHTML(w.name)}</span>
+                        ${wallets.length > 1 ? `<button type="button" class="action-icon-btn del" onclick="deleteWallet('${w.id}')" title="លុបកាបូប">🗑️</button>` : '<span style="font-size: 12px; color: var(--text-muted);">គោល</span>'}
                     </div>
                 `).join('');
-            }
-
-            const catBox = document.getElementById('customCategoriesList');
-            if (catBox) {
-                const allCustom = [
-                    ...(customCategories.expense || []).map(c => ({ ...c, type: 'expense' })),
-                    ...(customCategories.income || []).map(c => ({ ...c, type: 'income' }))
-                ];
-                if (allCustom.length === 0) {
-                    catBox.innerHTML = `<span style="font-size: 12px; color: var(--text-muted);">មិនទាន់មានប្រភេទបន្ថែមផ្ទាល់ខ្លួននៅឡើយទេ</span>`;
-                } else {
-                    catBox.innerHTML = allCustom.map(c => `
-                        <span class="wallet-badge" style="padding: 5px 10px;">
-                            ${c.emoji} ${escapeHTML(c.name)} (${c.type === 'income' ? 'ចំណូល' : 'ចំណាយ'})
-                            <button type="button" style="border:none;background:transparent;color:var(--expense);font-weight:800;cursor:pointer;margin-left:4px;" onclick="deleteCustomCategory('${c.type}', '${c.id}')">✕</button>
-                        </span>
-                    `).join('');
-                }
             }
         }
 
@@ -3878,7 +3856,7 @@
                 showToast('សូមវាយឈ្មោះកាបូបលុយ!');
                 return;
             }
-            wallets.push({ id: 'w_' + Date.now(), name, emoji });
+            wallets.push({ id: 'w_' + Date.now(), name, emoji, icon: emoji });
             document.getElementById('newWalletName').value = '';
             saveStorage();
             renderWalletUI();
@@ -4015,12 +3993,23 @@
             });
 
             const topic = 'kh_exp_sync_' + encodeURIComponent(code.toLowerCase());
+            const kvKey = 'kh_exp_kv_' + encodeURIComponent(code.toLowerCase()).replace(/[^a-zA-Z0-9_-]/g, '_');
+            let synced = false;
+
             try {
                 const res = await fetch(`https://ntfy.sh/${topic}`, { method: 'POST', body: payload });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
+                if (res.ok) synced = true;
+            } catch (e) {}
+
+            try {
+                const resKv = await fetch(`https://kvdb.io/A2x9kLmPqR7vTzNwBcYe8H/${kvKey}`, { method: 'PUT', body: payload });
+                if (resKv.ok) synced = true;
+            } catch (e2) {}
+
+            if (synced) {
                 if (statusEl) statusEl.textContent = `✅ បានរុញទិន្នន័យឡើង Cloud ជោគជ័យ (${new Date().toLocaleTimeString()})`;
                 showToast('រុញទិន្នន័យឡើង Cloud ជោគជ័យ!');
-            } catch (err) {
+            } else {
                 if (statusEl) statusEl.textContent = '⚠️ មិនអាចភ្ជាប់ Cloud បានទេ សូមប្រើប៊ូតុង «ចម្លងកូដទិន្នន័យ» ខាងក្រោម!';
                 showToast('ការភ្ជាប់ Cloud មានបញ្ហា សូមសាកល្បងចម្លងកូដទិន្នន័យ');
             }
@@ -4037,48 +4026,59 @@
             saveStorage();
             if (statusEl) statusEl.textContent = '⏳ កំពុងទាញយកទិន្នន័យពី Cloud...';
 
+            const topic = 'kh_exp_sync_' + encodeURIComponent(code.toLowerCase());
+            const kvKey = 'kh_exp_kv_' + encodeURIComponent(code.toLowerCase()).replace(/[^a-zA-Z0-9_-]/g, '_');
+            let latestData = null;
+
             try {
-                const topic = 'kh_exp_sync_' + encodeURIComponent(code.toLowerCase());
                 const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=24h`);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const text = await res.text();
-                const lines = text.trim().split('\n').filter(Boolean);
-                let latestData = null;
+                if (res.ok) {
+                    const text = await res.text();
+                    const lines = text.trim().split('\n').filter(Boolean);
+                    for (let i = lines.length - 1; i >= 0; i--) {
+                        try {
+                            const msg = JSON.parse(lines[i]);
+                            if (msg.message && msg.message.startsWith('KHSYNC:')) {
+                                latestData = decodeSyncPayload(msg.message);
+                                break;
+                            }
+                        } catch (e) {}
+                    }
+                }
+            } catch (err) {}
 
-                for (let i = lines.length - 1; i >= 0; i--) {
-                    try {
-                        const msg = JSON.parse(lines[i]);
-                        if (msg.message && msg.message.startsWith('KHSYNC:')) {
-                            latestData = decodeSyncPayload(msg.message);
-                            break;
+            if (!latestData) {
+                try {
+                    const resKv = await fetch(`https://kvdb.io/A2x9kLmPqR7vTzNwBcYe8H/${kvKey}`);
+                    if (resKv.ok) {
+                        const rawKv = await resKv.text();
+                        if (rawKv && rawKv.startsWith('KHSYNC:')) {
+                            latestData = decodeSyncPayload(rawKv);
                         }
-                    } catch (e) {}
-                }
-
-                if (!latestData || !Array.isArray(latestData.transactions)) {
-                    if (statusEl) statusEl.textContent = 'ℹ️ រកមិនឃើញទិន្នន័យថ្មីក្រោមលេខកូដនេះទេ';
-                    showToast('រកមិនឃើញទិន្នន័យក្រោមលេខកូដនេះទេ');
-                    return;
-                }
-
-                transactions = latestData.transactions;
-                if (Array.isArray(latestData.wallets) && latestData.wallets.length > 0) wallets = latestData.wallets;
-                if (Array.isArray(latestData.goals)) goals = latestData.goals;
-                if (latestData.budgets) budgets = latestData.budgets;
-                if (Array.isArray(latestData.recurringRules)) recurringRules = latestData.recurringRules;
-                if (latestData.customCategories) customCategories = latestData.customCategories;
-                if (latestData.config) config = { ...config, ...latestData.config, syncCode: code };
-
-                saveStorage();
-                renderWalletUI();
-                renderSettingsUI();
-                renderAll();
-                if (statusEl) statusEl.textContent = `✅ បានទាញទិន្នន័យពី Cloud ជោគជ័យ (${transactions.length} ប្រតិបត្តិការ)`;
-                showToast('ទាញទិន្នន័យពី Cloud ជោគជ័យ!');
-            } catch (err) {
-                if (statusEl) statusEl.textContent = '⚠️ មិនអាចទាញទិន្នន័យពី Cloud បានទេ សូមប្រើប៊ូតុង «បិទភ្ជាប់កូដទិន្នន័យ»!';
-                showToast('មិនអាចទាញទិន្នន័យពី Cloud បានទេ');
+                    }
+                } catch (err2) {}
             }
+
+            if (!latestData || !Array.isArray(latestData.transactions)) {
+                if (statusEl) statusEl.textContent = 'ℹ️ រកមិនឃើញទិន្នន័យថ្មីក្រោមលេខកូដនេះទេ';
+                showToast('រកមិនឃើញទិន្នន័យក្រោមលេខកូដនេះទេ');
+                return;
+            }
+
+            transactions = latestData.transactions;
+            if (Array.isArray(latestData.wallets) && latestData.wallets.length > 0) wallets = normalizeWalletList(latestData.wallets);
+            if (Array.isArray(latestData.goals)) goals = latestData.goals;
+            if (latestData.budgets) budgets = latestData.budgets;
+            if (Array.isArray(latestData.recurringRules)) recurringRules = latestData.recurringRules;
+            if (latestData.customCategories) customCategories = latestData.customCategories;
+            if (latestData.config) config = { ...config, ...latestData.config, syncCode: code };
+
+            saveStorage();
+            renderWalletUI();
+            renderSettingsUI();
+            renderAll();
+            if (statusEl) statusEl.textContent = `✅ បានទាញទិន្នន័យពី Cloud ជោគជ័យ (${transactions.length} ប្រតិបត្តិការ)`;
+            showToast('ទាញទិន្នន័យពី Cloud ជោគជ័យ!');
         }
 
         function copySyncTextCode() {
@@ -4109,7 +4109,7 @@
                 const parsed = decodeSyncPayload(raw);
                 if (!parsed || !Array.isArray(parsed.transactions)) throw new Error('Invalid');
                 transactions = parsed.transactions;
-                if (Array.isArray(parsed.wallets) && parsed.wallets.length > 0) wallets = parsed.wallets;
+                if (Array.isArray(parsed.wallets) && parsed.wallets.length > 0) wallets = normalizeWalletList(parsed.wallets);
                 if (Array.isArray(parsed.goals)) goals = parsed.goals;
                 if (parsed.budgets) budgets = parsed.budgets;
                 if (Array.isArray(parsed.recurringRules)) recurringRules = parsed.recurringRules;
@@ -4146,7 +4146,7 @@
                     const data = JSON.parse(e.target.result);
                     if (!Array.isArray(data.transactions)) throw new Error('Invalid');
                     transactions = data.transactions;
-                    if (Array.isArray(data.wallets) && data.wallets.length > 0) wallets = data.wallets;
+                    if (Array.isArray(data.wallets) && data.wallets.length > 0) wallets = normalizeWalletList(data.wallets);
                     if (Array.isArray(data.goals)) goals = data.goals;
                     if (data.budgets) budgets = data.budgets;
                     if (Array.isArray(data.recurringRules)) recurringRules = data.recurringRules;

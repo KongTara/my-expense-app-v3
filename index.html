@@ -1283,8 +1283,49 @@
         }
 
         .modal-box.wide {
-            max-width: 960px;
+            max-width: 1180px;
+            width: 96vw;
         }
+
+        /* Bulk Entry Table & Responsive Card Layout */
+        .bulk-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bulk-table th {
+            text-align: left;
+            padding: 10px 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 1.5px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .bulk-table td {
+            padding: 9px 6px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .bulk-cell-label {
+            display: none;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .bulk-col-idx { width: 34px; font-weight: 700; color: var(--text-muted); }
+        .bulk-col-type { min-width: 135px; }
+        .bulk-col-cat { min-width: 215px; }
+        .bulk-col-pay { min-width: 175px; }
+        .bulk-col-amt { min-width: 145px; }
+        .bulk-col-curr { min-width: 115px; }
+        .bulk-col-date { min-width: 150px; }
+        .bulk-col-note { min-width: 210px; }
+        .bulk-col-act { width: 42px; text-align: center; }
 
         .modal-header {
             display: flex;
@@ -1654,9 +1695,75 @@
             .modal-box {
                 border-radius: 22px 22px 0 0;
                 max-width: 100%;
+                width: 100%;
                 max-height: 92dvh;
-                padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
+                padding: 18px 14px calc(20px + env(safe-area-inset-bottom));
             }
+
+            /* Convert Bulk Table Rows into Spacious Mobile Cards */
+            .bulk-table thead {
+                display: none;
+            }
+
+            .bulk-table,
+            .bulk-table tbody {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .bulk-table tr {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                background: #f8fafc;
+                border: 1.5px solid var(--border);
+                border-radius: 15px;
+                padding: 12px;
+                position: relative;
+                width: 100%;
+            }
+
+            .bulk-table td {
+                display: flex;
+                flex-direction: column;
+                padding: 0;
+                border-bottom: none;
+                min-width: 0 !important;
+                width: 100% !important;
+            }
+
+            .bulk-cell-label {
+                display: block;
+            }
+
+            .bulk-col-idx {
+                grid-column: 1 / 2;
+                flex-direction: row !important;
+                align-items: center;
+                font-size: 14px;
+                color: var(--primary-dark);
+            }
+
+            .bulk-col-idx::before {
+                content: 'ជួរទី ';
+            }
+
+            .bulk-col-act {
+                grid-column: 2 / 3;
+                align-items: flex-end;
+                justify-content: center;
+            }
+
+            .bulk-col-type { grid-column: 1 / 2; }
+            .bulk-col-curr { grid-column: 2 / 3; }
+            .bulk-col-cat { grid-column: 1 / -1; }
+            .bulk-col-pay { grid-column: 1 / -1; }
+            .bulk-col-amt { grid-column: 1 / 2; }
+            .bulk-col-date { grid-column: 2 / 3; }
+            .bulk-col-note { grid-column: 1 / -1; }
+        }
         }
 
         /* Small Mobile Phones (<= 460px) */
@@ -1721,7 +1828,7 @@
                 <div class="brand-icon">📒</div>
                 <div>
                     <div class="brand-title">ចំណូល-ចំណាយ</div>
-                    <div class="brand-sub">Desktop &amp; Mobile Offline</div>
+                    <div class="brand-sub">Desktop &amp; Mobile • <span id="sidebarVersionBadge">v3.2.0</span></div>
                 </div>
             </div>
 
@@ -2145,6 +2252,21 @@
                                 <button type="button" class="btn-danger" onclick="openResetAllModal()">🗑️ លុបទិន្នន័យទាំងអស់</button>
                             </div>
                         </div>
+
+                        <!-- Box 7: App Auto-Update & Version Info -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">🔄 បច្ចុប្បន្នភាពកម្មវិធី (App Update)</div>
+                                <span id="settingsVersionBadge" class="active-period-badge" style="font-size: 12px;">v3.2.0</span>
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+                                ទទួលបានកំណែទម្រង់ថ្មីដោយស្វ័យប្រវត្តិ <strong>ដោយមិនបាច់លុប App ចេញពីទូរសព្ទ</strong> និង<strong>ការពារទិន្នន័យចាស់ ១០០%</strong>។
+                            </p>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                                <button type="button" id="btnCheckAppUpdate" class="btn-primary" onclick="checkForAppUpdate(true)">🔄 ពិនិត្យ និងទាញយកកំណែថ្មី</button>
+                            </div>
+                            <div id="appUpdateStatusText" style="font-size: 12.5px; color: var(--text-muted); margin-top: 8px; font-weight: 600;">ជំនាន់បច្ចុប្បន្ន៖ v3.2.0 (រក្សាទុកទិន្នន័យសុវត្ថិភាព)</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -2245,8 +2367,11 @@
 
                 <div class="form-group">
                     <label class="form-label">កំណត់ចំណាំ (ស្រេចចិត្ត)</label>
-                    <input type="text" id="txNote" class="input-control" placeholder="ឧ. បាយថ្ងៃត្រង់, កាហ្វេ, ប្រាក់ខែ...">
+                    <input type="text" id="txNote" list="dailyNoteHistoryList" class="input-control" placeholder="ឧ. បាយថ្ងៃត្រង់, កាហ្វេ, ប្រាក់ខែ...">
+                    <div id="dailyNoteChips" class="quick-chips" style="margin-top: 4px;"></div>
                 </div>
+
+                <datalist id="dailyNoteHistoryList"></datalist>
 
                 <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px;">
                     <button type="button" class="btn-secondary" onclick="closeTxModal()">បោះបង់</button>
@@ -2275,18 +2400,18 @@
             </div>
 
             <div class="table-wrapper">
-                <table class="tx-table">
+                <table class="bulk-table">
                     <thead>
                         <tr>
                             <th style="width: 34px;">#</th>
-                            <th style="width: 115px;">ប្រភេទ</th>
-                            <th style="width: 155px;">មុខទំនិញ</th>
-                            <th style="width: 145px;">ការទូទាត់</th>
-                            <th style="width: 130px;">ទឹកប្រាក់ *</th>
-                            <th style="width: 95px;">រូបិយប័ណ្ណ</th>
-                            <th style="width: 135px;">កាលបរិច្ឆេទ</th>
-                            <th>កំណត់ចំណាំ</th>
-                            <th style="width: 40px;"></th>
+                            <th style="min-width: 135px;">ប្រភេទ</th>
+                            <th style="min-width: 215px;">មុខទំនិញ</th>
+                            <th style="min-width: 175px;">ការទូទាត់</th>
+                            <th style="min-width: 145px;">ទឹកប្រាក់ *</th>
+                            <th style="min-width: 115px;">រូបិយប័ណ្ណ</th>
+                            <th style="min-width: 150px;">កាលបរិច្ឆេទ</th>
+                            <th style="min-width: 210px;">កំណត់ចំណាំ</th>
+                            <th style="width: 42px;"></th>
                         </tr>
                     </thead>
                     <tbody id="bulkRowsBody"></tbody>
@@ -2392,7 +2517,113 @@
 
     <div id="toast" class="toast"></div>
 
+    <!-- Auto-Update Available Banner Modal -->
+    <div id="updateAvailableModal" class="modal-backdrop">
+        <div class="modal-box" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 40px;">🚀</div>
+            <div class="modal-title">មានកំណែទម្រង់កម្មវិធីថ្មី!</div>
+            <div id="updateAvailableDesc" style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6;">
+                ប្រព័ន្ធបានរកឃើញកំណែទម្រង់ថ្មីនៅលើ Server។ ការធ្វើបច្ចុប្បន្នភាពនេះ <strong>នឹងរក្សាទុកទិន្នន័យរបស់អ្នកទាំងអស់ឱ្យនៅដដែល ១០០%</strong> ដោយមិនបាច់លុប App ឡើយ។
+            </div>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 6px;">
+                <button type="button" class="btn-secondary" onclick="document.getElementById('updateAvailableModal').classList.remove('open')">ពេលក្រោយ</button>
+                <button type="button" class="btn-primary" onclick="applySafeAppUpdate()">✨ ធ្វើបច្ចុប្បន្នភាពឥឡូវនេះ</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        /* ==========================================
+           0. APP VERSION & ZERO-DATA-LOSS AUTO-UPDATE
+           ========================================== */
+        const APP_VERSION = 'v3.2.0';
+        const STORAGE_APP_VER = 'kh_expense_installed_version';
+
+        async function checkForAppUpdate(isManual = false) {
+            const statusEl = document.getElementById('appUpdateStatusText');
+            const btnEl = document.getElementById('btnCheckAppUpdate');
+            if (isManual && btnEl) btnEl.disabled = true;
+            if (isManual && statusEl) {
+                statusEl.style.color = 'var(--primary-dark)';
+                statusEl.textContent = '⏳ កំពុងពិនិត្យកំណែទម្រង់ថ្មីពី Server...';
+            }
+
+            try {
+                // Avoid checking on local file:// protocol
+                if (window.location.protocol === 'file:') {
+                    if (isManual && statusEl) {
+                        statusEl.style.color = 'var(--text-muted)';
+                        statusEl.textContent = `ជំនាន់បច្ចុប្បន្ន៖ ${APP_VERSION} (កំពុងប្រើឯកសារ Offline ក្នុងម៉ាស៊ីន)`;
+                    }
+                    if (isManual && btnEl) btnEl.disabled = false;
+                    return;
+                }
+
+                // Fetch latest index.html directly from network bypassing browser cache
+                const baseUrl = window.location.href.split('#')[0].split('?')[0];
+                const res = await fetch(`${baseUrl}?_vcheck=${Date.now()}`, {
+                    cache: 'no-store',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+
+                if (res.ok) {
+                    const htmlText = await res.text();
+                    const match = htmlText.match(/const\s+APP_VERSION\s*=\s*['"]([^'"]+)['"]/);
+                    const remoteVersion = match ? match[1] : null;
+
+                    if (remoteVersion && remoteVersion !== APP_VERSION) {
+                        const descEl = document.getElementById('updateAvailableDesc');
+                        if (descEl) {
+                            descEl.innerHTML = `មានកំណែទម្រង់ថ្មី <strong>${escapeHTML(remoteVersion)}</strong> (ជំនាន់ចាស់ ${APP_VERSION})។<br>ទិន្នន័យចំណូល-ចំណាយរបស់អ្នកទាំងអស់ <strong>នឹងត្រូវបានរក្សាទុកសុវត្ថិភាព ១០០%</strong>។`;
+                        }
+                        document.getElementById('updateAvailableModal').classList.add('open');
+                        if (statusEl) {
+                            statusEl.style.color = 'var(--income)';
+                            statusEl.textContent = `✨ រកឃើញជំនាន់ថ្មី ${remoteVersion}!`;
+                        }
+                    } else if (isManual) {
+                        if (statusEl) {
+                            statusEl.style.color = 'var(--income)';
+                            statusEl.textContent = `✅ កម្មវិធីរបស់អ្នកគឺជាជំនាន់ចុងក្រោយបំផុត (${APP_VERSION}) រួចហើយ!`;
+                        }
+                        showToast(`✅ កម្មវិធីជាជំនាន់ចុងក្រោយ (${APP_VERSION}) រួចហើយ!`);
+                    }
+                }
+            } catch (err) {
+                if (isManual && statusEl) {
+                    statusEl.style.color = 'var(--text-muted)';
+                    statusEl.textContent = `ℹ️ មិនអាចភ្ជាប់អ៊ីនធឺណិតដើម្បីពិនិត្យ Update បានទេ (ជំនាន់ ${APP_VERSION})`;
+                }
+            } finally {
+                if (isManual && btnEl) btnEl.disabled = false;
+            }
+        }
+
+        async function applySafeAppUpdate() {
+            try {
+                // 1. Guarantee all user LocalStorage data is safely flushed before reload
+                saveStorage();
+
+                // 2. Clear any CacheStorage entries without touching LocalStorage
+                if ('caches' in window) {
+                    const keys = await caches.keys();
+                    await Promise.all(keys.map(k => caches.delete(k)));
+                }
+
+                // 3. Unregister any stale Service Workers if present
+                if ('serviceWorker' in navigator) {
+                    const regs = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(regs.map(r => r.unregister()));
+                }
+            } catch (e) {
+                console.warn('Cache clear warning:', e);
+            }
+
+            // 4. Force reload with cache-busting query string (preserves all LocalStorage data!)
+            const cleanUrl = window.location.href.split('#')[0].split('?')[0];
+            window.location.replace(`${cleanUrl}?updated=${Date.now()}`);
+        }
+
         /* ==========================================
            1. PWA YELLOW NOTEBOOK ICON GENERATOR
            ========================================== */
@@ -3456,6 +3687,50 @@
             box.innerHTML = presets.map(v => `<button type="button" class="quick-chip" onclick="document.getElementById('txAmount').value='${v}'">${formatMoney(v, config.currency)}</button>`).join('');
         }
 
+        function getDailyNoteHistory(targetDateStr = '') {
+            const dateStr = targetDateStr || document.getElementById('txDate')?.value || getTodayStr();
+            const sameDayNotes = [];
+            const recentNotes = [];
+            const seen = new Set();
+
+            // Prioritize notes recorded on the same selected date first, then recent notes
+            transactions.forEach(tx => {
+                const n = (tx.note || '').trim();
+                if (!n) return;
+                if (tx.date === dateStr && !seen.has(n)) {
+                    seen.add(n);
+                    sameDayNotes.push(n);
+                }
+            });
+
+            transactions.forEach(tx => {
+                const n = (tx.note || '').trim();
+                if (!n || seen.has(n)) return;
+                seen.add(n);
+                recentNotes.push(n);
+            });
+
+            return [...sameDayNotes, ...recentNotes].slice(0, 12);
+        }
+
+        function refreshDailyNoteSuggestions(targetDateStr = '') {
+            const notes = getDailyNoteHistory(targetDateStr);
+            const datalist = document.getElementById('dailyNoteHistoryList');
+            if (datalist) {
+                datalist.innerHTML = notes.map(n => `<option value="${escapeHTML(n)}"></option>`).join('');
+            }
+
+            const chipsBox = document.getElementById('dailyNoteChips');
+            if (chipsBox) {
+                if (notes.length === 0) {
+                    chipsBox.innerHTML = '';
+                } else {
+                    chipsBox.innerHTML = `<span style="font-size: 11.5px; font-weight: 700; color: var(--text-muted); align-self: center;">🕒 ប្រវត្តិ៖</span>` +
+                        notes.slice(0, 8).map(n => `<button type="button" class="quick-chip" data-note-val="${escapeHTML(n)}" onclick="document.getElementById('txNote').value=this.dataset.noteVal">${escapeHTML(n)}</button>`).join('');
+                }
+            }
+        }
+
         function openTxModal(editId = '') {
             const wSel = document.getElementById('txWalletId');
             wSel.innerHTML = wallets.map(w => `<option value="${w.id}">${w.emoji} ${escapeHTML(w.name)}</option>`).join('');
@@ -3485,6 +3760,7 @@
             }
 
             renderQuickAmountChips();
+            refreshDailyNoteSuggestions(document.getElementById('txDate').value);
             document.getElementById('txModal').classList.add('open');
         }
 
@@ -3554,6 +3830,8 @@
             wSel.innerHTML = wallets.map(w => `<option value="${w.id}">${w.emoji} ${escapeHTML(w.name)}</option>`).join('');
             if (activeWalletFilter !== 'all') wSel.value = activeWalletFilter;
 
+            refreshDailyNoteSuggestions(getTodayStr());
+
             const tbody = document.getElementById('bulkRowsBody');
             tbody.innerHTML = '';
             for (let i = 0; i < 4; i++) addBulkRow();
@@ -3565,40 +3843,62 @@
             document.getElementById('bulkModal').classList.remove('open');
         }
 
+        function renumberBulkRows() {
+            document.querySelectorAll('#bulkRowsBody tr').forEach((tr, i) => {
+                const idxCell = tr.querySelector('.bulk-col-idx');
+                if (idxCell) idxCell.textContent = String(i + 1);
+            });
+        }
+
         function addBulkRow() {
             const tbody = document.getElementById('bulkRowsBody');
             const idx = tbody.children.length + 1;
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td style="font-weight: 700; color: var(--text-muted);">${idx}</td>
-                <td>
-                    <select class="input-control bulk-type" style="padding: 6px; width: 100%;" onchange="this.closest('tr').querySelector('.bulk-cat').innerHTML = buildCatOptionsHTML(this.value)">
+                <td class="bulk-col-idx">${idx}</td>
+                <td class="bulk-col-type">
+                    <span class="bulk-cell-label">ប្រភេទ</span>
+                    <select class="input-control bulk-type" style="padding: 8px 10px; width: 100%;" onchange="this.closest('tr').querySelector('.bulk-cat').innerHTML = buildCatOptionsHTML(this.value)">
                         <option value="expense">↑ ចំណាយ</option>
                         <option value="income">↓ ចំណូល</option>
                     </select>
                 </td>
-                <td>
-                    <select class="input-control bulk-cat" style="padding: 6px; width: 100%;">${buildCatOptionsHTML('expense')}</select>
+                <td class="bulk-col-cat">
+                    <span class="bulk-cell-label">មុខទំនិញ / ប្រភេទ</span>
+                    <select class="input-control bulk-cat" style="padding: 8px 10px; width: 100%;">${buildCatOptionsHTML('expense')}</select>
                 </td>
-                <td>
-                    <select class="input-control bulk-pay" style="padding: 6px; width: 100%;">
+                <td class="bulk-col-pay">
+                    <span class="bulk-cell-label">វិធីទូទាត់</span>
+                    <select class="input-control bulk-pay" style="padding: 8px 10px; width: 100%;">
                         <option value="cash">💵 សាច់ប្រាក់</option>
                         <option value="bank:ABA Bank">🏦 ABA Bank</option>
-                        <option value="bank:ACLEDA Bank">🏦 ACLEDA</option>
+                        <option value="bank:ACLEDA Bank">🏦 ACLEDA Bank</option>
                         <option value="bank:Wing Bank">🏦 Wing Bank</option>
-                        <option value="bank:ធនាគារផ្សេងៗ">🏦 ធនាគារ</option>
+                        <option value="bank:ធនាគារផ្សេងៗ">🏦 ធនាគារផ្សេងៗ</option>
                     </select>
                 </td>
-                <td><input type="number" class="input-control bulk-amt" min="0" step="any" placeholder="0" style="padding: 6px 8px; width: 100%;" oninput="updateBulkSummary()"></td>
-                <td>
-                    <select class="input-control bulk-curr" style="padding: 6px; width: 100%;">
-                        <option value="KHR" ${config.currency === 'KHR' ? 'selected' : ''}>៛ KHR</option>
-                        <option value="USD" ${config.currency === 'USD' ? 'selected' : ''}>$ USD</option>
+                <td class="bulk-col-amt">
+                    <span class="bulk-cell-label">ទឹកប្រាក់ *</span>
+                    <input type="number" class="input-control bulk-amt" min="0" step="any" placeholder="0" style="padding: 8px 10px; width: 100%; font-weight: 700;" oninput="updateBulkSummary()">
+                </td>
+                <td class="bulk-col-curr">
+                    <span class="bulk-cell-label">រូបិយប័ណ្ណ</span>
+                    <select class="input-control bulk-curr" style="padding: 8px 10px; width: 100%;">
+                        <option value="KHR" ${config.currency === 'KHR' ? 'selected' : ''}>៛ រៀល (KHR)</option>
+                        <option value="USD" ${config.currency === 'USD' ? 'selected' : ''}>$ ដុល្លារ (USD)</option>
                     </select>
                 </td>
-                <td><input type="date" class="input-control bulk-date" value="${getTodayStr()}" style="padding: 6px; width: 100%;"></td>
-                <td><input type="text" class="input-control bulk-note" placeholder="កំណត់ចំណាំ..." style="padding: 6px 8px; width: 100%;"></td>
-                <td><button type="button" class="action-icon-btn del" onclick="this.closest('tr').remove(); updateBulkSummary();">✕</button></td>
+                <td class="bulk-col-date">
+                    <span class="bulk-cell-label">កាលបរិច្ឆេទ</span>
+                    <input type="date" class="input-control bulk-date" value="${getTodayStr()}" style="padding: 8px 10px; width: 100%;" onchange="refreshDailyNoteSuggestions(this.value)">
+                </td>
+                <td class="bulk-col-note">
+                    <span class="bulk-cell-label">កំណត់ចំណាំ (ចុចជ្រើសប្រវត្តិបាន)</span>
+                    <input type="text" list="dailyNoteHistoryList" class="input-control bulk-note" placeholder="វាយ ឬជ្រើសប្រវត្តិកំណត់ចំណាំ..." style="padding: 8px 10px; width: 100%;">
+                </td>
+                <td class="bulk-col-act">
+                    <button type="button" class="action-icon-btn del" onclick="this.closest('tr').remove(); renumberBulkRows(); updateBulkSummary();" title="លុបជួរនេះ">✕</button>
+                </td>
             `;
             tbody.appendChild(tr);
         }
@@ -4264,6 +4564,18 @@
                 const monthEl = document.getElementById('monthFilterInput');
                 if (dayEl) dayEl.value = getTodayStr();
                 if (monthEl) monthEl.value = getCurrentMonthStr();
+
+                const sbVer = document.getElementById('sidebarVersionBadge');
+                const stVer = document.getElementById('settingsVersionBadge');
+                if (sbVer) sbVer.textContent = APP_VERSION;
+                if (stVer) stVer.textContent = APP_VERSION;
+
+                const prevInstalledVer = localStorage.getItem(STORAGE_APP_VER);
+                localStorage.setItem(STORAGE_APP_VER, APP_VERSION);
+                if (prevInstalledVer && prevInstalledVer !== APP_VERSION) {
+                    setTimeout(() => showToast(`🎉 បានធ្វើបច្ចុប្បន្នភាពទៅ ${APP_VERSION} ដោយសុវត្ថិភាព!`), 600);
+                }
+
                 updateCurrencyToggleUI();
                 renderWalletUI();
                 renderAll();
@@ -4273,6 +4585,14 @@
                     updatePinDots();
                     document.getElementById('pinOverlay').classList.add('open');
                 }
+
+                // Auto-check for new version on GitHub Pages after 2 seconds & whenever user returns to app
+                setTimeout(() => checkForAppUpdate(false), 2000);
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') {
+                        checkForAppUpdate(false);
+                    }
+                });
             } catch (err) {
                 console.error('Initialization error:', err);
             }
